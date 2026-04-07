@@ -1,0 +1,21 @@
+.app {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+}
+
+.app-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.app-header a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.app-header a:hover {
+  text-decoration: underline;
+}
