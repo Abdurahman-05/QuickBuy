@@ -74,7 +74,7 @@ function App() {
           <div className="flex flex-col gap-1 text-center md:text-left">
             <h2 className="text-qb-red font-bold text-sm tracking-tight">QuickBuy</h2>
             <p className="text-[11px] text-gray-500 font-medium">
-              © 2024 QuickBuy Curator. All rights reserved.
+              © 2026 QuickBuy Curator. All rights reserved.
             </p>
           </div>
 
