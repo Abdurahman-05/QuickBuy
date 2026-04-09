@@ -1,12 +1,17 @@
 import React from 'react';
-import { ShoppingCart, User } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, User } from 'lucide-react';
 
 // Note: This is an inline placeholder for the Navbar.
 // When you copy this file, you can simply use: import Navbar from './components/Navbar';
-// We added the text-qb-red specifically inside here as requested!
 const Navbar = () => (
   <header className="w-full max-w-6xl flex justify-between items-center py-6 px-8">
-    <div className="text-xl font-extrabold tracking-tight text-qb-red">QuickBuy</div>
+    <div className="flex items-center gap-1.5 text-2xl font-black tracking-tight">
+      <ShoppingBag className="w-6 h-6 text-qb-red fill-current" />
+      <div>
+        <span className="text-qb-red">Quick</span>
+        <span className="text-black">Buy</span>
+      </div>
+    </div>
   </header>
 );
 
@@ -72,7 +77,13 @@ function App() {
       <footer className="w-full bg-qb-gray py-8 px-8 mt-auto">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col gap-1 text-center md:text-left">
-            <h2 className="text-qb-red font-bold text-sm tracking-tight">QuickBuy</h2>
+            <div className="flex items-center gap-1 font-black text-sm tracking-tight mb-0.5 justify-center md:justify-start">
+              <ShoppingBag className="w-4 h-4 text-qb-red fill-current" />
+              <div>
+                <span className="text-qb-red">Quick</span>
+                <span className="text-black">Buy</span>
+              </div>
+            </div>
             <p className="text-[11px] text-gray-500 font-medium">
               © 2026 QuickBuy Curator. All rights reserved.
             </p>
