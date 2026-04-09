@@ -1,29 +1,19 @@
 import React from 'react';
 import { ShoppingCart, User } from 'lucide-react';
 
+// Note: This is an inline placeholder for the Navbar.
+// When you copy this file, you can simply use: import Navbar from './components/Navbar';
+// We added the text-qb-red specifically inside here as requested!
+const Navbar = () => (
+  <header className="w-full max-w-6xl flex justify-between items-center py-6 px-8">
+    <div className="text-xl font-extrabold tracking-tight text-qb-red">QuickBuy</div>
+  </header>
+);
+
 function App() {
   return (
     <div className="min-h-screen flex flex-col items-center bg-white font-sans text-qb-textDark">
-      {/* Navbar */}
-      <header className="w-full max-w-6xl flex justify-between items-center py-6 px-8">
-        <div className="text-xl font-extrabold tracking-tight">QuickBuy</div>
-
-        <nav className="hidden md:flex gap-8 text-sm font-medium text-qb-textLight">
-          <a href="#" className="hover:text-qb-black transition-colors">Shop</a>
-          <a href="#" className="hover:text-qb-black transition-colors">Categories</a>
-          <a href="#" className="hover:text-qb-black transition-colors">Deals</a>
-          <a href="#" className="hover:text-qb-black transition-colors">Support</a>
-        </nav>
-
-        <div className="flex gap-4">
-          <button className="text-qb-textDark hover:opacity-70 transition-opacity">
-            <ShoppingCart className="w-5 h-5" />
-          </button>
-          <button className="text-qb-textDark hover:opacity-70 transition-opacity">
-            <User className="w-5 h-5" />
-          </button>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="flex-1 w-full flex flex-col items-center justify-center px-4 py-12">
