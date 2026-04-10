@@ -1,5 +1,24 @@
+<<<<<<< HEAD
 # Logs
 logs
+=======
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+>>>>>>> b1af034db563099fc86e6b55107e8c8fa8f3fd4d
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,6 +26,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+<<<<<<< HEAD
 node_modules
 dist
 dist-ssr
@@ -17,8 +37,24 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+=======
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.idea/
+.vscode/*
+!.vscode/extensions.json
+>>>>>>> b1af034db563099fc86e6b55107e8c8fa8f3fd4d
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+<<<<<<< HEAD
+=======
+
+# Local / misc
+*.local
+>>>>>>> b1af034db563099fc86e6b55107e8c8fa8f3fd4d
