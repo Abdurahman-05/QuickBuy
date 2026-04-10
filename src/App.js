@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User } from 'lucide-react';
+import Footer from './Footer';
 
 export default function App() {
   const [step, setStep] = useState(1);
@@ -13,16 +13,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] text-black font-sans">
-      <nav className="flex justify-between items-center py-6 px-12 border-b border-gray-200">
-        <div className="text-2xl font-black tracking-tighter">QuickBuy</div>
-        <div className="flex gap-8 text-sm font-medium">
-          <span>Shop</span><span>Categories</span><span>Deals</span><span>Support</span>
-        </div>
-        <div className="flex gap-4">
-          <ShoppingCart size={20} /> <User size={20} />
-        </div>
-      </nav>
-
+      
+      {/* Main Content (Nav removed as requested) */}
       <main className="max-w-6xl mx-auto py-20 px-12 grid grid-cols-1 md:grid-cols-2 gap-24">
         <section>
           <h1 className="text-5xl font-bold mb-6">Create Account</h1>
@@ -67,6 +59,9 @@ export default function App() {
           </div>
         </section>
       </main>
+
+      {/* Footer added below main content */}
+      <Footer />
     </div>
   );
 }
