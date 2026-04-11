@@ -1,64 +1,70 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
 
-const Login = () => {
+const Login: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center bg-white font-sans text-qb-textDark">
-      <Navbar />
+    // We removed Navbar from here because it's now in App.tsx
+    <main className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+      <div className="w-full max-w-[420px]">
+        
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-[42px] font-bold tracking-tight mb-2">Login</h1>
+          <p className="text-gray-500 text-[15px]">
+            Welcome back. Please enter your details.
+          </p>
+        </div>
 
-      <main className="flex-1 w-full flex flex-col items-center justify-center px-4 py-12">
-        <h1 className="text-4xl font-extrabold mb-3">Login</h1>
-        <p className="text-qb-textLight text-sm mb-10">
-          Welcome back. Please enter your details.
-        </p>
-
-        <form className="w-full max-w-sm flex flex-col gap-5">
-          {/* Email */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold tracking-widest uppercase">
+        <form className="flex flex-col gap-7" onSubmit={(e) => e.preventDefault()}>
+          {/* Email Field */}
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-black">
               Email Address
             </label>
             <input
               type="email"
               placeholder="name@example.com"
-              className="w-full bg-qb-gray text-sm rounded-md px-4 py-3"
+              className="w-full bg-[#f1f1f1] border-none text-sm rounded-[10px] px-5 py-4 outline-none focus:ring-1 focus:ring-gray-300 placeholder:text-gray-400"
             />
           </div>
 
-          {/* Password */}
-          <div className="flex flex-col gap-1.5">
-            <div className="flex justify-between items-center">
-              <label className="text-[11px] font-bold tracking-widest uppercase">
+          {/* Password Field */}
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-end">
+              <label className="text-[10px] font-bold tracking-[0.15em] uppercase text-black">
                 Password
               </label>
-              <a href="#" className="text-[11px] font-bold text-qb-red">
-                Forget Password?
+              <a href="#" className="text-[10px] font-bold text-red-600">
+                Forgot Password?
               </a>
             </div>
             <input
               type="password"
               placeholder="••••••••"
-              className="w-full bg-qb-gray text-sm rounded-md px-4 py-3"
+              className="w-full bg-[#f1f1f1] border-none text-sm rounded-[10px] px-5 py-4 outline-none focus:ring-1 focus:ring-gray-300 placeholder:text-gray-400"
             />
           </div>
 
-          {/* Button */}
+          {/* Login Button */}
           <button
-            type="button"
-            className="w-full bg-qb-black text-white py-3.5 rounded-full text-sm mt-3"
+            type="submit"
+            className="w-full bg-[#1a1a1a] text-white py-4.5 rounded-full text-[16px] font-bold mt-4 hover:bg-black transition-all active:scale-[0.98]"
           >
             Login
           </button>
 
-          <div className="text-center text-xs mt-3">
+          {/* Create Account Link */}
+          <div className="text-center text-[13px] mt-6 text-gray-600">
             New to QuickBuy?{' '}
-            <a href="#" className="font-bold underline">
+            <a 
+              href="#" 
+              className="font-bold text-black border-b-[3px] border-red-600 pb-0.5 ml-1 inline-block"
+            >
               Create Account
             </a>
           </div>
         </form>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };
 
