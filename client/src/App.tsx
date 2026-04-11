@@ -3,12 +3,15 @@ import "./App.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import PrimaryPillButton from "./components/PrimaryPillButton";
+import Login from "./page/login";
+import OrderConfirmation from "./page/ordercomfirmation";
+
 
 export default function App() {
   return (
     <div className="app min-h-screen">
-      <Navbar />
-      <section className="flex flex-grow items-center justify-center px-6 py-12">
+      {/* <Navbar /> */}
+      {/* <section className="flex flex-grow items-center justify-center px-6 py-12">
         <PrimaryPillButton
           label="Shop now"
           icon={
@@ -26,8 +29,11 @@ export default function App() {
             </svg>
           }
         />
-      </section>
-      <Footer />
+      </section> */}
+      {/* <Login /> */}
+      <OrderConfirmation />
+      {/* <Footer /> */}
     </div>
   );
 }
+
