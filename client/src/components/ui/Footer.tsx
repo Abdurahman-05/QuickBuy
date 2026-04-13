@@ -28,12 +28,12 @@ const socialLinks: FooterLink[] = [
 
 export default function Footer() {
   return (
-    <footer className="mt-16 rounded-t-[40px] bg-black text-white">
-      <div className="mx-auto w-full max-w-[1920px] px-6 pb-16 pt-20 sm:px-10 lg:px-12">
-        <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr_0.75fr_0.75fr] lg:gap-0">
-          <section className="lg:pr-14">
+    <footer className="mt-16 h-auto overflow-x-hidden rounded-t-[40px] bg-black text-white">
+      <div className="mx-auto flex w-full max-w-[1920px] flex-col gap-8 px-4 py-[15px] sm:px-6 lg:px-10">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-[1.25fr_0.75fr_0.75fr_0.75fr] lg:gap-4">
+          <section className="md:col-span-2 lg:col-span-1 lg:pr-8">
             <h2
-              className="max-w-[460px] text-[36px] font-bold leading-[100%] tracking-[0%] text-white"
+              className="max-w-[460px] text-[28px] font-bold leading-[100%] tracking-[0%] text-white sm:text-[32px] lg:text-[36px]"
               style={{ fontFamily: "Inter, sans-serif" }}
             >
               Recieve an exclusive
@@ -44,20 +44,20 @@ export default function Footer() {
             </h2>
 
             <form
-              className="mt-16 max-w-[340px] border-b border-zinc-500 pb-4 sm:mt-20"
+              className="mt-8 w-full max-w-[340px] border-b border-zinc-500 pb-2 sm:mt-10"
               onSubmit={(event) => event.preventDefault()}
             >
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center justify-between gap-2 sm:gap-4">
                 <input
                   type="email"
                   placeholder="enter your email"
                   aria-label="Enter your email"
-                  className="w-[205px] bg-transparent text-[20px] font-semibold leading-[100%] tracking-[0%] text-zinc-500 outline-none placeholder:text-[20px] placeholder:font-semibold placeholder:leading-[100%] placeholder:tracking-[0%] placeholder:text-zinc-500 sm:w-[225px]"
+                  className="min-w-0 flex-1 bg-transparent text-[16px] font-semibold leading-[100%] tracking-[0%] text-zinc-500 outline-none placeholder:text-[16px] placeholder:font-semibold placeholder:leading-[100%] placeholder:tracking-[0%] placeholder:text-zinc-500 sm:text-[18px] sm:placeholder:text-[18px] lg:text-[20px] lg:placeholder:text-[20px]"
                   style={{ fontFamily: "Inter, sans-serif" }}
                 />
                 <button
                   type="submit"
-                  className="shrink-0 text-[20px] font-semibold leading-[100%] tracking-[0%] text-zinc-100"
+                  className="shrink-0 text-[16px] font-semibold leading-[100%] tracking-[0%] text-zinc-100 sm:text-[18px] lg:text-[20px]"
                   style={{ fontFamily: "Inter, sans-serif" }}
                 >
                   Subscribe
@@ -80,10 +80,10 @@ export default function Footer() {
           />
         </div>
 
-        <div className="mt-24 flex flex-col gap-8 sm:mt-32 sm:flex-row sm:items-center sm:justify-between lg:mt-44">
+        <div className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <Link
             to="/"
-            className="inline-flex h-[36px] w-[142px] items-center gap-2 text-[46px] font-semibold leading-none tracking-tight text-white"
+            className="inline-flex h-[32px] w-[130px] items-center gap-2 text-[34px] font-semibold leading-none tracking-tight text-white"
             style={{ fontFamily: "Inter, sans-serif" }}
           >
             <svg
@@ -108,7 +108,7 @@ export default function Footer() {
           </Link>
 
           <p
-            className="text-[20px] font-bold leading-[100%] tracking-[0%] text-zinc-100 lg:mr-24"
+            className="text-[18px] font-bold leading-[100%] tracking-[0%] text-zinc-100 lg:mr-12"
             style={{ fontFamily: "Inter, sans-serif" }}
           >
             © 2025. All rights reserved
@@ -130,16 +130,16 @@ function FooterColumn({
 }) {
   return (
     <section
-      className={`${bordered ? "border-l-2 border-zinc-500 pl-8 lg:mr-8 lg:pl-12" : ""} lg:pb-[8px]`}
+      className={`${bordered ? "border-zinc-500 pt-1 lg:mr-4 lg:border-l-2 lg:pl-8" : ""} lg:pb-0`}
     >
       <h3
-        className="whitespace-nowrap text-[32px] font-semibold capitalize leading-[100%] tracking-[0%] text-zinc-100"
+        className="text-[24px] font-semibold capitalize leading-[100%] tracking-[0%] text-zinc-100 sm:text-[26px] lg:whitespace-nowrap"
         style={{ fontFamily: "Inter, sans-serif" }}
       >
         {title}
       </h3>
       <ul
-        className="mt-6 space-y-2 text-[20px] font-semibold leading-[100%] tracking-[0%] text-zinc-400 lg:mt-8 lg:space-y-3"
+        className="mt-4 space-y-1.5 text-[18px] font-semibold leading-[100%] tracking-[0%] text-zinc-400 lg:mt-5 lg:space-y-2"
         style={{ fontFamily: "Inter, sans-serif" }}
       >
         {links.map((link) => (
@@ -170,16 +170,16 @@ function FooterExternalColumn({
 }) {
   return (
     <section
-      className={`${bordered ? "border-l-2 border-zinc-500 pl-8 lg:pl-12" : ""} ${rightBorder ? "lg:mr-24 lg:border-r-2 lg:border-zinc-500 lg:pr-12" : ""} lg:pb-[8px]`}
+      className={`${bordered ? "border-zinc-500 pt-1 lg:border-l-2 lg:pl-8" : ""} ${rightBorder ? "lg:mr-12 lg:border-r-2 lg:border-zinc-500 lg:pr-8" : ""} lg:pb-0`}
     >
       <h3
-        className="whitespace-nowrap text-[32px] font-semibold leading-[100%] tracking-[0%] text-zinc-100 lg:text-center"
+        className="text-[24px] font-semibold leading-[100%] tracking-[0%] text-zinc-100 sm:text-[26px] lg:whitespace-nowrap lg:text-center"
         style={{ fontFamily: "Inter, sans-serif" }}
       >
         {title}
       </h3>
       <ul
-        className="mt-6 space-y-2 text-[20px] font-semibold leading-[100%] tracking-[0%] text-zinc-400 lg:mt-8 lg:space-y-3"
+        className="mt-4 space-y-1.5 text-[18px] font-semibold leading-[100%] tracking-[0%] text-zinc-400 lg:mt-5 lg:space-y-2"
         style={{ fontFamily: "Inter, sans-serif" }}
       >
         {links.map((link) => (
