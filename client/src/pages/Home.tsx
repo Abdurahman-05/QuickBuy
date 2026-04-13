@@ -312,6 +312,7 @@ const Home: React.FC = () => {
 
   return (
     <main className="bg-white min-h-screen">
+      
       <Hero />
       <Category />
       <ProductSection title="Last viewed" products={lastViewedProducts} />

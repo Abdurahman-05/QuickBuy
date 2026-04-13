@@ -1,4 +1,14 @@
-function ProductCard({ product }) {
+interface ProductCardProps {
+    product: {
+        name: string;
+        image: string;
+        stock: number;
+        rating: number;
+        price?: number;
+    };
+}
+
+function ProductCard({ product }: ProductCardProps) {
     return (
         <article className="group bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full flex flex-col relative cursor-pointer">
             
@@ -15,7 +25,8 @@ function ProductCard({ product }) {
                     src={product.image}
                     alt={product.name}
                     onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
+                        e.currentTarget.src =
+                            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
                     }}
                     className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
