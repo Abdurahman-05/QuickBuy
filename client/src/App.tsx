@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 
 export default function App() {
   return (
+
     <div className="app min-h-screen flex flex-col bg-[#f5f5f5]">
       <Navbar />
       <div className="flex-grow">
@@ -17,5 +18,8 @@ export default function App() {
       </div>
       <Footer />
     </div>
+
+
+
   );
 }
