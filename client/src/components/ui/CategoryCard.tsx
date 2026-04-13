@@ -1,4 +1,8 @@
-function CategoryCard({ category }) {
+interface CategoryCardProps {
+    category: { name: string; image: string };
+}
+
+function CategoryCard({ category }: CategoryCardProps) {
     return (
         <div className="group bg-white p-4 sm:p-6 rounded-2xl w-full text-center shadow-sm border border-gray-100 hover:shadow-xl hover:border-indigo-100 transition-all duration-300 cursor-pointer flex flex-col items-center">
             
@@ -7,7 +11,8 @@ function CategoryCard({ category }) {
                     src={category.image}
                     alt={category.name}
                     onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&q=80";
+                        e.currentTarget.src =
+                            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&q=80";
                     }}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
                 />

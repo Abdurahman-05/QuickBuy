@@ -1,4 +1,8 @@
-function PromoCard({ promo }) {
+interface PromoCardProps {
+    promo: { title: string; description: string; image: string };
+}
+
+function PromoCard({ promo }: PromoCardProps) {
     return (
         <article className="group cursor-pointer bg-white rounded-3xl p-6 sm:p-8 flex flex-col-reverse sm:flex-row items-center justify-between w-full shadow-sm hover:shadow-xl border border-gray-100 transition-all duration-300 relative overflow-hidden">
             
@@ -29,7 +33,8 @@ function PromoCard({ promo }) {
                     src={promo.image}
                     alt={promo.title}
                     onError={(e) => {
-                        e.target.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
+                        e.currentTarget.src =
+                            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
                     }}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                 />

@@ -1,7 +1,4 @@
 import CategoryCard from "../ui/CategoryCard";
-import Footer from "../ui/Footer"
-import Navbar from "../ui/Navbar"
-import PrimaryPillButton from "../ui/PrimaryPillButton";
 import ProductCard from "../ui/ProductCard";
 import PromoCard from "../ui/PromoCard";
 
