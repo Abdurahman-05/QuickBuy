@@ -14,8 +14,7 @@ export default function App() {
         <Route path="/productDetail" element={<ProductDetails />} />
       </Route>
 
-
-      <Route path="/profile" element={<UserProfilePage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
       <Route path="/register" element={<Register />} />
     </Routes>
   );
