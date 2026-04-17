@@ -8,6 +8,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 import OrderConfirmation from "./pages/Orderconformation";
+import MyOrders from "./pages/MyOrders";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/order-confirmation" element={<OrderConfirmation />} />
       <Route path="/profile" element={<UserProfilePage />} />
+      <Route path="/orders" element={<MyOrders />} />
       <Route path="/register" element={<Register />} />
     </Routes>
   );
