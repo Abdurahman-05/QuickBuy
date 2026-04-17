@@ -41,9 +41,9 @@ const OrderSummery: React.FC = () => {
                     <div className="mb-8">
                         <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Shipping Address</p>
                         <p className="text-[14px] text-black font-medium leading-relaxed">
-                            Alex Sterling<br/>
-                            1284 Editorial Avenue<br/>
-                            Suite 400<br/>
+                            Alex Sterling<br />
+                            1284 Editorial Avenue<br />
+                            Suite 400<br />
                             New York, NY 10001
                         </p>
                     </div>
@@ -57,7 +57,7 @@ const OrderSummery: React.FC = () => {
                             Visa ending in **** 4922
                         </div>
                     </div>
-                    
+
                     {/* Totals */}
                     <div className="pt-6 border-t border-gray-200/80 flex flex-col gap-3.5 text-[14px] font-medium">
                         <div className="flex justify-between text-gray-500">
