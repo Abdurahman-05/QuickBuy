@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card"
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Card } from "../../ui/card"
+import { Avatar, AvatarImage } from "../../ui/avatar";
 
 export default function NewRegistrationsCard() {
     return (

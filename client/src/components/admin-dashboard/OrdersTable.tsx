@@ -1,5 +1,5 @@
 import { MoreHorizontal } from "lucide-react"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar"
 
 const orders = [
     {

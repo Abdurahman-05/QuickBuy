@@ -1,4 +1,4 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "../../ui/card";
 import statsImage from "@/assets/statsimg.svg";
 import { useEffect, useState } from "react";
 

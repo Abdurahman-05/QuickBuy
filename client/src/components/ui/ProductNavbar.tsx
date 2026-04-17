@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 
 export default function ProductNavbar() {
     return (
-        <div className="flex items-center justify-between px-10 py-6 bg-[#f9fafb] border-b">
+        <div className="flex items-center justify-between px-10 py-6 bg-[#f9fafb] border-b mt-5 lg:mt-0">
 
             {/* LEFT - BACK */}
             <Link

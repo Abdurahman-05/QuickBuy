@@ -10,7 +10,7 @@ export default function AddProduct() {
             <Sidebar />
 
             {/* MAIN */}
-            <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 flex flex-col min-w-0 mt-16 lg:mt-0">
 
                 {/* NAVBAR */}
                 <ProductNavbar />

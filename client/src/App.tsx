@@ -8,6 +8,9 @@ import UserProfilePage from "./pages/UserProfilePage";
 import MainLayout from "./layouts/MainLayout";
 import Login from "./pages/Login";
 import OrderConfirmation from "./pages/Orderconformation";
+import Dashboard from "./pages/Dashboard";
+import AddProduct from "./pages/AddProduct";
+import Users from "./pages/Users";
 
 export default function App() {
   return (
@@ -22,6 +25,9 @@ export default function App() {
       <Route path="/order-confirmation" element={<OrderConfirmation />} />
       <Route path="/profile" element={<UserProfilePage />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/addproduct" element={<AddProduct />} />
+      <Route path="/users" element={<Users />} />
     </Routes>
   );
 }

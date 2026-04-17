@@ -13,7 +13,7 @@ export default function Navbar() {
     return (
         <>
             {/* TOP BAR */}
-            <div className="w-full h-16 bg-white border-b flex items-center justify-between px-4 lg:px-6">
+            <div className="w-full h-16 bg-white border-b flex items-center justify-between px-4 lg:px-6 mt-14 lg:mt-0">
 
                 {/* LEFT */}
                 <div className="flex items-center gap-4">
