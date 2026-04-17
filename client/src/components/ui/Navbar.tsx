@@ -64,23 +64,20 @@ export default function Navbar() {
           >
             <span className="relative block h-5 w-5">
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${
-                  isMobileMenuOpen
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${isMobileMenuOpen
                     ? "translate-y-0 rotate-45"
                     : "-translate-y-2"
-                }`}
+                  }`}
               />
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${
-                  isMobileMenuOpen ? "opacity-0" : "opacity-100"
-                }`}
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${isMobileMenuOpen ? "opacity-0" : "opacity-100"
+                  }`}
               />
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${
-                  isMobileMenuOpen
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${isMobileMenuOpen
                     ? "translate-y-0 -rotate-45"
                     : "translate-y-2"
-                }`}
+                  }`}
               />
             </span>
           </button>
@@ -183,9 +180,8 @@ function MobileNavButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex h-12 items-center justify-between rounded-2xl px-4 text-left text-[18px] font-medium transition-colors duration-200 ${
-        active ? "bg-white text-[#FF0000]" : "bg-white/60 text-[#1B1B1B]"
-      }`}
+      className={`flex h-12 items-center justify-between rounded-2xl px-4 text-left text-[18px] font-medium transition-colors duration-200 ${active ? "bg-white text-[#FF0000]" : "bg-white/60 text-[#1B1B1B]"
+        }`}
       style={{ fontFamily: "Inter, sans-serif" }}
     >
       <span>{label}</span>
@@ -214,9 +210,8 @@ function IconButton({
       type="button"
       aria-label={label}
       onClick={onClick}
-      className={`relative inline-flex items-center justify-center text-[#1B1B1B] transition-colors duration-200 ${
-        active && variant === "mobile" ? "text-[#FF0000]" : ""
-      } ${className}`}
+      className={`relative inline-flex items-center justify-center text-[#1B1B1B] transition-colors duration-200 ${active && variant === "mobile" ? "text-[#FF0000]" : ""
+        } ${className}`}
     >
       {children}
       {active && variant === "desktop" ? (

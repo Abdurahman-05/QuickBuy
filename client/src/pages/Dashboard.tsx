@@ -1,11 +1,13 @@
 import Sidebar from "../components/layout/Sidebar"
 import Navbar from "../components/layout/Navbar"
 import StatCard from "../components/admin-dashboard/StatCard"
-import OrdersTable from "../components/admin-dashboard/OrdersTable"
+import OrdersTable from "../components/admin-dashboard/DashboardOrderTable"
+import { useNavigate } from "react-router-dom"
 
 import { Plus } from "lucide-react"
 
 export default function Dashboard() {
+    const navigate = useNavigate()
     return (
         <div className="flex min-h-screen bg-gray-50 w-full overflow-x-hidden">
 
@@ -40,14 +42,17 @@ export default function Dashboard() {
                         </div>
 
                         {/* BUTTON */}
-                        <button className="
-                            flex items-center justify-center gap-2
-                            bg-black text-white
-                            px-4 sm:px-5 py-2.5
-                            rounded-full shadow-sm
-                            hover:shadow-md transition
-                            w-full sm:w-auto
-                        ">
+                        <button
+                            onClick={() => navigate("/addproduct")}
+                            className="
+                flex items-center justify-center gap-2
+                bg-black text-white
+                px-4 sm:px-5 py-2.5
+                rounded-full shadow-sm
+                hover:shadow-md transition
+                w-full sm:w-auto
+            "
+                        >
                             <span className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10">
                                 <Plus className="w-4 h-4" />
                             </span>
