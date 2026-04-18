@@ -30,7 +30,7 @@ export default function Navbar() {
 
   return (
     <header className="w-full bg-white border-b border-gray-100 flex flex-col items-center sticky top-0 z-50">
-      <div className="flex h-[84px] w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
+      <div className="flex h-[60px] w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
         
         {/* Logo */}
         <Logo />
