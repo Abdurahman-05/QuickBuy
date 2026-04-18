@@ -1,13 +1,32 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
-type NavItem = "Home" | "Products" | "Categories" | "About";
+type NavItem = {
+  name: string;
+  path: string;
+};
 
-const NAV_ITEMS: NavItem[] = ["Home", "Products", "Categories", "About"];
+const NAV_ITEMS: NavItem[] = [
+  { name: "Home", path: "/" },
+  { name: "Products", path: "/products" },
+  { name: "Categories", path: "/categories" },
+  { name: "About", path: "/about" },
+];
 
 export default function Navbar() {
-  const [selectedNav, setSelectedNav] = useState<NavItem>("Products");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+      setIsMobileMenuOpen(false);
+    }
+  };
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <header className="w-full bg-white border-b border-gray-100 flex flex-col items-center sticky top-0 z-50">
@@ -16,43 +35,57 @@ export default function Navbar() {
         {/* Logo */}
         <Logo />
 
-        {/* Navigation Links */}
+        {/* Navigation Links (Desktop) */}
         <nav className="hidden items-center gap-10 lg:flex pl-8">
           {NAV_ITEMS.map((item) => (
-            <button
-              key={item}
-              onClick={() => setSelectedNav(item)}
-              className={`relative text-[14px] tracking-wide transition-colors ${
-                selectedNav === item ? "text-black font-semibold" : "text-gray-500 font-medium hover:text-black"
-              }`}
+            <NavLink
+              key={item.name}
+              to={item.path}
+              className={({ isActive }) =>
+                `relative text-[14px] tracking-wide transition-colors ${
+                  isActive ? "text-black font-semibold" : "text-gray-500 font-medium hover:text-black"
+                }`
+              }
             >
-              {item}
-              {selectedNav === item && (
-                <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] w-8 bg-red-500 rounded-full" />
+              {({ isActive }) => (
+                <>
+                  {item.name}
+                  {isActive && (
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-[3px] w-8 bg-red-500 rounded-full" />
+                  )}
+                </>
               )}
-            </button>
+            </NavLink>
           ))}
         </nav>
 
         {/* Search Bar & Actions */}
         <div className="flex items-center gap-3 md:gap-8">
-          {/* Pill Search Bar */}
-          <div className="relative hidden md:block">
+          {/* Pill Search Bar (Desktop) */}
+          <form onSubmit={handleSearch} className="relative hidden md:block">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
               <SearchIcon />
             </span>
             <input
               type="text"
               placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="h-[44px] w-[200px] lg:w-[260px] rounded-full bg-[#f8f9fa] pl-11 pr-4 text-[13px] outline-none placeholder:text-gray-400 focus:ring-1 focus:ring-gray-200 shadow-sm"
             />
-          </div>
+          </form>
 
           {/* Action Icons */}
           <div className="flex items-center gap-4 md:gap-6 text-black">
-            <button className="hover:text-red-500 transition-colors"><CartIcon /></button>
-            <button className="hover:text-red-500 transition-colors"><HeartIcon /></button>
-            <button className="hover:text-red-500 transition-colors"><ProfileIcon /></button>
+            <Link to="/cart" className="hover:text-red-500 transition-colors" aria-label="Cart">
+              <CartIcon />
+            </Link>
+            <Link to="/wishlist" className="hover:text-red-500 transition-colors" aria-label="Wishlist">
+              <HeartIcon />
+            </Link>
+            <Link to="/profile" className="hover:text-red-500 transition-colors" aria-label="Profile">
+              <ProfileIcon />
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -65,20 +98,19 @@ export default function Navbar() {
           >
             <span className="relative block h-5 w-5">
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${isMobileMenuOpen
-                    ? "translate-y-0 rotate-45"
-                    : "-translate-y-2"
-                  }`}
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${
+                  isMobileMenuOpen ? "translate-y-0 rotate-45" : "-translate-y-2"
+                }`}
               />
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${isMobileMenuOpen ? "opacity-0" : "opacity-100"
-                  }`}
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${
+                  isMobileMenuOpen ? "opacity-0" : "opacity-100"
+                }`}
               />
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${isMobileMenuOpen
-                    ? "translate-y-0 -rotate-45"
-                    : "translate-y-2"
-                  }`}
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${
+                  isMobileMenuOpen ? "translate-y-0 -rotate-45" : "translate-y-2"
+                }`}
               />
             </span>
           </button>
@@ -90,31 +122,33 @@ export default function Navbar() {
         <div className="w-full bg-white border-t border-gray-100 lg:hidden py-6 px-6 shadow-xl">
           <div className="flex flex-col gap-2">
             {NAV_ITEMS.map((item) => (
-              <button
-                key={item}
-                onClick={() => {
-                  setSelectedNav(item);
-                  setIsMobileMenuOpen(false);
-                }}
-                className={`flex h-12 items-center rounded-xl px-4 text-[16px] font-medium transition-colors ${
-                  selectedNav === item ? "bg-red-50 text-red-600" : "text-gray-700 hover:bg-gray-50"
-                }`}
+              <NavLink
+                key={item.name}
+                to={item.path}
+                onClick={closeMobileMenu}
+                className={({ isActive }) =>
+                  `flex h-12 items-center rounded-xl px-4 text-[16px] font-medium transition-colors ${
+                    isActive ? "bg-red-50 text-red-600" : "text-gray-700 hover:bg-gray-50"
+                  }`
+                }
               >
-                {item}
-              </button>
+                {item.name}
+              </NavLink>
             ))}
           </div>
           <div className="mt-6 pt-6 border-t border-gray-100 md:hidden">
-            <div className="relative w-full">
+            <form onSubmit={handleSearch} className="relative w-full">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                 <SearchIcon />
               </span>
               <input
                 type="text"
                 placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-12 w-full rounded-full bg-gray-50 pl-11 pr-4 text-[14px] outline-none"
               />
-            </div>
+            </form>
           </div>
         </div>
       )}
@@ -163,7 +197,7 @@ function HeartIcon() {
 function CartIcon() {
   return (
     <svg width="24" height="22" viewBox="0 0 34 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M25.9507 24.31C26.6685 24.31 27.3867 24.6177 27.8995 25.1305C28.4124 25.6433 28.7201 26.3615 28.7201 27.1821C28.7201 28.7206 27.4891 29.9516 25.9506 29.9516C25.13 29.9516 24.4121 29.6438 23.899 29.131C23.3862 28.6182 23.0785 27.9 23.0785 27.1821C23.0785 26.3616 23.3862 25.6436 23.899 25.1306C24.4119 24.6178 25.13 24.31 25.9506 24.31L25.9507 24.31ZM15.3856 13.3347C14.7701 13.3347 14.36 12.8219 14.36 12.2064C14.36 11.5909 14.7704 11.0781 15.3856 11.0781H23.2839C23.8993 11.0781 24.4122 11.5909 24.4122 12.2064C24.4122 12.8219 23.8993 13.3347H15.3856ZM31.1821 5.4365C31.2847 4.82101 31.9 4.41086 32.5155 4.51327C33.131 4.61594 33.5411 5.23115 33.4387 5.84668L30.7719 21.1301C30.6692 21.7456 30.054 22.0533 29.5409 22.0533H9.12896C8.51347 22.0533 8.10332 21.5405 8.00064 21.1301L4.71836 2.25664H1.12832C0.512827 2.25664 0 1.74381 0 1.12832C0 0.512827 0.512827 0 1.12832 0H5.64159C6.15442 0 6.66723 0.410416 6.76991 0.92323L10.0522 19.7967L28.7206 19.8994L31.1823 5.4363L31.1821 5.4365ZM12.8217 24.31C13.6422 24.31 14.2578 24.6177 14.7706 25.1305C15.2834 25.6433 15.5911 26.3615 15.5911 27.1821C15.5911 28.7206 14.3601 29.9516 12.8216 29.9516C12.1037 29.9516 11.3855 29.6438 10.8727 29.131C10.3599 28.6182 10.0522 27.9 10.0522 27.1821C10.0522 26.3616 10.3599 25.6436 10.8727 25.1306C11.3856 24.6178 12.0011 24.31 12.8216 24.31L12.8217 24.31Z" fill="currentColor" />
+      <path d="M25.9507 24.31C26.6685 24.31 27.3867 24.6177 27.8995 25.1305C28.4124 25.6433 28.7201 26.3615 28.7201 27.1821C28.7201 28.7206 27.4891 29.9516 25.9506 29.9516C25.13 29.9516 24.4121 29.6438 23.899 29.131C23.3862 28.6182 23.0785 27.9 23.0785 27.1821C23.0785 26.3616 23.3862 25.6436 23.899 25.1306C24.4119 24.6178 25.13 24.31 25.9506 24.31L25.9507 24.31ZM15.3856 13.3347C14.7701 13.3347 14.36 12.8219 14.36 12.2064C14.36 11.5909 14.7704 11.0781 15.3856 11.0781H23.2839C23.8993 11.0781 24.4122 11.5909 24.4122 12.2064C24.4122 12.8219 23.8993 13.3347 23.2839 13.3347H15.3856ZM31.1821 5.4365C31.2847 4.82101 31.9 4.41086 32.5155 4.51327C33.131 4.61594 33.5411 5.23115 33.4387 5.84668L30.7719 21.1301C30.6692 21.7456 30.054 22.0533 29.5409 22.0533H9.12896C8.51347 22.0533 8.10332 21.5405 8.00064 21.1301L4.71836 2.25664H1.12832C0.512827 2.25664 0 1.74381 0 1.12832C0 0.512827 0.512827 0 1.12832 0H5.64159C6.15442 0 6.66723 0.410416 6.76991 0.92323L10.0522 19.7967L28.7206 19.8994L31.1823 5.4363L31.1821 5.4365ZM12.8217 24.31C13.6422 24.31 14.2578 24.6177 14.7706 25.1305C15.2834 25.6433 15.5911 26.3615 15.5911 27.1821C15.5911 28.7206 14.3601 29.9516 12.8216 29.9516C12.1037 29.9516 11.3855 29.6438 10.8727 29.131C10.3599 28.6182 10.0522 27.9 10.0522 27.1821C10.0522 26.3616 10.3599 25.6436 10.8727 25.1306C11.3856 24.6178 12.0011 24.31 12.8216 24.31L12.8217 24.31Z" fill="currentColor" />
     </svg>
   );
 }

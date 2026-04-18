@@ -18,7 +18,7 @@ const Hero: React.FC = () => {
           </p>
           
           <Link 
-            to="/product"
+            to="/products"
             className="bg-black text-white px-10 md:px-16 py-4 rounded-full font-bold shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 inline-block"
           >
             View more
@@ -32,7 +32,7 @@ const Hero: React.FC = () => {
             
             {/* Main Product Image Group */}
             <div className="relative w-full flex justify-center md:justify-end pr-0 md:pr-4 lg:pr-8">
-              <Link to="/product" className="relative z-30 block">
+              <Link to="/products" className="relative z-30 block">
                 <img 
                   src={heroImg} 
                   alt="Premium Headphones" 
@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
 
               {/* FLOATING PRODUCT CARD */}
               <Link 
-                to="/product"
+                to="/products/wireless-headphones"
                 className="absolute -bottom-10 md:bottom-2 left-4 sm:left-10 md:-left-8 lg:-left-12 z-10 bg-white/70 backdrop-blur-md rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] p-5 md:p-6 w-full max-w-[200px] sm:max-w-[230px] border border-white/50 flex flex-col gap-2 group transition-all duration-700 hover:-translate-y-2 cursor-pointer"
               >
                 <h3 className="text-[13px] md:text-[15px] font-semibold text-black leading-tight tracking-tight">

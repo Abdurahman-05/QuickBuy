@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { Product } from '../../pages/Home';
+import type { Product } from '../../data/products';
 
 interface ProductSectionProps {
   title: string;
@@ -18,7 +18,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
         {products.map((product) => (
           <Link 
             key={product.id}
-            to={`/product/${product.id}`}
+            to={`/products/${product.id}`}
             className="group relative bg-[#efefef] rounded-lg p-5 flex flex-col hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-2 border-transparent hover:border-white/50"
           >
             {/* Rectangular Yellow Recommended Badge */}

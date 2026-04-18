@@ -77,6 +77,7 @@ export default function Dashboard() {
                             change="+12% this month"
                             trend="up"
                             type="products"
+                            path="/products"
                         />
 
                         <StatCard
@@ -85,6 +86,7 @@ export default function Dashboard() {
                             change="+8.4% since Monday"
                             trend="up"
                             type="orders"
+                            path="/orders"
                         />
 
                         <StatCard
@@ -93,6 +95,7 @@ export default function Dashboard() {
                             change="Stable performance"
                             trend="stable"
                             type="users"
+                            path="/users"
                         />
 
                         <StatCard
@@ -101,6 +104,7 @@ export default function Dashboard() {
                             change="Record breaking week"
                             trend="up"
                             type="revenue"
+                            path="/dashboard"
                         />
                     </div>
 

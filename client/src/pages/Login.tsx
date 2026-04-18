@@ -36,9 +36,9 @@ const Login: React.FC = () => {
               <label className="text-[12px] font-extrabold tracking-[0.2em] uppercase text-black">
                 Password
               </label>
-              <a href="#" className="text-[12px] font-bold text-red-600 hover:underline">
+              <Link to="/support" className="text-[12px] font-bold text-red-600 hover:underline">
                 Forgot Password?
-              </a>
+              </Link>
             </div>
             <input
               type="password"
@@ -60,7 +60,7 @@ const Login: React.FC = () => {
         <div className="text-center text-[16px] mt-8 text-gray-600">
           New to QuickBuy?{' '}
           <Link 
-            to="/signup" 
+            to="/register" 
             className="font-bold text-black border-b-[3px] border-red-600 pb-1 ml-1 inline-block hover:text-red-600 transition-colors"
           >
             Create Account

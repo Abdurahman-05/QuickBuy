@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -56,7 +57,7 @@ export default function Register() {
             </>
           )}
           <p className="text-center text-sm mt-6 text-gray-600">
-            Already have an account? <span className="font-bold underline cursor-pointer text-black">Login</span>
+            Already have an account? <Link to="/login" className="font-bold underline cursor-pointer text-black">Login</Link>
           </p>
         </div>
       </section>

@@ -6,6 +6,7 @@ import {
     TrendingUp,
 } from "lucide-react"
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 interface StatCardProps {
     title: string
@@ -13,6 +14,7 @@ interface StatCardProps {
     change?: string
     trend?: "up" | "stable" | "down"
     type: "products" | "orders" | "users" | "revenue"
+    path: string
 }
 
 export default function StatCard({
@@ -21,6 +23,7 @@ export default function StatCard({
     change,
     trend = "stable",
     type,
+    path
 }: StatCardProps) {
     const icons = {
         products: Package,
@@ -55,15 +58,14 @@ export default function StatCard({
     }, [numericValue])
 
     return (
-        <div
+        <Link
+            to={path}
             className={`
                 relative overflow-hidden rounded-2xl border
-                w-full min-w-0
-
-                /* RESPONSIVE HEIGHT (NO OVERFLOW FIX) */
+                w-full min-w-0 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]
                 ${isRevenue
-                    ? "bg-black text-white p-4 sm:p-5 lg:p-7"
-                    : "bg-[#f7f7f7] text-black p-4 sm:p-5 lg:p-6"
+                    ? "bg-black text-white p-4 sm:p-5 lg:p-7 shadow-lg shadow-black/20"
+                    : "bg-[#f7f7f7] text-black p-4 sm:p-5 lg:p-6 hover:bg-white hover:border-black/10 shadow-sm"
                 }
             `}
         >
@@ -128,6 +130,6 @@ export default function StatCard({
                     </div>
                 )}
             </div>
-        </div>
+        </Link>
     )
 }

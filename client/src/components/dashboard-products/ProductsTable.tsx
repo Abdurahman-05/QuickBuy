@@ -1,4 +1,5 @@
 import { Pencil, Trash2 } from "lucide-react"
+import { Link } from "react-router-dom"
 import Mac from "../../assets/MacBook Pro.svg"
 import Headphone from "../../assets/XM5 Headphones.svg"
 import Camera from "../../assets/Polaroid Camera.svg"
@@ -67,17 +68,17 @@ export default function ProductsTable() {
 
                                     {/* PRODUCT */}
                                     <td className="py-4 sm:py-5">
-                                        <div className="flex items-center gap-3 sm:gap-4">
+                                        <Link to={`/products/${p.sku.toLowerCase()}`} className="flex items-center gap-3 sm:gap-4 group cursor-pointer">
 
                                             <img
                                                 src={p.image}
                                                 alt={p.name}
-                                                className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg sm:rounded-xl object-cover"
+                                                className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg sm:rounded-xl object-cover group-hover:opacity-80 transition"
                                             />
 
                                             <div className="min-w-0">
 
-                                                <p className="font-semibold text-gray-900 text-xs sm:text-sm truncate">
+                                                <p className="font-semibold text-gray-900 text-xs sm:text-sm truncate group-hover:text-red-500 transition underline-offset-2 decoration-red-500/30 group-hover:underline">
                                                     {p.name}
                                                 </p>
 
@@ -87,7 +88,7 @@ export default function ProductsTable() {
 
                                             </div>
 
-                                        </div>
+                                        </Link>
                                     </td>
 
                                     {/* CATEGORY */}
