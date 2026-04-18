@@ -1,6 +1,6 @@
-import { TableCell, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { TableCell, TableRow } from "../../ui/table";
+import { Avatar, AvatarImage } from "../../ui/avatar";
+import { Badge } from "../../ui/badge";
 import { MoreHorizontal } from "lucide-react";
 
 export default function UserRow({ user }: any) {

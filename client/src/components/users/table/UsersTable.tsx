@@ -4,11 +4,11 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
+} from "../../ui/table";
 
 import UserRow from "./UserRow";
 import { ListFilter, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../ui/button";
 
 const users = [
     {

@@ -1,6 +1,6 @@
 import Sidebar from "@/components/layout/Sidebar"
 import ProductNavbar from "@/components/ui/ProductNavbar"
-import ProductForm from "@/components/dashboard-products/ProductForm"
+import ProductForm from "@/components/dashboard-products/addproduct/ProductForm"
 
 export default function AddProduct() {
     return (
