@@ -1,5 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
+import Checkout from "./pages/Checkout";
 
 import "./App.css";
 import MainLayout from "./layouts/MainLayout";
