@@ -4,48 +4,66 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
+
 import { connectDB } from "./config/db.js";
-import authRoutes from "./modules/auth/auth.routes.js";
-import userRoutes from "./modules/user/user.routes.js";
-import { swaggerSpec } from "./config/swagger.js";
 import { configureCloudinary } from "./config/cloudinary.js";
 
+// Routes
+import authRoutes from "./modules/auth/auth.routes.js";
+import userRoutes from "./modules/user/user.routes.js";
+import productRoutes from "./routes/product.routes.js";
+
 const app = express();
-const port = Number(process.env.PORT) || 5000;
 
 // Configs
 connectDB();
 configureCloudinary();
 
+// Middlewares
 app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? "http://localhost:5173" }));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Swagger API Documentation Route
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec, {
-    customCss: `
-      .responses-inner h5:nth-of-type(2), .responses-inner .headers, .responses-inner .response-headers { display: none !important; }
-      .download-contents, .copy-to-clipboard { top: 10px !important; bottom: auto !important; }
-      .copy-to-clipboard { right: 100px !important; }
-      .download-contents { right: 10px !important; }
-      .microlight { padding-right: 140px !important; padding-top: 40px !important; }
-    `,
-  })
-);
+// Swagger Setup (single source)
+const specs = swaggerJsdoc({
+  definition: {
+    openapi: "3.0.0",
+    info: { title: "QuickBuy API", version: "1.0.0" },
+    components: {
+      schemas: {
+        Product: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            price: { type: "number" }
+          }
+        },
+        Review: {
+          type: "object",
+          properties: {
+            productId: { type: "string" },
+            rating: { type: "number" },
+            comment: { type: "string" }
+          }
+        }
+      }
+    }
+  },
+  apis: ["./routes/*.js", "./modules/**/*.js"],
+});
 
-// Main Routes
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
-app.get("/api/health", (_req, res) => {
-  res.json({ ok: true, service: "quickbuy-api" });
-});
+// Health check
+app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
-app.listen(port, () => {
-  console.log(`API listening on http://localhost:${port}`);
-});
+const port = process.env.PORT || 5000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
