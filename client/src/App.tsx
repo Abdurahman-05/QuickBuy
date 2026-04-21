@@ -1,5 +1,5 @@
 import { Suspense, lazy } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Checkout from "./pages/Checkout";
 
 import "./App.css";
@@ -59,7 +59,7 @@ export default function App() {
           <Route path="/notifications" element={<Categories />} />
           <Route path="/collections" element={<Categories />} />
           <Route path="/stock-alerts" element={<Categories />} />
-          <Route path="/checkout" element={<Checkout />}/>
+          <Route path="/checkout" element={<Checkout />} />
         </Route>
 
         {/* Standalone Pages (No default layout) */}
@@ -68,7 +68,8 @@ export default function App() {
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
         {/* Management/Dashboard Pages */}
-        <Route path="/admin" element={<Dashboard />} />
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/addproduct" element={<AddProduct />} />
         <Route path="/admin/products" element={<AdminProducts />} />
         <Route path="/admin/users" element={<Users />} />

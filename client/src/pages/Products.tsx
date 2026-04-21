@@ -23,13 +23,13 @@ const Products: React.FC = () => {
           ))}
         </div>
       </div>
-
+      
       {/* Footer CTA */}
       <div className="mt-20 text-center">
-        <p className="text-gray-400 text-sm font-bold uppercase tracking-[0.3em] mb-4">
-          Quality Guaranteed
-        </p>
-        <div className="w-20 h-1 bg-red-500 mx-auto rounded-full" />
+         <p className="text-gray-400 text-sm font-bold uppercase tracking-[0.3em] mb-4">
+            Quality Guaranteed
+         </p>
+         <div className="w-20 h-1 bg-red-500 mx-auto rounded-full" />
       </div>
     </div>
   );

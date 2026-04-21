@@ -9,14 +9,23 @@ export default function ProductsSearchFilter() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
 
                 {/* SEARCH */}
-                <div className="relative flex-1 w-full bg-gray-200 rounded-full">
-
+                <form 
+                    className="relative flex-1 w-full bg-gray-200 rounded-full"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        const formData = new FormData(e.currentTarget);
+                        const searchQuery = formData.get("q");
+                        // For generic UX handling, route to /search or trigger local table filtering
+                        if (searchQuery) window.location.href = `/search?q=${encodeURIComponent(searchQuery.toString())}`;
+                    }}
+                >
                     <Search
                         size={16}
                         className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
                     />
 
                     <Input
+                        name="q"
                         placeholder="Search product name, SKU, or category..."
                         className="
                             w-full h-12
@@ -28,7 +37,7 @@ export default function ProductsSearchFilter() {
                             focus-visible:ring-0 focus-visible:ring-offset-0
                         "
                     />
-                </div>
+                </form>
 
                 {/* FILTER BUTTON */}
                 <Button

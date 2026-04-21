@@ -10,17 +10,16 @@ import {
     Plus,
     Menu,
     X,
-    LogOut,
 } from "lucide-react"
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false)
 
     const navItems = [
-        { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+        { name: "Dashboard", icon: LayoutDashboard, path: "/admin/dashboard" },
         { name: "Products", icon: Package, path: "/admin/products" },
-        { name: "Orders", icon: ShoppingCart, path: "/orders" },
-        { name: "Users", icon: Users, path: "/users" },
+        { name: "Orders", icon: ShoppingCart, path: "/admin/orders" },
+        { name: "Users", icon: Users, path: "/admin/users" },
     ]
 
     return (
@@ -92,11 +91,10 @@ export default function Sidebar() {
                                 key={item.name}
                                 to={item.path}
                                 onClick={() => setOpen(false)}
-                                className={({ isActive }) => 
-                                    `flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
-                                        isActive
-                                            ? "bg-gray-100 text-black font-medium"
-                                            : "text-gray-500 hover:bg-gray-50 hover:text-black"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${isActive
+                                        ? "bg-gray-100 text-black font-medium"
+                                        : "text-gray-500 hover:bg-gray-50 hover:text-black"
                                     }`
                                 }
                             >
@@ -111,21 +109,20 @@ export default function Sidebar() {
 
                 {/* BOTTOM */}
                 <div className="space-y-3">
-                    <Link 
+                    <Link
                         to="/addproduct"
                         onClick={() => setOpen(false)}
                         className="w-full bg-black text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 transition"
                     >
                         <Plus size={16} />
-                        <span className="text-sm font-medium">Add Product</span>
+                        <span className="text-sm font-medium">NEW ENTRY</span>
                     </Link>
 
                     <NavLink
                         to="/support"
                         onClick={() => setOpen(false)}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2 transition ${
-                                isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
+                            `flex items-center gap-3 px-3 py-2 transition ${isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
                             }`
                         }
                     >
@@ -134,49 +131,16 @@ export default function Sidebar() {
                     </NavLink>
 
                     <NavLink
-                        to="/settings"
+                        to="/dashboard/settings"
                         onClick={() => setOpen(false)}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2 transition ${
-                                isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
+                            `flex items-center gap-3 px-3 py-2 transition ${isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
                             }`
                         }
                     >
                         <Settings size={18} />
                         Settings
                     </NavLink>
-                </div>
-
-                {/* USER SECTION AT BOTTOM */}
-                <div className="mt-8 pt-6 border-t border-gray-100">
-                    <div className="flex items-center gap-3 px-2 mb-4">
-                        <Link to="/profile" className="shrink-0 transition-opacity hover:opacity-80">
-                            <img
-                                src="https://i.pravatar.cc/40?img=12"
-                                alt="User profile"
-                                className="w-10 h-10 rounded-full border border-gray-100"
-                            />
-                        </Link>
-                        <div className="min-w-0">
-                            <Link to="/profile" className="block text-sm font-bold text-black truncate hover:underline">
-                                Admin User
-                            </Link>
-                            <p className="text-[10px] text-gray-400 uppercase tracking-widest truncate">
-                                Super Administrator
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <Link
-                        to="/login"
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2 text-red-500 hover:bg-red-50 rounded-xl transition-all font-medium text-sm group"
-                    >
-                        <div className="p-1.5 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
-                            <LogOut size={16} />
-                        </div>
-                        Logout
-                    </Link>
                 </div>
             </div>
         </>

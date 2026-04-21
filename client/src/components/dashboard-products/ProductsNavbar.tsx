@@ -57,11 +57,11 @@ export default function ProductsNavbar() {
                 {/* ICONS */}
                 <div className="flex items-center gap-2 sm:gap-4 text-gray-500">
 
-                    <Link to="/notifications" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Notifications">
+                    <Link to="/dashboard/settings" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Notifications">
                         <Bell size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </Link>
 
-                    <Link to="/settings" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Settings">
+                    <Link to="/dashboard/settings" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Settings">
                         <Settings size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </Link>
 
@@ -70,7 +70,7 @@ export default function ProductsNavbar() {
                 {/* USER */}
                 <div className="flex items-center gap-2 sm:gap-3 border-l pl-3 sm:pl-5">
 
-                    <Link to="/profile">
+                    <Link to="/admin/dashboard">
                         <Avatar className="h-7 w-7 sm:h-8 sm:w-8 hover:opacity-80 transition-opacity">
                             <AvatarImage src="https://i.pravatar.cc/100" />
                             <AvatarFallback>AU</AvatarFallback>
