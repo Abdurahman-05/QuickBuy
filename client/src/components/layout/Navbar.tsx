@@ -55,24 +55,26 @@ export default function Navbar() {
                         />
                     </div>
 
-                    <button className="p-2 rounded-lg hover:bg-gray-100 transition">
+                    <Link to="/notifications" className="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
                         <Bell size={18} />
-                    </button>
+                    </Link>
 
-                    <button className="p-2 rounded-lg hover:bg-gray-100 transition">
+                    <Link to="/settings" className="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
                         <Settings size={18} />
-                    </button>
+                    </Link>
 
-                    <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition text-gray-700">
+                    <Link to="/login" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition text-gray-700">
                         <LogOut size={16} />
-                        <span className="hidden sm:inline text-sm">Logout</span>
-                    </button>
+                        <span className="hidden sm:inline text-sm font-medium">Logout</span>
+                    </Link>
 
-                    <img
-                        src="https://i.pravatar.cc/40?img=12"
-                        alt="User avatar"
-                        className="w-9 h-9 rounded-full object-cover border"
-                    />
+                    <Link to="/profile" className="shrink-0">
+                        <img
+                            src="https://i.pravatar.cc/40?img=12"
+                            alt="User avatar"
+                            className="w-9 h-9 rounded-full object-cover border hover:border-black transition-colors"
+                        />
+                    </Link>
                 </div>
             </div>
 
@@ -117,11 +119,14 @@ export default function Navbar() {
 
                 {/* PUSH BOTTOM SECTION */}
                 <div className="flex-1" />
-
-                <button className="w-full bg-black text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 transition">
+                <Link
+                    to="/login"
+                    className="w-full bg-black text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 transition"
+                >
                     <LogOut size={16} />
                     Logout
-                </button>
+                </Link>
+
             </div>
         </>
     )

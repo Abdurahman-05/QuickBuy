@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { Product } from '../../data/products';
 
 interface ProductSectionProps {
@@ -8,6 +8,8 @@ interface ProductSectionProps {
 }
 
 const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
+  const navigate = useNavigate();
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
       <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">
@@ -16,10 +18,10 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {products.map((product) => (
-          <Link 
+          <div 
             key={product.id}
-            to={`/products/${product.id}`}
-            className="group relative bg-[#efefef] rounded-lg p-5 flex flex-col hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-2 border-transparent hover:border-white/50"
+            onClick={() => navigate(`/products/${product.id}`)}
+            className="group relative bg-[#efefef] rounded-lg p-5 flex flex-col hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-2 border-transparent hover:border-white/50 cursor-pointer"
           >
             {/* Rectangular Yellow Recommended Badge */}
             {product.recommended && (
@@ -66,7 +68,11 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                   </p>
                   
                   {/* Modern Hover Feature: "+" icon expands to "Add to cart" ONLY ON BUTTON HOVER */}
-                  <div className="flex items-center bg-[#1b1b1b] text-white rounded-full transition-all duration-500 overflow-hidden w-8 hover:w-[160px] h-8 relative group/btn">
+                  <Link 
+                    to="/cart"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center bg-[#1b1b1b] text-white rounded-full transition-all duration-500 overflow-hidden w-8 hover:w-[160px] h-8 relative group/btn"
+                  >
                     <div className="absolute inset-0 flex items-center justify-center w-8 shrink-0">
                       <svg className="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
@@ -75,11 +81,11 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                     <span className="ml-[36px] text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300">
                       Add to cart
                     </span>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </section>

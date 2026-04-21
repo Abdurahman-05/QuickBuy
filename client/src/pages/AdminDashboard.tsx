@@ -77,7 +77,7 @@ export default function Dashboard() {
                             change="+12% this month"
                             trend="up"
                             type="products"
-                            path="/products"
+                            path="/admin/products"
                         />
 
                         <StatCard
