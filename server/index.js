@@ -8,8 +8,6 @@ import swaggerJsdoc from "swagger-jsdoc";
 
 import { connectDB } from "./config/db.js";
 import { configureCloudinary } from "./config/cloudinary.js";
-
-// Routes
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
 import productRoutes from "./routes/product.routes.js";

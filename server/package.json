@@ -8,8 +8,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-{
-  "dependencies": {
     "bcryptjs": "^3.0.3",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.6",
@@ -32,7 +30,5 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.1.14"
-  }
-}
   }
 }
