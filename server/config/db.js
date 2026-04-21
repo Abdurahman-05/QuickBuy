@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
+
   console.log("Attempting to connect to:", process.env.MONGO_URI); // ADD THIS LINE
 
   try {
@@ -14,3 +15,4 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
+
