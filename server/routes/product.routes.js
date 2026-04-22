@@ -1,46 +1,56 @@
 import express from "express";
-import { getProducts, getProductById, getCategories, getReviews, addReview } from "../controllers/product.controller.js";
+import { getProducts, getProductById, addProduct, updateProduct, deleteProduct, getCategories, addCategory, getReviews, addReview } from "../controllers/product.controller.js";
 
 const router = express.Router();
 
-/**
- * @swagger
+/** @swagger
  * /api/products:
  *   get:
- *     summary: Retrieve a list of products
- *     responses: 
- *       200: { description: "Success" }
+ *     tags: [Products]
+ *     summary: Get all products
+ *   post:
+ *     tags: [Products]
+ *     summary: Create product
  */
 router.get("/", getProducts);
+router.post("/", addProduct);
 
-/**
- * @swagger
+/** @swagger
  * /api/products/{id}:
  *   get:
- *     summary: Get product by ID
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: string }
+ *     tags: [Products]
+ *     summary: Get by ID
+ *   put:
+ *     tags: [Products]
+ *     summary: Update product
+ *   delete:
+ *     tags: [Products]
+ *     summary: Delete product
  */
 router.get("/:id", getProductById);
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
 
-/**
- * @swagger
+/** @swagger
  * /api/products/categories:
  *   get:
- *     summary: Get all categories
+ *     tags: [Categories]
+ *     summary: Get categories
+ *   post:
+ *     tags: [Categories]
+ *     summary: Add category
  */
 router.get("/categories", getCategories);
+router.post("/categories", addCategory);
 
-/**
- * @swagger
+/** @swagger
  * /api/products/{id}/reviews:
  *   get:
- *     summary: Get reviews for a product
+ *     tags: [Reviews]
+ *     summary: Get reviews
  *   post:
- *     summary: Add a review
+ *     tags: [Reviews]
+ *     summary: Add review
  */
 router.get("/:id/reviews", getReviews);
 router.post("/:id/reviews", addReview);
