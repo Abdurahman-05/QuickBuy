@@ -32,6 +32,53 @@ const specs = swaggerJsdoc({
     info: { title: "QuickBuy API", version: "1.0.0" },
     components: {
       schemas: {
+        User: {
+          type: "object",
+          properties: {
+            _id: { type: "string" },
+            firstName: { type: "string" },
+            lastName: { type: "string" },
+            email: { type: "string" },
+            phone: { type: "string", nullable: true },
+            profileImage: { type: "string", nullable: true },
+            role: { type: "string", enum: ["USER", "ADMIN"] },
+            address: {
+              type: "object",
+              properties: {
+                street: { type: "string", nullable: true },
+                city: { type: "string", nullable: true },
+                state: { type: "string", nullable: true },
+                country: { type: "string", nullable: true },
+                zipCode: { type: "string", nullable: true }
+              }
+            },
+            createdAt: { type: "string", format: "date-time" },
+            updatedAt: { type: "string", format: "date-time" }
+          }
+        },
+        AuthResponse: {
+          type: "object",
+          properties: {
+            _id: { type: "string" },
+            firstName: { type: "string" },
+            lastName: { type: "string" },
+            email: { type: "string" },
+            phone: { type: "string", nullable: true },
+            profileImage: { type: "string", nullable: true },
+            role: { type: "string" },
+            address: { type: "object" },
+            token: { type: "string" },
+            message: { type: "string" }
+          }
+        },
+        Error: {
+          type: "object",
+          properties: {
+            message: { type: "string" },
+            error: { type: "string" },
+            stack: { type: "string" }
+          }
+        },
         Product: {
           type: "object",
           properties: {
@@ -46,6 +93,13 @@ const specs = swaggerJsdoc({
             rating: { type: "number" },
             comment: { type: "string" }
           }
+        }
+      },
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT"
         }
       }
     }
