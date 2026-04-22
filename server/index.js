@@ -25,7 +25,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Swagger Setup (single source)
+// Swagger Setup
 const specs = swaggerJsdoc({
   definition: {
     openapi: "3.0.0",
@@ -83,7 +83,9 @@ const specs = swaggerJsdoc({
           type: "object",
           properties: {
             name: { type: "string" },
-            price: { type: "number" }
+            price: { type: "number" },
+            brand: { type: "string" },
+            stock: { type: "number" }
           }
         },
         Review: {
@@ -104,7 +106,7 @@ const specs = swaggerJsdoc({
       }
     }
   },
-  apis: ["./routes/*.js", "./modules/**/*.js"],
+  apis: ["./routes/*.js", "./modules/**/*.js"], // Scans all routes
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
@@ -117,5 +119,5 @@ app.use("/api/products", productRoutes);
 // Health check
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
-const port = process.env.PORT || 5000;
+const port = Number(process.env.PORT) || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
