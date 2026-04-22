@@ -12,9 +12,15 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
-      <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">
-        {title}
-      </h2>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gray-900 tracking-tight">
+          {title}
+        </h2>
+        <Link to="/products" className="text-[11px] font-extrabold uppercase tracking-widest text-gray-400 hover:text-[#e60000] transition-colors flex items-center gap-1 group">
+          View All Products
+          <span className="transform transition-transform group-hover:translate-x-1">→</span>
+        </Link>
+      </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {products.map((product) => (

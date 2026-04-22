@@ -48,7 +48,7 @@ const PromoSection: React.FC = () => {
               <img
                 src={promo.image}
                 alt={promo.title}
-                className="w-full h-full object-cover object-top transform group-hover:scale-110 transition-all duration-[2000ms] opacity-95 group-hover:opacity-100"
+                className="w-full h-full object-cover object-top transform group-hover:scale-110 transition-all duration-&lsqb;2000ms&rsqb; opacity-95 group-hover:opacity-100"
               />
               {/* Soft Gradient (only visible on sm and up) */}
               <div className="hidden sm:block absolute inset-0 bg-gradient-to-r from-[#f2f2f2] via-[#f2f2f2]/40 to-transparent w-full" />

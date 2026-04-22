@@ -1,38 +1,116 @@
-import React from "react";
+import { useState, useMemo } from "react";
 import { products } from "../data/products";
-import ProductCard from "../components/ui/ProductCard";
+import ProductItemCard from "../components/products/ProductItemCard";
+import ProductFilterBar from "../components/products/ProductFilterBar";
+import ProductPagination from "../components/products/ProductPagination";
 
-const Products: React.FC = () => {
+const ITEMS_PER_PAGE = 12; // 4 columns × 3 rows
+
+export default function Products() {
+  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [sortOption, setSortOption] = useState("NEWEST");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Filter and sort products
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    if (activeCategory !== "ALL") {
+      result = result.filter(p => p.category.toUpperCase() === activeCategory);
+    }
+
+    switch (sortOption) {
+      case "PRICE_LOW_HIGH":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "PRICE_HIGH_LOW":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case "NEWEST":
+      default:
+        break;
+    }
+
+    return result;
+  }, [activeCategory, sortOption]);
+
+  // Pagination math
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // Reset to page 1 when filter/sort changes
+  const handleCategoryChange = (cat: string) => {
+    setActiveCategory(cat);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (option: string) => {
+    setSortOption(option);
+    setCurrentPage(1);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-20 px-4 md:px-8">
-      {/* Header Section (Inspired by Categories) */}
-      <div className="text-center mb-16 max-w-2xl">
-        <h1 className="text-4xl md:text-5xl font-black text-black mb-6 uppercase tracking-tight">
-          Our Collection
-        </h1>
-        <p className="text-gray-500 text-lg md:text-xl font-medium leading-relaxed">
-          Discover our curated selection of high-performance electronics and accessories designed for excellence.
-        </p>
-      </div>
+    <div className="min-h-screen bg-white font-sans flex flex-col">
 
-      {/* Product Grid */}
-      <div className="w-full max-w-[1440px]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+      <main className="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-12 pt-8 md:pt-10 pb-12">
+        {/* Page Header */}
+        <div className="mb-6">
+          <p className="text-[#e60000] text-[10px] font-extrabold tracking-[0.15em] uppercase mb-3 text-center md:text-left">
+            Collection 2024
+          </p>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <h1 className="text-[35px] sm:text-[45px] md:text-[60px] font-black leading-[1.1] tracking-tight uppercase text-center md:text-left">
+              All Products
+            </h1>
+            <div className="flex flex-col items-center md:items-end gap-1">
+              <p className="text-[11px] font-black text-black tracking-[0.15em] uppercase">
+                Showing {startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length}
+              </p>
+              <p className="text-[10px] font-bold text-gray-400 tracking-[0.12em] uppercase">
+                Collection 2024
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Filters and Sorting */}
+        <ProductFilterBar
+          activeCategory={activeCategory}
+          setActiveCategory={handleCategoryChange}
+          sortOption={sortOption}
+          setSortOption={handleSortChange}
+        />
+
+        {/* Product Grid — 4 cols × 3 rows */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 sm:gap-y-16">
+          {paginatedProducts.map((product) => (
+            <ProductItemCard key={product.id} product={product} />
           ))}
         </div>
-      </div>
-      
-      {/* Footer CTA */}
-      <div className="mt-20 text-center">
-         <p className="text-gray-400 text-sm font-bold uppercase tracking-[0.3em] mb-4">
-            Quality Guaranteed
-         </p>
-         <div className="w-20 h-1 bg-red-500 mx-auto rounded-full" />
-      </div>
+
+        {/* Empty state */}
+        {filteredProducts.length === 0 && (
+          <div className="py-20 text-center">
+            <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">No products found in this category.</p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <ProductPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+      </main>
+
     </div>
   );
-};
-
-export default Products;
+}
