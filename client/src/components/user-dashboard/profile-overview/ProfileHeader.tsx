@@ -24,15 +24,15 @@ const ProfileHeader: React.FC = () => {
       </div>
 
       {/* User Info */}
-      <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight">
-          Alex Johnson
+      <div className="min-w-0">
+        <h1 className="text-lg sm:text-2xl font-black text-gray-900 tracking-tight leading-tight truncate">
+          Alex Rivera
         </h1>
 
-        <p className="text-sm text-gray-400 mt-1 flex items-center gap-1.5">
+        <p className="text-[11px] sm:text-sm text-gray-400 mt-0.5 sm:mt-1 flex items-center gap-1.5 font-medium">
           Member since 2023
-          <span className="inline-block w-[5px] h-[5px] bg-red-400 rounded-full" />
-          Premium Tier
+          <span className="inline-block w-[4px] h-[4px] bg-red-400 rounded-full" />
+          Alex@example.com
         </p>
       </div>
 

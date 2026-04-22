@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { products } from "../data/products";
 import ProductItemCard from "../components/products/ProductItemCard";
 import ProductFilterBar from "../components/products/ProductFilterBar";
@@ -7,9 +8,18 @@ import ProductPagination from "../components/products/ProductPagination";
 const ITEMS_PER_PAGE = 12; // 4 columns × 3 rows
 
 export default function Products() {
-  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [searchParams] = useSearchParams();
+  const categoryFromUrl = searchParams.get("category")?.toUpperCase() || "ALL";
+
+  const [activeCategory, setActiveCategory] = useState(categoryFromUrl);
   const [sortOption, setSortOption] = useState("NEWEST");
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Sync category with URL param when it changes
+  useEffect(() => {
+    setActiveCategory(categoryFromUrl);
+    setCurrentPage(1);
+  }, [categoryFromUrl]);
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {

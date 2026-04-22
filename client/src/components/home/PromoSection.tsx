@@ -1,19 +1,20 @@
 import React from 'react';
 import womanImg from '../../assets/womenimg.svg';
 import manImg from '../../assets/menimg.svg';
+import { Link } from 'react-router-dom';
 
 const promos = [
   {
     title: "Comfy style for her.✨",
     description: "Shop from quickbuy fashion including shoes, clothes, handbags and much more.😋",
     image: womanImg,
-    linkText: "Explore >"
+    linkText: "Explore"
   },
   {
     title: "Comfy style for him.✨",
     description: "Shop from quickbuy fashion including shoes, clothes, handbags and much more.😋",
     image: manImg,
-    linkText: "Explore >"
+    linkText: "Explore"
   }
 ];
 
@@ -34,13 +35,13 @@ const PromoSection: React.FC = () => {
               <p className="text-gray-500 text-[13px] md:text-sm font-bold mb-8 md:mb-10 max-w-[240px] mx-auto sm:mx-0 leading-relaxed">
                 {promo.description}
               </p>
-              <a
-                href="#"
-                className="inline-flex items-center gap-1 font-[1000] text-[12px] text-gray-900 hover:text-indigo-600 transition-colors uppercase tracking-[0.2em] group/link"
+              <Link
+                to="/products"
+                className="inline-flex items-center gap-1 font-[1000] text-[12px] text-gray-900 hover:text-[#e60000] transition-colors uppercase tracking-[0.2em] group/link"
               >
                 {promo.linkText}
-                <span className="hidden group-hover/link:inline-block ml-1 transition-transform group-hover/link:translate-x-1">→</span>
-              </a>
+                <span className="ml-1 transition-transform group-hover/link:translate-x-1">→</span>
+              </Link>
             </div>
 
             {/* Image Content */}

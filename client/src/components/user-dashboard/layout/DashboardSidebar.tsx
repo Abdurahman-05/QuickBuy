@@ -10,12 +10,12 @@ import {
   X,
 } from "lucide-react";
 
-interface OrdersSidebarProps {
+interface DashboardSidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
 }
 
-const OrdersSidebar: React.FC<OrdersSidebarProps> = ({ isOpen, onClose }) => {
+const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isOpen, onClose }) => {
   const navItems = [
     { name: "Profile Overview", path: "/dashboard", icon: CircleUser, end: true },
     { name: "My Orders", path: "/dashboard/orders", icon: ShoppingBag },
@@ -48,14 +48,17 @@ const OrdersSidebar: React.FC<OrdersSidebarProps> = ({ isOpen, onClose }) => {
 
         {/* Logo */}
         <div className="px-10 pt-6 pb-2 mt-5">
-          <Link to="/" className="text-xl font-semibold text-red-500 tracking-tight block ml-4 lg:ml-0">
-            QuickBuy
+          <Link to="/" className="text-xl font-black text-black tracking-tighter block ml-4 lg:ml-0 group">
+            Quick<span className="text-red-600 group-hover:text-red-500 transition-colors">Buy</span>
           </Link>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1 ml-4 lg:ml-0">
+            User Center
+          </p>
         </div>
 
         {/* User Card */}
-        <div className="px-7 mt-6 py-4 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-gray-100">
+        <div className="px-7 mt-8 py-4 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-gray-100 shadow-sm">
             <img
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
               alt="User"
@@ -63,15 +66,18 @@ const OrdersSidebar: React.FC<OrdersSidebarProps> = ({ isOpen, onClose }) => {
             />
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-bold text-gray-900 truncate">Premium Member</p>
-            <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">
-              Account Active
-            </p>
+            <p className="text-[13px] font-bold text-gray-900 truncate">Alex Rivera</p>
+            <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                    Member
+                </p>
+            </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-0 px-6 mt-5 flex-1 overflow-y-auto">
+        <nav className="flex flex-col gap-1 px-6 mt-8 flex-1 overflow-y-auto">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
@@ -79,8 +85,8 @@ const OrdersSidebar: React.FC<OrdersSidebarProps> = ({ isOpen, onClose }) => {
               end={item.end}
               onClick={onClose}
               className={({ isActive }) =>
-                `relative flex items-center gap-3 px-3 py-[10px] text-[13px] font-medium rounded-lg transition-colors duration-200 ${isActive
-                  ? "text-gray-900 bg-gray-50"
+                `relative flex items-center gap-3 px-3 py-[12px] text-[13px] font-medium rounded-xl transition-all duration-300 ${isActive
+                  ? "text-gray-900 bg-gray-50 shadow-sm"
                   : "text-gray-400 hover:text-gray-700 hover:bg-gray-50/50"
                 }`
               }
@@ -88,18 +94,18 @@ const OrdersSidebar: React.FC<OrdersSidebarProps> = ({ isOpen, onClose }) => {
               {({ isActive }) => (
                 <>
                   <item.icon
-                    size={17}
-                    strokeWidth={isActive ? 2.2 : 1.7}
-                    className={isActive ? "text-red-500" : "text-gray-400"}
+                    size={18}
+                    strokeWidth={isActive ? 2.5 : 1.8}
+                    className={isActive ? "text-red-600" : "text-gray-400"}
                   />
 
-                  <span className={isActive ? "font-semibold" : ""}>
+                  <span className={isActive ? "font-bold" : ""}>
                     {item.name}
                   </span>
 
-                  {/* Active underline */}
+                  {/* Active dot indicator */}
                   {isActive && (
-                    <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-red-500 rounded-full" />
+                    <span className="absolute left-0 w-1 h-5 bg-red-600 rounded-r-full" />
                   )}
                 </>
               )}
@@ -108,12 +114,12 @@ const OrdersSidebar: React.FC<OrdersSidebarProps> = ({ isOpen, onClose }) => {
         </nav>
 
         {/* Sign Out */}
-        <div className="px-4 pb-6 mt-auto">
+        <div className="px-6 pb-8 mt-auto">
           <Link 
             to="/login"
-            className="flex items-center gap-3 px-3 py-[10px] text-[13px] font-medium text-gray-400 hover:text-gray-700 transition-colors duration-200 w-full rounded-lg hover:bg-gray-50/50"
+            className="flex items-center gap-3 px-4 py-3 text-[13px] font-bold text-gray-400 hover:text-red-600 hover:bg-red-50/50 transition-all duration-300 w-full rounded-xl"
           >
-            <LogOut size={17} strokeWidth={1.7} />
+            <LogOut size={18} strokeWidth={2} />
             Sign Out
           </Link>
         </div>
@@ -122,4 +128,4 @@ const OrdersSidebar: React.FC<OrdersSidebarProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default OrdersSidebar;
+export default DashboardSidebar;

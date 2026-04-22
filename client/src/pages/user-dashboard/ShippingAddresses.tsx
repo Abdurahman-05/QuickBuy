@@ -5,25 +5,26 @@ import { Link } from "react-router-dom";
 
 const ShippingAddresses = () => {
     return (
-        <div className="relative px-5 py-4 min-h-screen">
+        <div className="relative px-2 sm:px-5 py-2 sm:py-4 min-h-screen">
             <ShippingHeader />
             <AddressGrid />
             <Link to="/dashboard/settings"
                 className="
-    fixed
-    bottom-6
-    right-6
-    w-12 h-12
-    bg-black text-white
-    rounded-full
-    flex items-center justify-center
-    shadow-lg
-    hover:scale-105
-    transition
-    z-50
-  "
+                    fixed
+                    bottom-8
+                    right-8
+                    w-14 h-14
+                    bg-gray-900 text-white
+                    rounded-full
+                    flex items-center justify-center
+                    shadow-2xl
+                    hover:scale-110
+                    active:scale-95
+                    transition-all
+                    z-50
+                "
             >
-                <MapPinPlus className="w-5 h-5" />
+                <MapPinPlus className="w-6 h-6" />
             </Link>
         </div>
     );
