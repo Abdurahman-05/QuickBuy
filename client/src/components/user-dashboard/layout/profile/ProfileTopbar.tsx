@@ -19,7 +19,7 @@ const ProfileTopbar: React.FC<ProfileTopbarProps> = ({ onMenuToggle }) => {
         >
           <Menu size={20} className="text-gray-700" strokeWidth={2} />
         </button>
-        
+
         <Link to="/" className="flex items-center">
           <span className="text-xl font-extrabold text-gray-900 tracking-tight">
             QuickBuy
@@ -29,7 +29,7 @@ const ProfileTopbar: React.FC<ProfileTopbarProps> = ({ onMenuToggle }) => {
 
       {/* CENTER NAV */}
       <nav className="hidden md:flex items-center gap-7">
-        {["Home", "Products", "Categories", "Deals"].map((item) => (
+        {["Home", "Products", "Categories", "About"].map((item) => (
           <Link
             key={item}
             to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
