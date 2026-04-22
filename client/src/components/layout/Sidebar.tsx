@@ -16,10 +16,10 @@ export default function Sidebar() {
     const [open, setOpen] = useState(false)
 
     const navItems = [
-        { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
-        { name: "Products", icon: Package, path: "/products" },
-        { name: "Orders", icon: ShoppingCart, path: "/orders" },
-        { name: "Users", icon: Users, path: "/users" },
+        { name: "Dashboard", icon: LayoutDashboard, path: "/admin/dashboard" },
+        { name: "Products", icon: Package, path: "/admin/products" },
+        { name: "Orders", icon: ShoppingCart, path: "/admin/orders" },
+        { name: "Users", icon: Users, path: "/admin/users" },
     ]
 
     return (
@@ -91,11 +91,10 @@ export default function Sidebar() {
                                 key={item.name}
                                 to={item.path}
                                 onClick={() => setOpen(false)}
-                                className={({ isActive }) => 
-                                    `flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${
-                                        isActive
-                                            ? "bg-gray-100 text-black font-medium"
-                                            : "text-gray-500 hover:bg-gray-50 hover:text-black"
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 px-3 py-2 rounded-xl transition-all ${isActive
+                                        ? "bg-gray-100 text-black font-medium"
+                                        : "text-gray-500 hover:bg-gray-50 hover:text-black"
                                     }`
                                 }
                             >
@@ -110,21 +109,20 @@ export default function Sidebar() {
 
                 {/* BOTTOM */}
                 <div className="space-y-3">
-                    <Link 
+                    <Link
                         to="/addproduct"
                         onClick={() => setOpen(false)}
                         className="w-full bg-black text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-800 transition"
                     >
                         <Plus size={16} />
-                        <span className="text-sm font-medium">Add Product</span>
+                        <span className="text-sm font-medium">NEW ENTRY</span>
                     </Link>
 
                     <NavLink
                         to="/support"
                         onClick={() => setOpen(false)}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2 transition ${
-                                isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
+                            `flex items-center gap-3 px-3 py-2 transition ${isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
                             }`
                         }
                     >
@@ -133,11 +131,10 @@ export default function Sidebar() {
                     </NavLink>
 
                     <NavLink
-                        to="/settings"
+                        to="/dashboard/settings"
                         onClick={() => setOpen(false)}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2 transition ${
-                                isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
+                            `flex items-center gap-3 px-3 py-2 transition ${isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
                             }`
                         }
                     >

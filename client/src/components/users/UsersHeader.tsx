@@ -1,4 +1,5 @@
 import { Bell, Settings, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function UsersHeader() {
     return (
@@ -52,10 +53,19 @@ export default function UsersHeader() {
             ">
 
                 {/* SEARCH */}
-                <div className="relative flex-1 sm:flex-none">
+                <form 
+                    className="relative flex-1 sm:flex-none"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        const formData = new FormData(e.currentTarget);
+                        const searchQuery = formData.get("q");
+                        if (searchQuery) window.location.href = `/search?q=${encodeURIComponent(searchQuery.toString())}`;
+                    }}
+                >
                     <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
                     <input
                         type="text"
+                        name="q"
                         placeholder="Search product..."
                         className="
                             pl-9 pr-3 py-2
@@ -65,21 +75,25 @@ export default function UsersHeader() {
                             focus:outline-none focus:ring-2 focus:ring-gray-200
                         "
                     />
-                </div>
+                </form>
 
                 {/* ICONS */}
                 <div className="flex items-center gap-2 sm:gap-3 text-gray-500">
-                    <Bell className="w-4 h-4 cursor-pointer hover:text-black transition" />
-                    <Settings className="w-4 h-4 cursor-pointer hover:text-black transition" />
+                    <Link to="/dashboard/settings" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
+                        <Bell className="w-4 h-4 text-gray-400 hover:text-black transition" />
+                    </Link>
+                    <Link to="/dashboard/settings" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
+                        <Settings className="w-4 h-4 text-gray-400 hover:text-black transition" />
+                    </Link>
                 </div>
 
                 {/* DIVIDER (hide on small) */}
                 <div className="hidden sm:block w-px h-5 bg-gray-200" />
 
                 {/* LOGOUT */}
-                <button className="text-xs sm:text-sm text-gray-500 hover:text-black transition whitespace-nowrap">
+                <Link to="/login" className="text-xs sm:text-sm text-gray-500 font-medium hover:text-black hover:underline transition whitespace-nowrap">
                     Logout
-                </button>
+                </Link>
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import Sidebar from "../components/layout/Sidebar"
-import Navbar from "../components/layout/Navbar"
+import Navbar from "../components/ui/Navbar"
 import StatCard from "../components/admin-dashboard/StatCard"
 import OrdersTable from "../components/admin-dashboard/DashboardOrderTable"
 import { useNavigate } from "react-router-dom"
@@ -77,7 +77,7 @@ export default function Dashboard() {
                             change="+12% this month"
                             trend="up"
                             type="products"
-                            path="/products"
+                            path="/admin/products"
                         />
 
                         <StatCard
@@ -86,7 +86,7 @@ export default function Dashboard() {
                             change="+8.4% since Monday"
                             trend="up"
                             type="orders"
-                            path="/orders"
+                            path="/admin/orders"
                         />
 
                         <StatCard
@@ -95,7 +95,7 @@ export default function Dashboard() {
                             change="Stable performance"
                             trend="stable"
                             type="users"
-                            path="/users"
+                            path="/admin/users"
                         />
 
                         <StatCard
@@ -104,7 +104,7 @@ export default function Dashboard() {
                             change="Record breaking week"
                             trend="up"
                             type="revenue"
-                            path="/dashboard"
+                            path="/admin/dashboard"
                         />
                     </div>
 

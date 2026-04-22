@@ -21,7 +21,7 @@ export default function Navbar() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
       setIsMobileMenuOpen(false);
     }
   };
@@ -30,8 +30,8 @@ export default function Navbar() {
 
   return (
     <header className="w-full bg-white border-b border-gray-100 flex flex-col items-center sticky top-0 z-50">
-      <div className="flex h-[60px] w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
-        
+      <div className="flex h-[84px] w-full max-w-[1440px] items-center justify-between px-6 lg:px-12">
+
         {/* Logo */}
         <Logo />
 
@@ -42,8 +42,7 @@ export default function Navbar() {
               key={item.name}
               to={item.path}
               className={({ isActive }) =>
-                `relative text-[14px] tracking-wide transition-colors ${
-                  isActive ? "text-black font-semibold" : "text-gray-500 font-medium hover:text-black"
+                `relative text-[14px] tracking-wide transition-colors ${isActive ? "text-black font-semibold" : "text-gray-500 font-medium hover:text-black"
                 }`
               }
             >
@@ -80,10 +79,10 @@ export default function Navbar() {
             <Link to="/cart" className="hover:text-red-500 transition-colors" aria-label="Cart">
               <CartIcon />
             </Link>
-            <Link to="/wishlist" className="hover:text-red-500 transition-colors" aria-label="Wishlist">
+            <Link to="/dashboard/wishlist" className="hover:text-red-500 transition-colors" aria-label="Wishlist">
               <HeartIcon />
             </Link>
-            <Link to="/profile" className="hover:text-red-500 transition-colors" aria-label="Profile">
+            <Link to="/dashboard" className="hover:text-red-500 transition-colors" aria-label="Profile">
               <ProfileIcon />
             </Link>
           </div>
@@ -98,19 +97,16 @@ export default function Navbar() {
           >
             <span className="relative block h-5 w-5">
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${
-                  isMobileMenuOpen ? "translate-y-0 rotate-45" : "-translate-y-2"
-                }`}
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${isMobileMenuOpen ? "translate-y-0 rotate-45" : "-translate-y-2"
+                  }`}
               />
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${
-                  isMobileMenuOpen ? "opacity-0" : "opacity-100"
-                }`}
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${isMobileMenuOpen ? "opacity-0" : "opacity-100"
+                  }`}
               />
               <span
-                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${
-                  isMobileMenuOpen ? "translate-y-0 -rotate-45" : "translate-y-2"
-                }`}
+                className={`absolute left-0 top-1/2 block h-0.5 w-5 rounded-full bg-current transition-transform duration-200 ${isMobileMenuOpen ? "translate-y-0 -rotate-45" : "translate-y-2"
+                  }`}
               />
             </span>
           </button>
@@ -127,8 +123,7 @@ export default function Navbar() {
                 to={item.path}
                 onClick={closeMobileMenu}
                 className={({ isActive }) =>
-                  `flex h-12 items-center rounded-xl px-4 text-[16px] font-medium transition-colors ${
-                    isActive ? "bg-red-50 text-red-600" : "text-gray-700 hover:bg-gray-50"
+                  `flex h-12 items-center rounded-xl px-4 text-[16px] font-medium transition-colors ${isActive ? "bg-red-50 text-red-600" : "text-gray-700 hover:bg-gray-50"
                   }`
                 }
               >
@@ -160,8 +155,8 @@ function Logo() {
   return (
     <Link to="/" className="flex items-center gap-2">
       <svg width="22" height="26" viewBox="0 0 22 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 23.5C21.1 24.1 20.8 24.8 20.4 25.3C20 25.7 19.4 26 18.7 26H2.3C1.6 26 1 25.7 0.6 25.3C0.2 24.8 -0.1 24.1 0 23.5L1.7 5.2C1.7 5 2 4.8 2.2 4.8H18.8C19 4.8 19.3 5 19.3 5.2L21 23.5Z" fill="#F42929"/>
-        <path d="M7 5.5V4C7 2.067 8.567 0.5 10.5 0.5C12.433 0.5 14 2.067 14 4V5.5" stroke="#F42929" strokeWidth="2.5" strokeLinecap="round"/>
+        <path d="M21 23.5C21.1 24.1 20.8 24.8 20.4 25.3C20 25.7 19.4 26 18.7 26H2.3C1.6 26 1 25.7 0.6 25.3C0.2 24.8 -0.1 24.1 0 23.5L1.7 5.2C1.7 5 2 4.8 2.2 4.8H18.8C19 4.8 19.3 5 19.3 5.2L21 23.5Z" fill="#F42929" />
+        <path d="M7 5.5V4C7 2.067 8.567 0.5 10.5 0.5C12.433 0.5 14 2.067 14 4V5.5" stroke="#F42929" strokeWidth="2.5" strokeLinecap="round" />
       </svg>
       <span className="text-[22px] font-bold tracking-tight text-black">
         QuickBuy

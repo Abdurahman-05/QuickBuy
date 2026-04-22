@@ -1,4 +1,3 @@
-import React from 'react';
 import chapaLogo from '../assets/chapa.jpg';
 import telebirrLogo from '../assets/telebirr.jpg';
 

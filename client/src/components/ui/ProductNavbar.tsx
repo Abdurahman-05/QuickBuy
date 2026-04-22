@@ -18,22 +18,29 @@ export default function ProductNavbar() {
             <div className="flex items-center gap-6">
 
                 {/* ICONS */}
-                <Bell className="w-5 h-5 text-gray-500 hover:text-black cursor-pointer transition" />
-                <Settings className="w-5 h-5 text-gray-500 hover:text-black cursor-pointer transition" />
+                <Link to="/notifications" className="p-1 hover:bg-gray-100 rounded-md transition border-transparent border hover:border-black/5">
+                    <Bell className="w-5 h-5 text-gray-400 hover:text-black transition" />
+                </Link>
+                <Link to="/settings" className="p-1 hover:bg-gray-100 rounded-md transition border-transparent border hover:border-black/5">
+                    <Settings className="w-5 h-5 text-gray-400 hover:text-black transition" />
+                </Link>
 
                 {/* USER */}
                 <div className="flex items-center gap-3 border-l pl-6">
                     <div className="text-right">
                         <p className="text-sm font-medium text-black">Admin User</p>
-                        <p className="text-xs text-gray-400 cursor-pointer hover:text-black">
+                        <Link to="/login" className="text-xs text-gray-400 hover:text-black hover:underline transition-all">
                             Logout
-                        </p>
+                        </Link>
                     </div>
 
-                    <img
-                        src="https://i.pravatar.cc/40?img=12"
-                        className="w-9 h-9 rounded-full"
-                    />
+                    <Link to="/profile">
+                        <img
+                            src="https://i.pravatar.cc/40?img=12"
+                            alt="Admin profile"
+                            className="w-9 h-9 rounded-full border border-transparent hover:border-black transition-all"
+                        />
+                    </Link>
                 </div>
             </div>
         </div>

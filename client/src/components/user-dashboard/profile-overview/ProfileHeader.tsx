@@ -1,0 +1,43 @@
+import React from "react";
+
+const ProfileHeader: React.FC = () => {
+  return (
+    <div className="flex items-center gap-5 sm:gap-6 mb-2">
+
+      {/* Avatar with gradient ring */}
+      <div className="relative flex-shrink-0">
+        {/* Gradient border ring */}
+        <div
+          className="w-20 h-20 sm:w-[90px] sm:h-[90px] rounded-full p-[3px]"
+          style={{
+            background: "linear-gradient(135deg, #FF8A00, #E53935, #C62828)",
+          }}
+        >
+          <div className="w-full h-full rounded-full overflow-hidden bg-white p-[2px]">
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face"
+              alt="Alex Johnson"
+              className="w-full h-full rounded-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* User Info */}
+      <div>
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight leading-tight">
+          Alex Johnson
+        </h1>
+
+        <p className="text-sm text-gray-400 mt-1 flex items-center gap-1.5">
+          Member since 2023
+          <span className="inline-block w-[5px] h-[5px] bg-red-400 rounded-full" />
+          Premium Tier
+        </p>
+      </div>
+
+    </div>
+  );
+};
+
+export default ProfileHeader;
