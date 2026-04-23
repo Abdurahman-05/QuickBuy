@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../store/useAuthStore";
 
 type NavItem = {
   name: string;
@@ -18,6 +19,10 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -27,6 +32,11 @@ export default function Navbar() {
   };
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <header className="w-full bg-white border-b border-gray-100 flex flex-col items-center sticky top-0 z-50">
@@ -56,6 +66,17 @@ export default function Navbar() {
               )}
             </NavLink>
           ))}
+          {user?.role === "ADMIN" && (
+            <NavLink
+              to="/admin/dashboard"
+              className={({ isActive }) =>
+                `relative text-[14px] tracking-wide transition-colors ${isActive ? "text-red-600 font-semibold" : "text-gray-500 font-medium hover:text-red-600"
+                }`
+              }
+            >
+              Admin Panel
+            </NavLink>
+          )}
         </nav>
 
         {/* Search Bar & Actions */}
@@ -79,12 +100,37 @@ export default function Navbar() {
             <Link to="/cart" className="hover:text-red-500 transition-colors" aria-label="Cart">
               <CartIcon />
             </Link>
-            <Link to="/dashboard/wishlist" className="hover:text-red-500 transition-colors" aria-label="Wishlist">
-              <HeartIcon />
-            </Link>
-            <Link to="/dashboard" className="hover:text-red-500 transition-colors" aria-label="Profile">
-              <ProfileIcon />
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link to="/dashboard/wishlist" className="hover:text-red-500 transition-colors" aria-label="Wishlist">
+                  <HeartIcon />
+                </Link>
+                <div className="flex items-center gap-3 border-l pl-4 border-gray-100">
+                  <Link to="/dashboard" className="flex items-center gap-2 group">
+                    <img 
+                      src={user?.profileImage || "https://i.pravatar.cc/40?img=1"} 
+                      alt="Profile" 
+                      className="w-8 h-8 rounded-full object-cover border border-gray-100 group-hover:border-red-500 transition-colors"
+                    />
+                    <span className="text-[13px] font-bold hidden xl:block">{user?.firstName}</span>
+                  </Link>
+                  <button 
+                    onClick={handleLogout}
+                    className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                    title="Logout"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  </button>
+                </div>
+              </>
+            ) : (
+              <Link 
+                to="/login" 
+                className="bg-black text-white px-6 py-2.5 rounded-full text-[13px] font-bold hover:bg-red-600 transition-all shadow-sm"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}

@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import {
     Table,
     TableBody,
@@ -7,41 +8,20 @@ import {
 } from "../../ui/table";
 
 import UserRow from "./UserRow";
-import { ListFilter, Download } from "lucide-react";
+import { ListFilter, Download, Loader2 } from "lucide-react";
 import { Button } from "../../ui/button";
-
-const users = [
-    {
-        name: "Alexander Wright",
-        email: "alex.wright@design.com",
-        role: "ADMIN",
-        date: "Oct 12, 2023",
-        id: "QB-8291",
-    },
-    {
-        name: "Elena Rodriguez",
-        email: "elena.r@techmail.io",
-        role: "USER",
-        date: "Jan 05, 2024",
-        id: "QB-7742",
-    },
-    {
-        name: "Marcus Sterling",
-        email: "m.sterling@global.net",
-        role: "USER",
-        date: "Nov 28, 2023",
-        id: "QB-9011",
-    },
-    {
-        name: "Sarah Chen",
-        email: "sarah.chen@innovate.co",
-        role: "USER",
-        date: "Mar 15, 2024",
-        id: "QB-1120",
-    },
-];
+import { useAuthStore } from "../../../store/useAuthStore";
 
 export default function UsersTable() {
+    const users = useAuthStore((state) => state.users);
+    const getAllUsers = useAuthStore((state) => state.getAllUsers);
+    const isLoading = useAuthStore((state) => state.isLoading);
+    const error = useAuthStore((state) => state.error);
+
+    useEffect(() => {
+        getAllUsers();
+    }, [getAllUsers]);
+
     return (
         <div className="space-y-4 sm:space-y-5 w-full min-w-0">
 
@@ -76,10 +56,17 @@ export default function UsersTable() {
                 </div>
             </div>
 
+            {/* ERROR STATE */}
+            {error && (
+                <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-2xl text-sm font-medium">
+                    {error}
+                </div>
+            )}
+
             {/* TABLE CARD */}
             <div className="bg-white rounded-2xl sm:rounded-3xl border border-gray-200/60 shadow-sm overflow-hidden">
 
-                {/* SCROLL CONTAINER (KEY FIX) */}
+                {/* SCROLL CONTAINER */}
                 <div className="w-full overflow-x-auto">
 
                     <div className="min-w-[700px]">
@@ -115,9 +102,26 @@ export default function UsersTable() {
 
                             {/* BODY */}
                             <TableBody className="divide-y divide-gray-100/70">
-                                {users.map((user, i) => (
-                                    <UserRow key={i} user={user} />
-                                ))}
+                                {isLoading ? (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="h-40 text-center">
+                                            <div className="flex items-center justify-center gap-3 text-gray-400">
+                                                <Loader2 size={18} className="animate-spin" />
+                                                <span className="text-[11px] font-black uppercase tracking-[0.2em]">Loading Customers...</span>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ) : users.length > 0 ? (
+                                    users.map((user) => (
+                                        <UserRow key={user._id} user={user} />
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="h-40 text-center text-gray-400 uppercase text-[10px] font-black tracking-widest">
+                                            No customers found
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
 
                         </Table>
@@ -135,7 +139,7 @@ export default function UsersTable() {
             ">
 
                 <span>
-                    Showing 4 of 12,480 users
+                    Showing {users.length} of {users.length} users
                 </span>
 
                 <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-5 w-full sm:w-auto">

@@ -1,7 +1,9 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Checkout from "./pages/Checkout";
 import ScrollToTop from "./components/utils/ScrollToTop";
+import { useAuthStore } from "./store/useAuthStore";
+import { ProtectedRoute, AdminRoute, GuestRoute } from "./components/layout/AuthGuard";
 
 import "./App.css";
 import MainLayout from "./layouts/MainLayout";
@@ -31,6 +33,8 @@ const AddProduct = lazy(() => import("./pages/AddProduct"));
 const AdminProducts = lazy(() => import("./pages/AdminProducts"));
 const Users = lazy(() => import("./pages/Users"));
 const Orders = lazy(() => import("./pages/Orders"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading fallback component — Modern and Fast
@@ -44,6 +48,15 @@ const PageLoader = () => (
 );
 
 export default function App() {
+  const getMe = useAuthStore((state) => state.getMe);
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    if (token) {
+      getMe();
+    }
+  }, [getMe, token]);
+
   return (
     <Suspense fallback={<PageLoader />}>
       <ScrollToTop />
@@ -62,24 +75,117 @@ export default function App() {
           <Route path="/notifications" element={<Categories />} />
           <Route path="/collections" element={<Categories />} />
           <Route path="/stock-alerts" element={<Categories />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route 
+            path="/checkout" 
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            } 
+          />
         </Route>
 
         {/* Standalone Pages (No default layout) */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route 
+          path="/login" 
+          element={
+            <GuestRoute>
+              <Login />
+            </GuestRoute>
+          } 
+        />
+        <Route 
+          path="/register" 
+          element={
+            <GuestRoute>
+              <Register />
+            </GuestRoute>
+          } 
+        />
+        <Route 
+          path="/forgot-password" 
+          element={
+            <GuestRoute>
+              <ForgotPassword />
+            </GuestRoute>
+          } 
+        />
+        <Route 
+          path="/reset-password/:token" 
+          element={
+            <GuestRoute>
+              <ResetPassword />
+            </GuestRoute>
+          } 
+        />
+        <Route 
+          path="/order-confirmation" 
+          element={
+            <ProtectedRoute>
+              <OrderConfirmation />
+            </ProtectedRoute>
+          } 
+        />
 
         {/* Management/Dashboard Pages */}
-        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/addproduct" element={<AddProduct />} />
-        <Route path="/admin/products" element={<AdminProducts />} />
-        <Route path="/admin/users" element={<Users />} />
-        <Route path="/admin/orders" element={<Orders />} />
+        <Route 
+          path="/admin" 
+          element={
+            <AdminRoute>
+              <Navigate to="/admin/dashboard" replace />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <AdminRoute>
+              <Dashboard />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/addproduct" 
+          element={
+            <AdminRoute>
+              <AddProduct />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/products" 
+          element={
+            <AdminRoute>
+              <AdminProducts />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/users" 
+          element={
+            <AdminRoute>
+              <Users />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/orders" 
+          element={
+            <AdminRoute>
+              <Orders />
+            </AdminRoute>
+          } 
+        />
 
         {/* Unified User Dashboard Route */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route 
+          path="/dashboard" 
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<ProfileOverview />} />
           <Route path="orders" element={<MyOrders />} />
           <Route path="settings" element={<AccountSettings />} />
