@@ -3,14 +3,23 @@ import { useState } from 'react';
 export default function NewsletterSection() {
     const [email, setEmail] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (email.trim()) {
-            setSubmitted(true);
-            setEmail('');
-            setTimeout(() => setSubmitted(false), 3000);
+        const normalizedEmail = email.trim().toLowerCase();
+        const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
+
+        if (!validEmail) {
+            setError('Please enter a valid email address.');
+            setSubmitted(false);
+            return;
         }
+
+        setError('');
+        setSubmitted(true);
+        setEmail('');
+        setTimeout(() => setSubmitted(false), 3000);
     };
 
     return (
@@ -28,7 +37,10 @@ export default function NewsletterSection() {
                         type="email"
                         placeholder="Email Address"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            if (error) setError('');
+                        }}
                         required
                         className="w-full sm:flex-1 h-12 px-5 sm:px-7 rounded-full border border-gray-200 bg-white text-sm outline-none focus:ring-2 focus:ring-[#e60000]/20 focus:border-[#e60000] transition-all placeholder:text-gray-400"
                     />
@@ -39,6 +51,9 @@ export default function NewsletterSection() {
                         {submitted ? '✓ Sent!' : 'Subscribe'}
                     </button>
                 </form>
+                {error && (
+                    <p className="text-[11px] text-red-500 font-semibold">{error}</p>
+                )}
             </div>
         </section>
     );

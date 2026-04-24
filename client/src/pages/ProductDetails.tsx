@@ -14,6 +14,7 @@ const ProductDetails = () => {
   const getProductById = useProductStore((state) => state.getProductById);
   const products = useProductStore((state) => state.products);
   const getAllProducts = useProductStore((state) => state.getAllProducts);
+  const isDifferentProductLoaded = !!product && !!id && product.id !== id;
 
   // Scroll to top on id change
   useEffect(() => {
@@ -31,7 +32,7 @@ const ProductDetails = () => {
     }
   }, [products.length, getAllProducts]);
 
-  if (isLoading && !product) {
+  if ((isLoading && !product) || isDifferentProductLoaded) {
     return (
       <div className="bg-[#f5f5f5] min-h-screen px-4 sm:px-6 py-10">
         <div className="max-w-7xl mx-auto">

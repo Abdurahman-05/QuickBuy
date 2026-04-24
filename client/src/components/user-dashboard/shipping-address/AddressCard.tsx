@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Home } from "lucide-react";
 
 interface AddressCardProps {
@@ -79,6 +80,15 @@ const AddressCard: React.FC<AddressCardProps> = ({
                 <p className="text-[13px] text-gray-600 mt-1">
                     {phone}
                 </p>
+            </div>
+
+            <div className="mt-5 flex items-center justify-between gap-3">
+                <Link to="/checkout" className="text-[10px] text-gray-500 uppercase tracking-widest font-bold hover:text-gray-900 transition-colors">
+                    Deliver Here
+                </Link>
+                <Link to="/dashboard/settings" className="text-[10px] text-red-500 uppercase tracking-widest font-bold hover:text-red-600 transition-colors">
+                    Edit Profile
+                </Link>
             </div>
         </div>
     );

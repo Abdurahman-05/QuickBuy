@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
 
               {/* FLOATING PRODUCT CARD */}
               <Link
-                to="/products/wireless-headphones"
+                to="/products"
                 className="absolute -bottom-10 md:bottom-2 left-4 sm:left-10 md:-left-8 lg:-left-12 z-10 bg-white/70 backdrop-blur-md rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] p-5 md:p-6 w-full max-w-[200px] sm:max-w-[230px] border border-white/50 flex flex-col gap-2 group transition-all duration-700 hover:-translate-y-2 cursor-pointer"
               >
                 <h3 className="text-[13px] md:text-[15px] font-semibold text-black leading-tight tracking-tight">
@@ -98,7 +98,7 @@ const Hero: React.FC = () => {
         {/* MOBILE SHOP NOW BUTTON (CENTERED) */}
         <div className="mt-20 md:hidden flex justify-center w-full z-30">
           <Link
-            to="/product"
+            to="/products"
             className="bg-black text-white px-24 py-4 rounded-full font-bold flex items-center gap-4 shadow-xl active:scale-95 transition-all whitespace-nowrap"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

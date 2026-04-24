@@ -73,21 +73,34 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                     ${product.price.toFixed(2)}
                   </p>
 
-                  {/* Modern Hover Feature: "+" icon expands to "Add to cart" ONLY ON BUTTON HOVER */}
-                  <Link
-                    to="/cart"
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center bg-[#1b1b1b] text-white rounded-full transition-all duration-500 overflow-hidden w-8 hover:w-[160px] h-8 relative group/btn"
-                  >
-                    <div className="absolute inset-0 flex items-center justify-center w-8 shrink-0">
-                      <svg className="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                  <div className="flex items-center gap-2">
+                    <Link
+                      to="/dashboard/wishlist"
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-8 h-8 rounded-full border border-gray-300/80 text-gray-600 hover:text-red-500 hover:border-red-200 flex items-center justify-center transition-colors"
+                      aria-label="Add to wishlist"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
                       </svg>
-                    </div>
-                    <span className="ml-[36px] text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300">
-                      Add to cart
-                    </span>
-                  </Link>
+                    </Link>
+
+                    {/* Modern Hover Feature: "+" icon expands to "Add to cart" ONLY ON BUTTON HOVER */}
+                    <Link
+                      to="/cart"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center bg-[#1b1b1b] text-white rounded-full transition-all duration-500 overflow-hidden w-8 hover:w-[160px] h-8 relative group/btn"
+                    >
+                      <div className="absolute inset-0 flex items-center justify-center w-8 shrink-0">
+                        <svg className="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                        </svg>
+                      </div>
+                      <span className="ml-[36px] text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300">
+                        Add to cart
+                      </span>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

@@ -8,7 +8,7 @@ const ShippingAddresses = () => {
         <div className="relative px-2 sm:px-5 py-2 sm:py-4 min-h-screen">
             <ShippingHeader />
             <AddressGrid />
-            <Link to="/dashboard/settings"
+            <Link to="/checkout"
                 className="
                     fixed
                     bottom-8

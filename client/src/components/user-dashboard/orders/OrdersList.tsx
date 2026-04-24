@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import OrderCard from "./OrderCard";
 
 const OrdersList: React.FC = () => {
@@ -40,9 +41,9 @@ const OrdersList: React.FC = () => {
 
       {/* Load More */}
       <div className="mt-10 flex flex-col items-center gap-2">
-        <button className="text-[11px] font-bold text-gray-500 tracking-[0.15em] uppercase hover:text-gray-900 transition-colors">
+        <Link to="/dashboard/orders" className="text-[11px] font-bold text-gray-500 tracking-[0.15em] uppercase hover:text-gray-900 transition-colors">
           Load More History
-        </button>
+        </Link>
         <div className="w-8 h-[2px] bg-gray-300 rounded-full" />
       </div>
     </div>
