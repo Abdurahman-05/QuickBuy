@@ -14,7 +14,7 @@ export default function ProductFilterBar({
     sortOption, 
     setSortOption 
 }: ProductFilterBarProps) {
-    const categories = ["ALL", "LAPTOPS", "AUDIO", "WEARABLES"];
+    const categories = ["ALL", "LAPTOPS", "AUDIO", "WEARABLES", "HOME", "FOOTWEAR"];
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 

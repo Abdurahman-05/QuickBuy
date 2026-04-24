@@ -20,7 +20,7 @@ export const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists with this email" });
+      return res.status(400).json({ success: false, message: "User already exists with this email" });
     }
 
     // Create user in the database
@@ -53,11 +53,12 @@ export const registerUser = async (req, res) => {
         token: generateToken(user._id), // Send JWT to the client
       });
     } else {
-      res.status(400).json({ message: "Invalid user data provided" });
+      res.status(400).json({ success: false, message: "Invalid user data provided" });
     }
   } catch (error) {
     console.error("Registration Error Details:", error);
     res.status(500).json({ 
+      success: false,
       message: "Server Error during registration", 
       error: error.message,
       receivedDetails: {
@@ -101,11 +102,11 @@ export const authUser = async (req, res) => {
         token: generateToken(user._id),
       });
     } else {
-      res.status(401).json({ message: "Invalid email or password" });
+      res.status(401).json({ success: false, message: "Invalid email or password" });
     }
   } catch (error) {
     console.error("Login Error:", error.message);
-    res.status(500).json({ message: "Server Error during login" });
+    res.status(500).json({ success: false, message: "Server Error during login" });
   }
 };
 
@@ -138,11 +139,11 @@ export const getMe = async (req, res) => {
       });
     } else {
 // ... (middle)
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ success: false, message: "User not found" });
     }
   } catch (error) {
     console.error("GetMe Error:", error.message);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
@@ -156,7 +157,7 @@ export const forgotPassword = async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found with this email" });
+      return res.status(404).json({ success: false, message: "User not found with this email" });
     }
 
     // Get reset token
@@ -173,29 +174,51 @@ export const forgotPassword = async (req, res) => {
 
     await user.save({ validateBeforeSave: false });
 
-    // Create reset URL
-    const resetUrl = `${req.protocol}://${req.get("host")}/api/auth/resetpassword/${resetToken}`;
+    // Create reset URL (Point to Frontend)
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
-    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please click the link below to reset your password: \n\n ${resetUrl}`;
+
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e1e1e1; border-radius: 10px;">
+        <h2 style="color: #333 text-align: center;">QuickBuy Password Reset</h2>
+        <p style="color: #555; line-height: 1.6;">You requested a password reset for your QuickBuy account. Click the button below to set a new password:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" style="background-color: #000; color: #fff; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Reset Password</a>
+        </div>
+        <p style="color: #555; line-height: 1.6;">If you did not request this reset, please ignore this email.</p>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        <p style="color: #999; font-size: 12px;">This link will expire in 10 minutes.</p>
+      </div>
+    `;
 
     try {
       await sendEmail({
         email: user.email,
-        subject: "Password Reset Token",
+        subject: "QuickBuy - Password Reset",
         message,
+        html
       });
 
-      res.status(200).json({ success: true, data: "Email sent" });
+      res.status(200).json({ success: true, message: "Reset email sent successfully" });
     } catch (error) {
-      console.error("Email Error:", error.message);
+      console.error("[Auth Controller] Email Error:", error.message);
+      
+      // Rollback database changes
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
       await user.save({ validateBeforeSave: false });
-      return res.status(500).json({ message: "Email could not be sent" });
+      
+      return res.status(500).json({ 
+        success: false, 
+        message: "Email delivery failed", 
+        error: error.message // Propagate SMTP error for debugging
+      });
     }
   } catch (error) {
-    console.error("Forgot Password Error:", error.message);
-    res.status(500).json({ message: "Server Error" });
+    console.error("[Auth Controller] Forgot Password Error:", error.message);
+    res.status(500).json({ success: false, message: "Server Error", error: error.message });
   }
 };
 
@@ -218,7 +241,7 @@ export const resetPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(400).json({ success: false, message: "Invalid or expired token" });
     }
 
     // Set new password
@@ -248,6 +271,6 @@ export const resetPassword = async (req, res) => {
     });
   } catch (error) {
     console.error("Reset Password Error:", error.message);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };

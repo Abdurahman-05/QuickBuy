@@ -1,6 +1,6 @@
 import React from "react";
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -9,39 +9,61 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({
-  placeholder = "Search orders...",
+  placeholder = "Search items...",
   className = "",
   onChange,
 }) => {
+  const navigate = useNavigate();
+  const [query, setQuery] = React.useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
-    <div className={`relative w-full ${className}`}>
+    <form 
+      onSubmit={handleSearch}
+      className={`relative w-full group ${className}`}
+    >
 
       {/* Icon */}
       <Search
         size={16}
-        className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
+        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors z-10 pointer-events-none"
       />
 
       {/* Input */}
-      <Input
+      <input
         type="text"
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          onChange?.(e);
+        }}
         placeholder={placeholder}
-        onChange={onChange}
         className="
-          h-10
-          pl-9 pr-4
-          text-sm
-          bg-white
-          border border-gray-200
-          rounded-xl
+          w-full
+          h-11
+          pl-11 pr-4
+          text-[13px]
+          font-medium
+          bg-gray-100/50
+          border border-transparent
+          rounded-2xl
           placeholder:text-gray-400
-          focus-visible:ring-1
-          focus-visible:ring-gray-300
-          focus-visible:border-gray-300
+          focus:outline-none
+          focus:ring-4
+          focus:ring-red-600/5
+          focus:border-red-600/30
+          focus:bg-white
           transition-all
+          duration-300
         "
       />
-    </div>
+    </form>
   );
 };
 

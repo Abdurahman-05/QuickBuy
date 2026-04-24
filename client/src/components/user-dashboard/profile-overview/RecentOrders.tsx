@@ -81,15 +81,20 @@ const RecentOrders: React.FC = () => {
         {orders.map((order) => (
           <div
             key={order.id}
-            className="bg-white border border-gray-200/60 rounded-xl p-4 flex items-center justify-between"
+            className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center justify-between shadow-sm active:scale-[0.98] transition-transform"
           >
-            <div className="space-y-1.5">
-              <p className="text-sm font-semibold text-gray-900">{order.id}</p>
-              <p className="text-xs text-gray-400">{order.date}</p>
-              <StatusBadge status={order.status} />
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">{order.date}</span>
+              <p className="text-sm font-black text-gray-900">{order.id}</p>
+              <div className="flex">
+                <StatusBadge status={order.status} />
+              </div>
             </div>
 
-            <p className="text-sm font-bold text-gray-900">{order.total}</p>
+            <div className="text-right">
+                <p className="text-sm font-black text-gray-900 mb-1">{order.total}</p>
+                <Link to="/dashboard/orders" className="text-[10px] font-bold text-red-600 uppercase underline underline-offset-4">Details</Link>
+            </div>
           </div>
         ))}
       </div>

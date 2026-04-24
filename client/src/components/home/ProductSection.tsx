@@ -21,13 +21,13 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
           <span className="transform transition-transform group-hover:translate-x-1">→</span>
         </Link>
       </div>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         {products.map((product) => (
-          <div 
+          <div
             key={product.id}
             onClick={() => navigate(`/products/${product.id}`)}
-            className="group relative bg-[#efefef] rounded-lg p-5 flex flex-col hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-2 border-transparent hover:border-white/50 cursor-pointer"
+            className="group relative bg-[#efefef] rounded-lg p-5 flex flex-col hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-white/40 cursor-pointer"
           >
             {/* Rectangular Yellow Recommended Badge */}
             {product.recommended && (
@@ -40,19 +40,19 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
 
             {/* Product Image Area */}
             <div className="w-full aspect-square mb-4 flex items-center justify-center relative bg-white/20 rounded-md overflow-hidden">
-              <img 
-                src={product.image} 
-                alt={product.name} 
-                className="max-h-[85%] max-w-[85%] object-contain mix-blend-multiply transform group-hover:scale-110 transition-transform duration-700 ease-out"
+              <img
+                src={product.image}
+                alt={product.name}
+                className="max-h-[85%] max-w-[85%] object-contain mix-blend-multiply group-hover:scale-[1.03] transition-transform duration-500 ease-out"
               />
             </div>
-            
+
             {/* Content Bottom */}
             <div className="flex-1 flex flex-col">
               <h3 className="text-[12px] font-bold text-gray-900 line-clamp-2 h-9 mb-2 leading-tight tracking-tight">
                 {product.name}
               </h3>
-              
+
               <div className="mt-auto space-y-2.5">
                 {/* Rating & Stock */}
                 <div className="flex items-center gap-1.5">
@@ -67,14 +67,14 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                     {product.stockInfo}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <p className="text-xl font-bold text-gray-900 tracking-tighter">
                     ${product.price.toFixed(2)}
                   </p>
-                  
+
                   {/* Modern Hover Feature: "+" icon expands to "Add to cart" ONLY ON BUTTON HOVER */}
-                  <Link 
+                  <Link
                     to="/cart"
                     onClick={(e) => e.stopPropagation()}
                     className="flex items-center bg-[#1b1b1b] text-white rounded-full transition-all duration-500 overflow-hidden w-8 hover:w-[160px] h-8 relative group/btn"

@@ -15,20 +15,20 @@ export default function OrdersNavbar() {
                 </h1>
 
                 <form
-                    className="relative w-full sm:w-auto"
+                    className="relative w-full sm:w-auto group"
                     onSubmit={(e) => {
                         e.preventDefault();
                         const formData = new FormData(e.currentTarget);
                         const searchQuery = formData.get("q");
-                        if (searchQuery) window.location.href = `/search?q=${encodeURIComponent(searchQuery.toString())}`;
+                        if (searchQuery) window.location.assign(`/search?q=${encodeURIComponent(searchQuery.toString())}`);
                     }}
                 >
-                    <Search className="absolute left-3 top-2.5 text-gray-400" size={16} />
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-red-500 transition-colors z-10" size={16} />
 
                     <Input
                         name="q"
                         placeholder="Search orders..."
-                        className="pl-10 w-full sm:w-64 rounded-full bg-gray-100 border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="pl-10 w-full sm:w-64 h-11 rounded-2xl bg-gray-100/60 border-transparent focus:bg-white focus:ring-4 focus:ring-red-500/5 focus:border-red-500/30 transition-all text-sm font-medium"
                     />
                 </form>
 

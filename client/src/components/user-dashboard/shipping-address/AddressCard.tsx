@@ -20,33 +20,34 @@ const AddressCard: React.FC<AddressCardProps> = ({
         <div
             className="
         relative
-        bg-gray-200/30
+        bg-gray-100/40
+        border border-gray-100
         rounded-2xl
-        p-7
+        p-5 sm:p-7
         shadow-sm
         hover:shadow-md
-        transition
-        min-h-[230px]
+        transition-all
+        min-h-[200px] sm:min-h-[230px]
       "
         >
             {/* PRIMARY BADGE */}
             <div className="h-6">
                 {isPrimary && (
-                    <span className="bg-red-500 text-white text-[10px] px-3 py-1 rounded-full font-semibold tracking-wide">
-                        PRIMARY DELIVERY
+                    <span className="bg-gray-900 text-white text-[9px] px-2.5 py-1 rounded-full font-black tracking-widest uppercase">
+                        PRIMARY INFO
                     </span>
                 )}
             </div>
 
             {/* ICON */}
             {isPrimary && (
-                <div className="absolute bottom-2 right-3 text-gray-300">
-                    <Home className="w-20 h-20 opacity-70" />
+                <div className="absolute top-6 right-6 text-gray-200 pointer-events-none">
+                    <Home className="w-12 h-12 opacity-50" />
                 </div>
             )}
 
             {/* TITLE */}
-            <h3 className="text-[25px] font-bold text-gray-900 mt-2">
+            <h3 className="text-xl sm:text-[25px] font-black text-gray-900 mt-2 sm:mt-3 tracking-tight">
                 {title}
             </h3>
 
