@@ -22,6 +22,11 @@ export default function Navbar() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const profileFallback = user
+    ? `https://ui-avatars.com/api/?name=${encodeURIComponent(
+        `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || "User"
+      )}&background=e5e7eb&color=111827`
+    : "https://ui-avatars.com/api/?name=User&background=e5e7eb&color=111827";
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,7 +113,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-3 border-l pl-4 border-gray-100">
                   <Link to="/dashboard" className="flex items-center gap-2 group">
                     <img 
-                      src={user?.profileImage || "https://i.pravatar.cc/40?img=1"} 
+                      src={user?.profileImage || profileFallback}
                       alt="Profile" 
                       className="w-8 h-8 rounded-full object-cover border border-gray-100 group-hover:border-red-500 transition-colors"
                     />

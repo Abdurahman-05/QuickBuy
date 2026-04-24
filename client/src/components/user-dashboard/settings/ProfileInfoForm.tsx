@@ -33,6 +33,16 @@ const ProfileInfoForm: React.FC = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!successMessage) return;
+
+    const timeout = setTimeout(() => {
+      clearSuccessMessage();
+    }, 3000);
+
+    return () => clearTimeout(timeout);
+  }, [successMessage, clearSuccessMessage]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
