@@ -57,6 +57,12 @@ const ProfileInfoForm: React.FC = () => {
       setPreviewUrl(URL.createObjectURL(file));
       if (error) clearError();
       if (successMessage) clearSuccessMessage();
+
+      const data = new FormData();
+      data.append("profileImage", file);
+      updateProfile(data).catch(() => {
+        // Error handled in store
+      });
     }
   };
 
