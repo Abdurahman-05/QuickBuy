@@ -18,10 +18,19 @@ export default function UsersTable() {
     const getAllUsers = useAuthStore((state) => state.getAllUsers);
     const isLoading = useAuthStore((state) => state.isLoading);
     const error = useAuthStore((state) => state.error);
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const pageSize = 10;
 
     useEffect(() => {
         getAllUsers();
     }, [getAllUsers]);
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [users.length]);
+
+    const totalPages = Math.max(1, Math.ceil(users.length / pageSize));
+    const safePage = Math.min(currentPage, totalPages);
+    const paginatedUsers = users.slice((safePage - 1) * pageSize, safePage * pageSize);
 
     return (
         <div className="space-y-4 sm:space-y-5 w-full min-w-0">
@@ -112,8 +121,8 @@ export default function UsersTable() {
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                ) : users.length > 0 ? (
-                                    users.map((user) => (
+                                ) : paginatedUsers.length > 0 ? (
+                                    paginatedUsers.map((user) => (
                                         <UserRow key={user._id} user={user} />
                                     ))
                                 ) : (
@@ -140,14 +149,18 @@ export default function UsersTable() {
             ">
 
                 <span>
-                    Showing {users.length} of {users.length} users
+                    Showing {(safePage - 1) * pageSize + (users.length ? 1 : 0)}–{Math.min(safePage * pageSize, users.length)} of {users.length} users
                 </span>
 
                 <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-5 w-full sm:w-auto">
 
-                    <span className="text-gray-400 cursor-pointer">
+                    <button
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={safePage === 1}
+                        className="text-gray-400 cursor-pointer disabled:opacity-40"
+                    >
                         Previous
-                    </span>
+                    </button>
 
                     <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-black" />
@@ -155,9 +168,13 @@ export default function UsersTable() {
                         <span className="w-2 h-2 rounded-full bg-gray-300" />
                     </div>
 
-                    <span className="text-gray-700 font-medium cursor-pointer hover:text-black">
+                    <button
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={safePage === totalPages}
+                        className="text-gray-700 font-medium cursor-pointer hover:text-black disabled:opacity-40"
+                    >
                         Next Page
-                    </span>
+                    </button>
 
                 </div>
             </div>

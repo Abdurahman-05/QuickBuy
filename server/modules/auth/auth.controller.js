@@ -3,6 +3,35 @@ import { generateToken } from "../../utils/authUtils.js";
 import crypto from "crypto";
 import { sendEmail } from "../../config/email.js";
 
+const getUploadedImageUrl = (file) => {
+  if (!file) return null;
+  if (typeof file.path === "string" && file.path.trim()) return file.path;
+  if (typeof file.secure_url === "string" && file.secure_url.trim()) return file.secure_url;
+  if (typeof file.url === "string" && file.url.trim()) return file.url;
+  if (file.path && typeof file.path === "object") {
+    if (typeof file.path.secure_url === "string" && file.path.secure_url.trim()) {
+      return file.path.secure_url;
+    }
+    if (typeof file.path.url === "string" && file.path.url.trim()) {
+      return file.path.url;
+    }
+  }
+  return null;
+};
+
+export const uploadRegistrationProfileImage = async (req, res) => {
+  try {
+    const uploadedImageUrl = getUploadedImageUrl(req.file);
+    if (!uploadedImageUrl) {
+      return res.status(400).json({ message: "Image upload failed. Please try another image." });
+    }
+    return res.status(200).json({ profileImage: uploadedImageUrl });
+  } catch (error) {
+    console.error("Registration Profile Upload Error:", error.message);
+    return res.status(500).json({ message: "Server Error during image upload" });
+  }
+};
+
 /**
  * @desc    Register a new user
  * @route   POST /api/auth/register

@@ -1,20 +1,27 @@
 import { Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
-import { useEffect } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useProductStore } from "../../store/useProductStore"
+import type { Product } from "../../types/product"
 
-export default function ProductsTable() {
-    const products = useProductStore((state) => state.products)
+interface ProductsTableProps {
+    products: Product[];
+}
+
+export default function ProductsTable({ products }: ProductsTableProps) {
     const isLoading = useProductStore((state) => state.isLoading)
     const error = useProductStore((state) => state.error)
     const successMessage = useProductStore((state) => state.successMessage)
-    const getAllProducts = useProductStore((state) => state.getAllProducts)
+    const clearSuccessMessage = useProductStore((state) => state.clearSuccessMessage)
     const updateProduct = useProductStore((state) => state.updateProduct)
     const deleteProduct = useProductStore((state) => state.deleteProduct)
+    const [editingProduct, setEditingProduct] = useState<{ id: string; name: string; price: string } | null>(null)
 
     useEffect(() => {
-        getAllProducts()
-    }, [getAllProducts])
+        if (!successMessage) return
+        const timer = setTimeout(() => clearSuccessMessage(), 2800)
+        return () => clearTimeout(timer)
+    }, [successMessage, clearSuccessMessage])
 
     const handleDelete = async (id: string) => {
         try {
@@ -24,22 +31,19 @@ export default function ProductsTable() {
         }
     }
 
-    const handleQuickUpdate = async (id: string, currentName: string, currentPrice: number) => {
-        const name = window.prompt("Update product name", currentName)
-        if (name === null || name.trim() === "") return
-
-        const priceInput = window.prompt("Update product price", String(currentPrice))
-        if (priceInput === null || priceInput.trim() === "") return
-
-        const price = Number(priceInput)
-        if (Number.isNaN(price)) return
-
+    const handleQuickUpdate = async () => {
+        if (!editingProduct) return
+        const price = Number(editingProduct.price)
+        if (!editingProduct.name.trim() || Number.isNaN(price)) return
         try {
-            await updateProduct(id, { name: name.trim(), price })
+            await updateProduct(editingProduct.id, { name: editingProduct.name.trim(), price })
+            setEditingProduct(null)
         } catch {
             // Error is handled in the product store
         }
     }
+
+    const hasProducts = useMemo(() => products.length > 0, [products.length])
 
     return (
         <div className="w-full px-4 sm:px-6 mt-6">
@@ -56,8 +60,11 @@ export default function ProductsTable() {
                     </div>
                 )}
                 {successMessage && (
-                    <div className="pb-4 text-[11px] font-semibold text-green-600 uppercase tracking-wider">
-                        {successMessage}
+                    <div className="fixed inset-0 z-[90] flex items-start justify-center pt-20 pointer-events-none">
+                        <div className="bg-white border border-emerald-200 shadow-xl rounded-2xl px-5 py-4">
+                            <p className="text-[11px] font-black text-emerald-600 uppercase tracking-wider">Success</p>
+                            <p className="text-sm text-emerald-700 mt-1">{successMessage}</p>
+                        </div>
                     </div>
                 )}
 
@@ -137,7 +144,7 @@ export default function ProductsTable() {
                                         <div className="flex justify-end gap-2 sm:gap-3">
 
                                             <button
-                                                onClick={() => handleQuickUpdate(p.id, p.name, p.price)}
+                                                onClick={() => setEditingProduct({ id: p.id, name: p.name, price: String(p.price) })}
                                                 disabled={isLoading}
                                                 className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-50"
                                             >
@@ -157,6 +164,13 @@ export default function ProductsTable() {
 
                                 </tr>
                             ))}
+                            {!isLoading && !hasProducts && (
+                                <tr>
+                                    <td colSpan={6} className="py-10 text-center text-gray-400 font-semibold text-sm">
+                                        No products match your current filter.
+                                    </td>
+                                </tr>
+                            )}
 
                         </tbody>
 
@@ -165,6 +179,36 @@ export default function ProductsTable() {
                 </div>
 
             </div>
+            {editingProduct && (
+                <div className="fixed inset-0 z-[95] bg-black/35 backdrop-blur-[1px] flex items-center justify-center p-4">
+                    <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 sm:p-6">
+                        <p className="text-[11px] font-black uppercase tracking-widest text-gray-400 mb-2">Update Product</p>
+                        <h3 className="text-xl font-bold text-gray-900 mb-5">Quick Edit</h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-xs text-gray-500">Product name</label>
+                                <input
+                                    value={editingProduct.name}
+                                    onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                                    className="mt-1 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-black/10"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-xs text-gray-500">Price</label>
+                                <input
+                                    value={editingProduct.price}
+                                    onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
+                                    className="mt-1 w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-black/10"
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-6 flex gap-3 justify-end">
+                            <button onClick={() => setEditingProduct(null)} className="px-4 py-2.5 rounded-full border border-gray-200 text-sm hover:bg-gray-50">Cancel</button>
+                            <button onClick={handleQuickUpdate} className="px-5 py-2.5 rounded-full bg-black text-white text-sm font-semibold hover:bg-gray-800">Save</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

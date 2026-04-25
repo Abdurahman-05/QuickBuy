@@ -63,7 +63,7 @@ export default function ProductsNavbar() {
                 {/* ICONS */}
                 <div className="flex items-center gap-2 sm:gap-4 text-gray-500">
 
-                    <Link to="/dashboard/settings" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Notifications">
+                    <Link to="/notifications" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Notifications">
                         <Bell size={16} className="sm:w-[18px] sm:h-[18px]" />
                     </Link>
 

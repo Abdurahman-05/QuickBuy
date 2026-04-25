@@ -1,13 +1,16 @@
 import { Card } from "../../ui/card";
 import statsImage from "@/assets/statsimg.svg";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 export default function TotalUsersCard() {
     const [count, setCount] = useState(0);
+    const users = useAuthStore((state) => state.users);
+    const total = users.length;
 
     useEffect(() => {
         let start = 0;
-        const end = 12482;
+        const end = total;
         const duration = 1200;
         const step = end / (duration / 16);
 
@@ -21,7 +24,7 @@ export default function TotalUsersCard() {
         }, 16);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [total]);
 
     return (
         <Card className="relative overflow-hidden rounded-2xl border bg-gray-50 shadow-sm w-full">
@@ -41,7 +44,7 @@ export default function TotalUsersCard() {
 
                     <div className="flex items-center gap-2 mt-3 text-red-500 text-sm font-medium">
                         <span className="text-base">↗</span>
-                        <span>+14% this month</span>
+                        <span>{total > 0 ? "Live from backend" : "No users yet"}</span>
                     </div>
                 </div>
 

@@ -2,8 +2,10 @@ import { TableCell, TableRow } from "../../ui/table";
 import { Avatar, AvatarImage } from "../../ui/avatar";
 import { Badge } from "../../ui/badge";
 import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
 
 export default function UserRow({ user }: any) {
+    const [menuOpen, setMenuOpen] = useState(false);
     // Format date beautifully
     const joinedDate = user.createdAt 
         ? new Date(user.createdAt).toLocaleDateString('en-US', {
@@ -67,12 +69,38 @@ export default function UserRow({ user }: any) {
             </TableCell>
 
             {/* ACTIONS */}
-            <TableCell className="text-right pr-3 sm:pr-6">
+            <TableCell className="text-right pr-3 sm:pr-6 relative">
                 <div className="flex justify-end">
-                    <button className="p-1.5 sm:p-2 rounded-full hover:bg-black/5 transition">
+                    <button onClick={() => setMenuOpen((o) => !o)} className="p-1.5 sm:p-2 rounded-full hover:bg-black/5 transition">
                         <MoreHorizontal className="h-4 w-4 text-gray-500" />
                     </button>
                 </div>
+                {menuOpen && (
+                    <div className="absolute right-2 top-10 z-20 w-40 bg-white border border-gray-200 rounded-xl shadow-lg text-left">
+                        <button
+                            onClick={() => {
+                                navigator.clipboard.writeText(user.email);
+                                setMenuOpen(false);
+                            }}
+                            className="w-full px-3 py-2 text-xs hover:bg-gray-50"
+                        >
+                            Copy email
+                        </button>
+                        <a
+                            href={`mailto:${user.email}`}
+                            className="block w-full px-3 py-2 text-xs hover:bg-gray-50"
+                            onClick={() => setMenuOpen(false)}
+                        >
+                            Send email
+                        </a>
+                        <button
+                            onClick={() => setMenuOpen(false)}
+                            className="w-full px-3 py-2 text-xs text-red-500 hover:bg-red-50"
+                        >
+                            Close
+                        </button>
+                    </div>
+                )}
             </TableCell>
 
         </TableRow>

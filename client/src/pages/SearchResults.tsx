@@ -14,6 +14,10 @@ const SearchResults: React.FC = () => {
   const query = searchParams.get("q") || "";
   const [sortParam, setSortParam] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [minRating, setMinRating] = useState<number | null>(null);
+  const [finish, setFinish] = useState<string | null>(null);
   const products = useProductStore((state) => state.products);
   const isLoading = useProductStore((state) => state.isLoading);
   const error = useProductStore((state) => state.error);
@@ -24,8 +28,28 @@ const SearchResults: React.FC = () => {
     setCurrentPage(1);
   }, [getAllProducts, query]);
 
-  const sortedProducts = useMemo(() => {
+  const filteredProducts = useMemo(() => {
     const result = [...products];
+    const byPrice = selectedPriceRanges.length === 0
+      ? result
+      : result.filter((p) => selectedPriceRanges.some((range) => {
+        if (range === "0-100") return p.price >= 0 && p.price <= 100;
+        if (range === "100-500") return p.price > 100 && p.price <= 500;
+        if (range === "500+") return p.price > 500;
+        return false;
+      }));
+    const byBrand = selectedBrands.length === 0
+      ? byPrice
+      : byPrice.filter((p) => selectedBrands.some((b) => p.name.toLowerCase().includes(b.toLowerCase())));
+    const byRating = minRating ? byBrand.filter((p) => p.rating >= minRating) : byBrand;
+    const byFinish = finish
+      ? byRating.filter((p) => `${p.name} ${p.description}`.toLowerCase().includes(finish.toLowerCase()))
+      : byRating;
+    return byFinish;
+  }, [products, selectedPriceRanges, selectedBrands, minRating, finish]);
+
+  const sortedProducts = useMemo(() => {
+    const result = [...filteredProducts];
     switch (sortParam) {
       case "price_asc":
         result.sort((a, b) => a.price - b.price);
@@ -37,7 +61,12 @@ const SearchResults: React.FC = () => {
         break;
     }
     return result;
-  }, [products, sortParam]);
+  }, [filteredProducts, sortParam]);
+
+  const brandOptions = useMemo(
+    () => Array.from(new Set(products.map((p) => (p.name.split(" ")[0] || "").trim()).filter(Boolean))).slice(0, 8),
+    [products]
+  );
 
   const totalPages = Math.ceil(sortedProducts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -54,7 +83,21 @@ const SearchResults: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-16 mt-16">
 
           {/* Sidebar */}
-          <SearchSidebar />
+          <SearchSidebar
+            selectedPriceRanges={selectedPriceRanges}
+            selectedBrands={selectedBrands}
+            minRating={minRating}
+            finish={finish}
+            brandOptions={brandOptions}
+            onTogglePriceRange={(range) =>
+              setSelectedPriceRanges((prev) => prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range])
+            }
+            onToggleBrand={(brand) =>
+              setSelectedBrands((prev) => prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand])
+            }
+            onToggleRating={() => setMinRating((prev) => (prev ? null : 4.5))}
+            onSetFinish={setFinish}
+          />
 
           {/* Right Content Area */}
           <div className="flex-1 w-full">

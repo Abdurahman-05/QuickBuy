@@ -1,6 +1,7 @@
-import { UploadCloud } from "lucide-react"
-import { useState, type FormEvent, type MouseEvent } from "react"
+import { CheckCircle2, ImageUp, UploadCloud, XCircle } from "lucide-react"
+import { useEffect, useState, type FormEvent, type MouseEvent } from "react"
 import { useProductStore } from "../../../store/useProductStore"
+import api from "../../../lib/axios"
 
 export default function ProductForm() {
     const [open, setOpen] = useState(false)
@@ -10,6 +11,13 @@ export default function ProductForm() {
     const [description, setDescription] = useState("")
     const [stock, setStock] = useState("")
     const [imageUrl, setImageUrl] = useState("")
+    const [isUploadingImage, setIsUploadingImage] = useState(false)
+    const [isDraggingImage, setIsDraggingImage] = useState(false)
+    const [uploadedImageName, setUploadedImageName] = useState("")
+    const [uploadCardMessage, setUploadCardMessage] = useState<{
+        type: "success" | "error";
+        text: string;
+    } | null>(null)
     const options = ["Electronics", "Clothing", "Accessories"]
     const createProduct = useProductStore((state) => state.createProduct)
     const isLoading = useProductStore((state) => state.isLoading)
@@ -17,6 +25,18 @@ export default function ProductForm() {
     const successMessage = useProductStore((state) => state.successMessage)
     const clearError = useProductStore((state) => state.clearError)
     const clearSuccessMessage = useProductStore((state) => state.clearSuccessMessage)
+
+    useEffect(() => {
+        if (!successMessage) return
+        const timer = setTimeout(() => clearSuccessMessage(), 3000)
+        return () => clearTimeout(timer)
+    }, [successMessage, clearSuccessMessage])
+
+    useEffect(() => {
+        if (!uploadCardMessage) return
+        const timer = setTimeout(() => setUploadCardMessage(null), 3200)
+        return () => clearTimeout(timer)
+    }, [uploadCardMessage])
 
     const handleSubmit = async (e?: FormEvent | MouseEvent) => {
         e?.preventDefault()
@@ -43,8 +63,36 @@ export default function ProductForm() {
             setStock("")
             setSelected("Select Category")
             setImageUrl("")
+            setUploadedImageName("")
         } catch {
             // Errors are already handled in store.
+        }
+    }
+
+    const uploadProductImage = async (file?: File) => {
+        if (!file) return
+        if (!file.type.startsWith("image/")) return
+        setIsUploadingImage(true)
+        clearError()
+        clearSuccessMessage()
+        try {
+            const payload = new FormData()
+            payload.append("image", file)
+            const response = await api.post("products/upload-image", payload)
+            const uploadedUrl = response.data?.imageUrl || ""
+            setImageUrl(uploadedUrl)
+            setUploadedImageName(file.name)
+            setUploadCardMessage({
+                type: "success",
+                text: "Image uploaded successfully and linked to product."
+            })
+        } catch {
+            setUploadCardMessage({
+                type: "error",
+                text: "Image upload failed. Try again with a different file."
+            })
+        } finally {
+            setIsUploadingImage(false)
         }
     }
 
@@ -68,6 +116,29 @@ export default function ProductForm() {
                 )}
                 {successMessage && (
                     <div className="mb-5 text-[11px] font-semibold text-green-600 uppercase tracking-wider">{successMessage}</div>
+                )}
+                {uploadCardMessage && (
+                    <div
+                        className={`mb-5 flex items-start gap-3 rounded-2xl border px-4 py-3 shadow-sm ${
+                            uploadCardMessage.type === "success"
+                                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                                : "bg-red-50 border-red-200 text-red-700"
+                        }`}
+                    >
+                        <div className="mt-0.5">
+                            {uploadCardMessage.type === "success" ? (
+                                <CheckCircle2 className="w-5 h-5" />
+                            ) : (
+                                <XCircle className="w-5 h-5" />
+                            )}
+                        </div>
+                        <div>
+                            <p className="text-xs font-black uppercase tracking-wider">
+                                {uploadCardMessage.type === "success" ? "Upload Complete" : "Upload Error"}
+                            </p>
+                            <p className="text-sm mt-1">{uploadCardMessage.text}</p>
+                        </div>
+                    </div>
                 )}
 
                 {/* FORM GRID */}
@@ -200,19 +271,45 @@ export default function ProductForm() {
                                 Product Visuals
                             </label>
 
-                            <div className="mt-4 sm:mt-5 border-2 border-dashed border-gray-200 rounded-xl sm:rounded-2xl h-44 sm:h-56 lg:h-64 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition p-4">
+                            <label
+                                onDragOver={(e) => {
+                                    e.preventDefault()
+                                    setIsDraggingImage(true)
+                                }}
+                                onDragLeave={() => setIsDraggingImage(false)}
+                                onDrop={async (e) => {
+                                    e.preventDefault()
+                                    setIsDraggingImage(false)
+                                    await uploadProductImage(e.dataTransfer.files?.[0])
+                                }}
+                                className={`mt-4 sm:mt-5 border-2 border-dashed rounded-xl sm:rounded-2xl h-44 sm:h-56 lg:h-64 flex flex-col items-center justify-center text-center transition p-4 cursor-pointer ${
+                                    isDraggingImage ? "border-black bg-gray-100" : "border-gray-200 hover:bg-gray-100"
+                                }`}
+                            >
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={async (e) => uploadProductImage(e.target.files?.[0])}
+                                />
                                 <div className="bg-white p-3 sm:p-4 rounded-full shadow-sm mb-3 sm:mb-4">
                                     <UploadCloud className="text-gray-400 w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
-                                <p className="text-sm font-medium text-gray-700 mb-3">Product Image URL</p>
-                                <input
-                                    type="url"
-                                    placeholder="https://example.com/product-image.jpg"
-                                    value={imageUrl}
-                                    onChange={(e) => setImageUrl(e.target.value)}
-                                    className="w-full max-w-md bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
-                                />
-                            </div>
+                                <p className="text-sm font-medium text-gray-700 mb-1">
+                                    {isUploadingImage ? "Uploading image..." : "Drag & drop product image"}
+                                </p>
+                                <p className="text-xs text-gray-400 mb-3">
+                                    {isUploadingImage ? "Please wait" : "or click to browse image file"}
+                                </p>
+                                {imageUrl && (
+                                    <div className="mt-1 flex items-center gap-2 rounded-full bg-white px-3 py-1.5 border border-gray-200">
+                                        <ImageUp className="w-3.5 h-3.5 text-green-600" />
+                                        <p className="text-[11px] text-green-700 break-all px-1">
+                                            {uploadedImageName || "Image selected"}
+                                        </p>
+                                    </div>
+                                )}
+                            </label>
                         </div>
                     </div>
                 </form>
@@ -227,7 +324,7 @@ export default function ProductForm() {
                         <button
                             type="submit"
                             onClick={handleSubmit}
-                            disabled={isLoading}
+                            disabled={isLoading || isUploadingImage}
                             className="
             bg-black text-white
             px-10 sm:px-12

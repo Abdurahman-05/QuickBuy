@@ -11,7 +11,10 @@ export const connectDB = async () => {
     console.log("MongoDB Connected Successfully");
   } catch (error) {
     console.error("Database connection failed:", error.message);
-    process.exit(1);
+    if (process.env.NODE_ENV === "production") {
+      process.exit(1);
+    }
+    console.warn("Continuing without database connection in non-production mode.");
   }
 };
 

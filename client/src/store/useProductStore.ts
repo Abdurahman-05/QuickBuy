@@ -120,7 +120,13 @@ export const useProductStore = create<ProductState>()((set) => ({
   getAllProducts: async (params) => {
     set((state) => ({ ...state, isLoading: true, error: null }));
     try {
-      const response = await api.get("products", { params });
+      const response = await api.get("products", {
+        params: { ...params, _t: Date.now() },
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      });
       const incoming = Array.isArray(response.data?.products)
         ? response.data.products
         : Array.isArray(response.data)
@@ -143,7 +149,13 @@ export const useProductStore = create<ProductState>()((set) => ({
   getProductById: async (id) => {
     set((state) => ({ ...state, isLoading: true, error: null }));
     try {
-      const response = await api.get(`products/${id}`);
+      const response = await api.get(`products/${id}`, {
+        params: { _t: Date.now() },
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      });
       const incoming = response.data?.product ?? response.data;
       let reviews: any[] = [];
       try {

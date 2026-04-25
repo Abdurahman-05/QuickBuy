@@ -155,6 +155,26 @@ export default function Register() {
               </div>
               <input name="email" type="email" placeholder="Email Address" className="w-full p-4 bg-gray-100 rounded-lg outline-none focus:bg-gray-200 transition-colors" value={formData.email} onChange={handleChange} required />
               <input name="phone" placeholder="Phone Number" className="w-full p-4 bg-gray-100 rounded-lg outline-none focus:bg-gray-200 transition-colors" value={formData.phone} onChange={handleChange} />
+              <button 
+                type="button" 
+                onClick={() => setStep(2)} 
+                disabled={!isStep1Valid}
+                className="w-full bg-black text-white py-4 rounded-lg font-bold hover:bg-gray-800 transition disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                NEXT →
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 space-y-4 shadow-[0_10px_25px_-20px_rgba(0,0,0,0.45)]">
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-gray-400">Security & profile</p>
+                  <Sparkles className="w-4 h-4 text-gray-400" />
+                </div>
+                <p className="text-sm text-gray-600">Set your password and add a profile image to personalize your account.</p>
+              </div>
+              <input name="password" type="password" placeholder="Password (min 6 chars)" className="w-full p-4 bg-gray-100 rounded-lg outline-none focus:bg-gray-200 transition-colors" value={formData.password} onChange={handleChange} required />
+              <input name="confirmPassword" type="password" placeholder="Confirm Password" className="w-full p-4 bg-gray-100 rounded-lg outline-none focus:bg-gray-200 transition-colors" value={formData.confirmPassword} onChange={handleChange} required />
               <label
                 onDragOver={(e) => {
                   e.preventDefault();
@@ -241,21 +261,8 @@ export default function Register() {
                 </div>
               </label>
               <button 
-                type="button" 
-                onClick={() => setStep(2)} 
-                disabled={!isStep1Valid || isUploadingImage}
-                className="w-full bg-black text-white py-4 rounded-lg font-bold hover:bg-gray-800 transition disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                NEXT →
-              </button>
-            </>
-          ) : (
-            <>
-              <input name="password" type="password" placeholder="Password (min 6 chars)" className="w-full p-4 bg-gray-100 rounded-lg outline-none focus:bg-gray-200 transition-colors" value={formData.password} onChange={handleChange} required />
-              <input name="confirmPassword" type="password" placeholder="Confirm Password" className="w-full p-4 bg-gray-100 rounded-lg outline-none focus:bg-gray-200 transition-colors" value={formData.confirmPassword} onChange={handleChange} required />
-              <button 
                 type="submit" 
-                disabled={isLoading || !isStep2Valid} 
+                disabled={isLoading || !isStep2Valid || isUploadingImage} 
                 className="w-full bg-black text-white py-4 rounded-lg font-bold hover:bg-gray-800 transition disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoading ? (
