@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { ChevronDown } from "lucide-react";
 
-const SearchSortBar: React.FC = () => {
-  const [sortParam, setSortParam] = useState("newest");
+interface SearchSortBarProps {
+  sortParam: string;
+  onChange: (value: string) => void;
+  totalItems: number;
+}
+
+const SearchSortBar: React.FC<SearchSortBarProps> = ({ sortParam, onChange, totalItems }) => {
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between bg-gray-50/80 rounded-2xl px-6 py-4 mb-8">
       <p className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-4 sm:mb-0">
-        Showing 1-12 of 48
+        Showing {totalItems} result{totalItems === 1 ? "" : "s"}
       </p>
 
       <div className="flex items-center gap-3">
@@ -17,7 +22,7 @@ const SearchSortBar: React.FC = () => {
         <div className="relative">
           <select
             value={sortParam}
-            onChange={(e) => setSortParam(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
             className="appearance-none bg-transparent pr-6 text-[11px] font-bold text-gray-700 focus:outline-none cursor-pointer"
           >
             <option value="newest">Newest Arrivals</option>

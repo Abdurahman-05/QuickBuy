@@ -9,7 +9,7 @@ export default function ProductForm() {
     const [price, setPrice] = useState("")
     const [description, setDescription] = useState("")
     const [stock, setStock] = useState("")
-    const [selectedImage, setSelectedImage] = useState<File | null>(null)
+    const [imageUrl, setImageUrl] = useState("")
     const options = ["Electronics", "Clothing", "Accessories"]
     const createProduct = useProductStore((state) => state.createProduct)
     const isLoading = useProductStore((state) => state.isLoading)
@@ -34,14 +34,15 @@ export default function ProductForm() {
                 description: description.trim(),
                 price: parsedPrice,
                 category: selected,
-                image: selectedImage,
+                stock: Number(stock) || 0,
+                images: imageUrl.trim() ? [imageUrl.trim()] : [],
             })
             setName("")
             setPrice("")
             setDescription("")
             setStock("")
             setSelected("Select Category")
-            setSelectedImage(null)
+            setImageUrl("")
         } catch {
             // Errors are already handled in store.
         }
@@ -199,26 +200,19 @@ export default function ProductForm() {
                                 Product Visuals
                             </label>
 
-                            <label className="mt-4 sm:mt-5 border-2 border-dashed border-gray-200 rounded-xl sm:rounded-2xl h-44 sm:h-56 lg:h-64 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition cursor-pointer">
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={(e) => setSelectedImage(e.target.files?.[0] || null)}
-                                />
-
+                            <div className="mt-4 sm:mt-5 border-2 border-dashed border-gray-200 rounded-xl sm:rounded-2xl h-44 sm:h-56 lg:h-64 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition p-4">
                                 <div className="bg-white p-3 sm:p-4 rounded-full shadow-sm mb-3 sm:mb-4">
                                     <UploadCloud className="text-gray-400 w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
-
-                                <p className="text-sm font-medium text-gray-700">
-                                    Drag & Drop Product Shot
-                                </p>
-
-                                <p className="text-xs text-gray-400 mt-1">
-                                    {selectedImage ? selectedImage.name : "JPG or PNG • 2000px+"}
-                                </p>
-                            </label>
+                                <p className="text-sm font-medium text-gray-700 mb-3">Product Image URL</p>
+                                <input
+                                    type="url"
+                                    placeholder="https://example.com/product-image.jpg"
+                                    value={imageUrl}
+                                    onChange={(e) => setImageUrl(e.target.value)}
+                                    className="w-full max-w-md bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
+                                />
+                            </div>
                         </div>
                     </div>
                 </form>
