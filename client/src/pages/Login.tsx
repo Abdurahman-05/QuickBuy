@@ -1,7 +1,64 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 const Login: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const login = useAuthStore((state) => state.login);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const error = useAuthStore((state) => state.error);
+  const successMessage = useAuthStore((state) => state.successMessage);
+  const clearError = useAuthStore((state) => state.clearError);
+  const clearSuccessMessage = useAuthStore((state) => state.clearSuccessMessage);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = (location.state as any)?.from?.pathname;
+
+  useEffect(() => {
+    console.log("[Login UI] UI ERROR UPDATED:", error);
+  }, [error]);
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (from) {
+        console.log("[Login UI] AUTH SUCCESS - Redirecting to:", from);
+        navigate(from, { replace: true });
+      } else if (user.role === "ADMIN") {
+        console.log("[Login UI] AUTH SUCCESS - Redirecting to Admin Dashboard");
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        console.log("[Login UI] AUTH SUCCESS - Redirecting to Home");
+        navigate("/", { replace: true });
+      }
+    }
+  }, [isAuthenticated, user, navigate, from]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (error) clearError();
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (error) clearError();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    try {
+      // Store already handles clearing previous messages at start
+      await login({ email, password });
+    } catch (err) {
+      // Error is handled in the store
+    }
+  };
+
   return (
     <main className="flex-1 w-full bg-white flex flex-col items-center justify-center px-6 py-20 min-h-[80vh]">
       <div className="w-full max-w-[440px]">
@@ -16,7 +73,19 @@ const Login: React.FC = () => {
           </p>
         </div>
 
-        <form className="flex flex-col gap-8" onSubmit={(e) => e.preventDefault()}>
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium animate-in fade-in slide-in-from-top-1">
+            {error}
+          </div>
+        )}
+
+        {successMessage && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-600 rounded-xl text-sm font-medium animate-in fade-in slide-in-from-top-1">
+            {successMessage}
+          </div>
+        )}
+
+        <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
           
           {/* Email Field */}
           <div className="flex flex-col gap-2.5">
@@ -26,6 +95,9 @@ const Login: React.FC = () => {
             <input
               type="email"
               placeholder="name@example.com"
+              value={email}
+              onChange={handleEmailChange}
+              required
               className="w-full bg-[#f5f5f5] border-none text-[16px] rounded-[12px] px-6 py-5 outline-none placeholder:text-gray-400 focus:bg-[#ebebeb] transition-all" 
             />
           </div>
@@ -36,13 +108,16 @@ const Login: React.FC = () => {
               <label className="text-[12px] font-extrabold tracking-[0.2em] uppercase text-black">
                 Password
               </label>
-              <a href="#" className="text-[12px] font-bold text-red-600 hover:underline">
+              <Link to="/forgot-password" title="Forgot Password" className="text-[12px] font-bold text-red-600 hover:underline">
                 Forgot Password?
-              </a>
+              </Link>
             </div>
             <input
               type="password"
               placeholder="••••••••"
+              value={password}
+              onChange={handlePasswordChange}
+              required
               className="w-full bg-[#f5f5f5] border-none text-[16px] rounded-[12px] px-6 py-5 outline-none placeholder:text-gray-400 focus:bg-[#ebebeb] transition-all"
             />
           </div>
@@ -50,9 +125,15 @@ const Login: React.FC = () => {
           {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-5 rounded-full text-[19px] font-bold hover:bg-[#1a1a1a] transition-all active:scale-[0.98] shadow-sm"
+            disabled={isLoading || !email || !password}
+            className="w-full bg-black text-white py-5 rounded-full text-[19px] font-bold hover:bg-[#1a1a1a] transition-all active:scale-[0.98] shadow-sm disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Login
+            {isLoading ? (
+              <>
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                Logging in...
+              </>
+            ) : "Login"}
           </button>
         </form>
 
@@ -60,7 +141,7 @@ const Login: React.FC = () => {
         <div className="text-center text-[16px] mt-8 text-gray-600">
           New to QuickBuy?{' '}
           <Link 
-            to="/signup" 
+            to="/register" 
             className="font-bold text-black border-b-[3px] border-red-600 pb-1 ml-1 inline-block hover:text-red-600 transition-colors"
           >
             Create Account

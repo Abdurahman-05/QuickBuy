@@ -1,12 +1,13 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import headphonesImg from '../../assets/headphones.jpg';
 import laptopImg from '../../assets/laptop.jpg';
 
 const OrderSummery: React.FC = () => {
     return (
-        <section className="mb-24 w-full max-w-[850px] mx-auto">
+        <section className="mb-24 w-full max-w-[850px] mx-auto px-4 sm:px-6">
             <h2 className="text-[12px] font-bold text-gray-500 uppercase tracking-[0.1em] mb-8">Order Summary</h2>
-            <div className="flex gap-14">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-14">
                 {/* Left - Items List */}
                 <div className="flex-1 flex flex-col gap-8">
                     {/* Item 1 */}
@@ -19,7 +20,7 @@ const OrderSummery: React.FC = () => {
                             <p className="text-[13px] text-gray-500 leading-snug pr-4">Carbon Black Finish • High-Fidelity Audio • Noise Cancellation</p>
                             <p className="text-[10px] text-gray-400 font-bold tracking-widest uppercase mt-4">Quantity: 1</p>
                         </div>
-                        <div className="font-bold text-black text-[15px] pt-1">$399.00</div>
+                        <div className="font-bold text-black text-[15px] pt-1 whitespace-nowrap">$399.00</div>
                     </div>
                     {/* Item 2 */}
                     <div className="flex gap-5 items-start">
@@ -31,19 +32,19 @@ const OrderSummery: React.FC = () => {
                             <p className="text-[13px] text-gray-500 leading-snug pr-4">Silver Aluminum • 32GB RAM • 1TB SSD • Retina Display</p>
                             <p className="text-[10px] text-gray-400 font-bold tracking-widest uppercase mt-4">Quantity: 1</p>
                         </div>
-                        <div className="font-bold text-black text-[15px] pt-1">$1,099.00</div>
+                        <div className="font-bold text-black text-[15px] pt-1 whitespace-nowrap">$1,099.00</div>
                     </div>
                 </div>
 
                 {/* Right - Summary Sidebar */}
-                <div className="w-[320px] bg-[#f8f9fa] rounded-3xl p-8 flex-shrink-0">
+                <div className="w-full lg:w-[320px] bg-[#f8f9fa] rounded-3xl p-6 sm:p-8 flex-shrink-0">
                     {/* Shipping Address */}
                     <div className="mb-8">
                         <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-3">Shipping Address</p>
                         <p className="text-[14px] text-black font-medium leading-relaxed">
-                            Alex Sterling<br/>
-                            1284 Editorial Avenue<br/>
-                            Suite 400<br/>
+                            Alex Sterling<br />
+                            1284 Editorial Avenue<br />
+                            Suite 400<br />
                             New York, NY 10001
                         </p>
                     </div>
@@ -57,7 +58,7 @@ const OrderSummery: React.FC = () => {
                             Visa ending in **** 4922
                         </div>
                     </div>
-                    
+
                     {/* Totals */}
                     <div className="pt-6 border-t border-gray-200/80 flex flex-col gap-3.5 text-[14px] font-medium">
                         <div className="flex justify-between text-gray-500">
@@ -76,6 +77,12 @@ const OrderSummery: React.FC = () => {
                             <span className="text-[12px] uppercase font-bold tracking-widest">Total</span>
                             <span className="text-xl font-bold">$1,498.00</span>
                         </div>
+                    </div>
+
+                    <div className="mt-8 pt-6 border-t border-gray-200/80">
+                        <Link to="/dashboard/orders" className="w-full inline-flex justify-center items-center py-3 rounded-full bg-black text-white text-[11px] font-bold tracking-widest uppercase hover:bg-gray-900 transition-colors">
+                            View Orders
+                        </Link>
                     </div>
                 </div>
             </div>

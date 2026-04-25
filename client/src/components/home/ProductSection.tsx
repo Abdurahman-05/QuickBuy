@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import type { Product } from '../../pages/Home';
+import { Link, useNavigate } from 'react-router-dom';
+import type { Product } from '../../data/products';
 
 interface ProductSectionProps {
   title: string;
@@ -8,18 +8,26 @@ interface ProductSectionProps {
 }
 
 const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
+  const navigate = useNavigate();
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
-      <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">
-        {title}
-      </h2>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-xl font-bold text-gray-900 tracking-tight">
+          {title}
+        </h2>
+        <Link to="/products" className="text-[11px] font-extrabold uppercase tracking-widest text-gray-400 hover:text-[#e60000] transition-colors flex items-center gap-1 group">
+          View All Products
+          <span className="transform transition-transform group-hover:translate-x-1">→</span>
+        </Link>
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
         {products.map((product) => (
-          <Link 
+          <div
             key={product.id}
-            to={`/product/${product.id}`}
-            className="group relative bg-[#efefef] rounded-lg p-5 flex flex-col hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-2 border-transparent hover:border-white/50"
+            onClick={() => navigate(`/products/${product.id}`)}
+            className="group relative bg-[#efefef] rounded-lg p-5 flex flex-col hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-white/40 cursor-pointer"
           >
             {/* Rectangular Yellow Recommended Badge */}
             {product.recommended && (
@@ -31,55 +39,63 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
             )}
 
             {/* Product Image Area */}
-            <div className="w-full aspect-square mb-4 flex items-center justify-center relative bg-white/20 rounded-md overflow-hidden">
-              <img 
-                src={product.image} 
-                alt={product.name} 
-                className="max-h-[85%] max-w-[85%] object-contain mix-blend-multiply transform group-hover:scale-110 transition-transform duration-700 ease-out"
+            <div className="w-full aspect-square mb-4 flex items-center justify-center relative bg-white/40 rounded-md overflow-hidden group-hover:shadow-sm transition-shadow duration-300">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="max-h-[85%] max-w-[85%] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out"
               />
+              <Link
+                to="/dashboard/wishlist"
+                onClick={(e) => e.stopPropagation()}
+                className="absolute right-3 top-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-white/40 text-gray-700 hover:text-red-500 flex items-center justify-center transition-colors shadow-sm"
+                aria-label="Add to wishlist"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+                </svg>
+              </Link>
             </div>
-            
+
             {/* Content Bottom */}
-            <div className="flex-1 flex flex-col">
-              <h3 className="text-[12px] font-bold text-gray-900 line-clamp-2 h-9 mb-2 leading-tight tracking-tight">
+            <div className="flex flex-col gap-1.5 px-0.5 flex-1">
+              <h3 className="text-[12px] md:text-[13px] font-bold text-black tracking-wide uppercase line-clamp-1">
                 {product.name}
               </h3>
-              
-              <div className="mt-auto space-y-2.5">
-                {/* Rating & Stock */}
-                <div className="flex items-center gap-1.5">
-                  <div className="flex text-[#f9d342] gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className={`w-3 h-3 ${i < 5 ? 'fill-current' : 'fill-gray-200'}`} viewBox="0 0 20 20">
-                        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter shrink-0">
-                    {product.stockInfo}
+
+              {/* Rating & Stock */}
+              <div className="flex flex-wrap items-center gap-1.5 mb-1 text-[9px] sm:text-[10px] text-gray-500 font-medium tracking-[0.08em] uppercase">
+                <div className="flex text-[#f9d342] gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${i < 5 ? 'fill-current' : 'fill-gray-200'}`} viewBox="0 0 20 20">
+                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                    </svg>
+                  ))}
+                </div>
+                <span className="hidden sm:inline">•</span>
+                <span className="shrink-0">{product.stockInfo}</span>
+              </div>
+
+              <div className="mt-auto flex flex-col gap-3 pt-3 border-t border-gray-200/50">
+                <p className="text-sm md:text-base lg:text-lg font-black text-gray-900 tracking-tighter">
+                  ${product.price.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                </p>
+
+                <Link
+                  to="/cart"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center justify-center gap-2 bg-[#1b1b1b] hover:bg-[#e60000] text-white rounded-full transition-all duration-300 w-full h-8 sm:h-9 relative overflow-hidden group/btn shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(230,0,0,0.23)] hover:-translate-y-0.5 active:scale-95"
+                >
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover/btn:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
+                    Add to cart
                   </span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <p className="text-xl font-bold text-gray-900 tracking-tighter">
-                    ${product.price.toFixed(2)}
-                  </p>
-                  
-                  {/* Modern Hover Feature: "+" icon expands to "Add to cart" ONLY ON BUTTON HOVER */}
-                  <div className="flex items-center bg-[#1b1b1b] text-white rounded-full transition-all duration-500 overflow-hidden w-8 hover:w-[160px] h-8 relative group/btn">
-                    <div className="absolute inset-0 flex items-center justify-center w-8 shrink-0">
-                      <svg className="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-                      </svg>
-                    </div>
-                    <span className="ml-[36px] text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300">
-                      Add to cart
-                    </span>
-                  </div>
-                </div>
+                </Link>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </section>
