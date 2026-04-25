@@ -1,6 +1,7 @@
-import { Product } from "../models/product.model.js";
-import { Category } from "../models/category.model.js";
-import { Review } from "../models/review.model.js";
+import { Product } from "./product.model.js";
+
+import { Category } from "../category/category.model.js";
+import { Review } from "../../models/review.model.js";
 
 export const getProducts = async (req, res) => {
   try {

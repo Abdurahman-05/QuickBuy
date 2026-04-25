@@ -2,7 +2,7 @@ import express from "express";
 import {
   getProducts, getProductById, addProduct, updateProduct, deleteProduct,
   getCategories, addCategory, getReviews, addReview
-} from "../controllers/product.controller.js";
+} from "./product.controller.js";
 
 const router = express.Router();
 
@@ -162,4 +162,28 @@ router.delete("/:id", deleteProduct);
 router.get("/:id/reviews", getReviews);
 router.post("/:id/reviews", addReview);
 
+
+/** @swagger
+ * /api/products/dashboard/stats:
+ *   get:
+ *     tags: [Products]
+ *     summary: Get admin dashboard stats
+ */
+router.get("/dashboard/stats", async (req, res) => {
+  try {
+    const productCount = await Product.countDocuments(); // Counts real products
+    res.json({
+      totalProducts: productCount,
+      totalOrders: 1240, // Mock for now
+      totalUsers: 842,   // Mock for now
+      revenue: 45200,    // Mock for now
+      recentOrders: [
+        { id: "#QB-9021", customer: "Alexander Pierce", total: 1299, status: "Completed", date: "Oct 24" },
+        { id: "#QB-9022", customer: "Sophia Martinez", total: 349, status: "Completed", date: "Oct 24" }
+      ]
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 export default router;
