@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
   brand: String,
   categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
   stock: { type: Number, default: 0 },
-  images: [String],
+  images: { type: [String], default: [] },
   rating: { type: Number, default: 0 },
 }, { timestamps: true });
 

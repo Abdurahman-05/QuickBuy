@@ -16,8 +16,13 @@ export const getProductById = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
-  try { res.status(201).json(await new Product(req.body).save()); } 
-  catch (err) { res.status(400).json({ error: err.message }); }
+  try { 
+    const product = new Product(req.body);
+    await product.save();
+    res.status(201).json(product); 
+  } catch (err) { 
+    res.status(400).json({ error: err.message }); 
+  }
 };
 
 export const updateProduct = async (req, res) => {

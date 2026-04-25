@@ -20,7 +20,12 @@ configureCloudinary();
 
 // Middlewares
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? "http://localhost:5173" }));
+// Updated CORS to be more permissive for Swagger and frontend team testing
+app.use(cors({
+  origin: "*", 
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  credentials: true
+}));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -30,6 +35,9 @@ const specs = swaggerJsdoc({
   definition: {
     openapi: "3.0.0",
     info: { title: "QuickBuy API", version: "1.0.0" },
+    servers: [
+      { url: "http://localhost:5000", description: "Development server" }
+    ],
     components: {
       schemas: {
         User: {
@@ -104,9 +112,10 @@ const specs = swaggerJsdoc({
           bearerFormat: "JWT"
         }
       }
-    }
+    },
+    security: [{ bearerAuth: [] }]
   },
-  apis: ["./routes/*.js", "./modules/**/*.js"], // Scans all routes
+  apis: ["./routes/*.js", "./modules/**/*.js"], 
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
