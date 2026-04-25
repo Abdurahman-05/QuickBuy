@@ -1,7 +1,24 @@
+import { useEffect, useMemo } from "react"
 import { TrendingUp, Package } from "lucide-react"
 import Gear from "../../assets/gear.svg"
+import { useOrderStore } from "@/store/useOrderStore"
 
 export default function OrdersTopSection() {
+    const { allOrders, getAllOrders } = useOrderStore()
+
+    useEffect(() => {
+        getAllOrders()
+    }, [getAllOrders])
+
+    const totalRevenue = useMemo(
+        () => allOrders.reduce((sum, order) => sum + Number(order.totalPrice || 0), 0),
+        [allOrders]
+    )
+    const activeShipments = useMemo(
+        () => allOrders.filter((order) => ["PROCESSING", "SHIPPED"].includes(order.orderStatus)).length,
+        [allOrders]
+    )
+
     return (
         <div className="w-full px-3 sm:px-6 mt-4 sm:mt-6">
 
@@ -28,12 +45,12 @@ export default function OrdersTopSection() {
                         </p>
 
                         <h2 className="text-[26px] sm:text-[34px] lg:text-[44px] leading-[1.05] font-extrabold tracking-tight text-black">
-                            ORDER VELOCITY <br /> IS UP 24%
+                            TOTAL ORDERS <br /> {allOrders.length}
                         </h2>
 
-                        <button className="mt-5 sm:mt-7 bg-black text-white text-xs sm:text-sm px-5 sm:px-6 py-2.5 sm:py-3 rounded-full shadow-sm hover:bg-gray-800 transition">
-                            VIEW ANALYTICS
-                        </button>
+                        <p className="mt-5 sm:mt-7 text-xs text-gray-500 font-semibold">
+                            Connected to live order data from API.
+                        </p>
 
                     </div>
                 </div>
@@ -53,7 +70,7 @@ export default function OrdersTopSection() {
                         </p>
 
                         <h3 className="text-xl sm:text-2xl font-bold">
-                            $142,850.00
+                            ${totalRevenue.toFixed(2)}
                         </h3>
                     </div>
 
@@ -68,7 +85,7 @@ export default function OrdersTopSection() {
                             </p>
 
                             <h3 className="text-2xl sm:text-3xl font-bold">
-                                842
+                                {activeShipments}
                             </h3>
                         </div>
 

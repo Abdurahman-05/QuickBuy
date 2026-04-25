@@ -17,7 +17,8 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ id, name, price, image, des
         <div className="flex flex-col">
 
             {/* IMAGE CARD */}
-            <div
+            <Link
+                to={`/products/${id}`}
                 className="
           relative 
           bg-[#EDEDED] 
@@ -28,7 +29,13 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ id, name, price, image, des
         "
             >
                 {/* HEART */}
-                <button className="absolute top-3 right-3">
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onRemove(id);
+                    }}
+                    className="absolute top-3 right-3"
+                >
                     <Heart className="w-4 h-4 fill-red-500 text-red-500" />
                 </button>
 
@@ -54,13 +61,13 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ id, name, price, image, des
                 >
                     ${price.toFixed(2)}
                 </div>
-            </div>
+            </Link>
 
             {/* INFO */}
             <div className="mt-3">
-                <h3 className="text-[11px] tracking-[0.12em] text-gray-900 font-semibold">
+                <Link to={`/products/${id}`} className="text-[11px] tracking-[0.12em] text-gray-900 font-semibold hover:text-red-500 transition-colors">
                     {name}
-                </h3>
+                </Link>
 
                 <p className="mt-1.5 text-[12px] text-gray-500 leading-[1.5]">
                     {desc}

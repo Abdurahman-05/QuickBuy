@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Crown, Truck } from "lucide-react";
+import { useOrderStore } from "@/store/useOrderStore";
 
 const OrdersStats: React.FC = () => {
+  const myOrders = useOrderStore((state) => state.myOrders);
+
+  const totalSpent = useMemo(
+    () => myOrders.reduce((sum, order) => sum + Number(order.totalPrice || 0), 0),
+    [myOrders]
+  );
+  const activeShipments = useMemo(
+    () => myOrders.filter((order) => ["PROCESSING", "SHIPPED"].includes(order.orderStatus)).length,
+    [myOrders]
+  );
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
 
@@ -11,11 +23,11 @@ const OrdersStats: React.FC = () => {
           Total Purchases
         </p>
         <h3 className="text-[32px] font-bold text-gray-900 tracking-tight leading-none mb-3">
-          24
+          {myOrders.length}
         </h3>
         <div className="flex items-center justify-between gap-5">
           <span className="text-xs font-bold text-red-500">Lifetime Value</span>
-          <span className="text-xs font-bold text-red-500">$12,480.00</span>
+          <span className="text-xs font-bold text-red-500">${totalSpent.toFixed(2)}</span>
         </div>
       </div>
 
@@ -25,7 +37,7 @@ const OrdersStats: React.FC = () => {
           Active Shipments
         </p>
         <h3 className="text-[32px] font-bold text-gray-900 tracking-tight leading-none mb-3">
-          02
+          {String(activeShipments).padStart(2, "0")}
         </h3>
         <div className="flex items-center justify-between gap-2 text-gray-400">
           <span className="text-xs font-medium">Arriving soon</span>
@@ -44,10 +56,10 @@ const OrdersStats: React.FC = () => {
           Membership Status
         </p>
         <h3 className="text-[28px] font-extrabold text-white tracking-tight leading-none mb-2 relative z-10">
-          ELITE
+          {myOrders.length >= 10 ? "ELITE" : "MEMBER"}
         </h3>
         <p className="text-xs text-gray-500 relative z-10">
-          Free priority shipping enabled
+          {myOrders.length >= 10 ? "Free priority shipping enabled" : "Keep shopping to unlock elite perks"}
         </p>
       </div>
 

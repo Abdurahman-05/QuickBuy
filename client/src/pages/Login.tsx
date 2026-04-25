@@ -26,14 +26,24 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (isAuthenticated && user) {
       if (from) {
-        console.log("[Login UI] AUTH SUCCESS - Redirecting to:", from);
-        navigate(from, { replace: true });
-      } else if (user.role === "ADMIN") {
+        const fromIsAdmin = from.startsWith("/admin");
+        if (user.role === "ADMIN" && fromIsAdmin) {
+          console.log("[Login UI] AUTH SUCCESS - Redirecting to:", from);
+          navigate(from, { replace: true });
+          return;
+        }
+        if (user.role !== "ADMIN" && !fromIsAdmin) {
+          console.log("[Login UI] AUTH SUCCESS - Redirecting to:", from);
+          navigate(from, { replace: true });
+          return;
+        }
+      }
+      if (user.role === "ADMIN") {
         console.log("[Login UI] AUTH SUCCESS - Redirecting to Admin Dashboard");
         navigate("/admin/dashboard", { replace: true });
       } else {
-        console.log("[Login UI] AUTH SUCCESS - Redirecting to Home");
-        navigate("/", { replace: true });
+        console.log("[Login UI] AUTH SUCCESS - Redirecting to User Dashboard");
+        navigate("/dashboard", { replace: true });
       }
     }
   }, [isAuthenticated, user, navigate, from]);

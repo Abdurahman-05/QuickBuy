@@ -1,9 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
 const TnksSection: React.FC = () => {
+    const [showPopout, setShowPopout] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => setShowPopout(false), 5500);
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
         <section className="flex flex-col items-center justify-center text-center mt-8 sm:mt-12 mb-10 sm:mb-16 px-4">
+            {/* Floating confirmation popout */}
+            {showPopout && (
+                <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[120] w-[92%] max-w-sm animate-in fade-in zoom-in-95 duration-300">
+                    <div className="relative rounded-2xl border border-gray-200/80 bg-white/95 backdrop-blur-md shadow-[0_20px_45px_rgba(0,0,0,0.12)] px-4 py-4 text-left">
+                        <button
+                            onClick={() => setShowPopout(false)}
+                            className="absolute right-2 top-2 h-7 w-7 rounded-full text-gray-400 hover:text-black hover:bg-gray-100 transition"
+                            aria-label="Dismiss notification"
+                        >
+                            ✕
+                        </button>
+                        <div className="flex items-start gap-3 pr-6">
+                            <div className="mt-0.5 h-9 w-9 shrink-0 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.4} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-600">Order Confirmed</p>
+                                <h3 className="text-[15px] font-extrabold text-gray-900 mt-0.5">Confirmation sent successfully</h3>
+                                <p className="text-[12px] text-gray-500 mt-1 leading-relaxed">
+                                    We sent your order details to your email inbox.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Checkmark icon */}
             <div className="bg-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center mb-6 shadow-sm">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
@@ -14,7 +50,7 @@ const TnksSection: React.FC = () => {
             </h1>
 
             <p className="text-gray-500 text-[14px] sm:text-[15px] mb-8 sm:mb-10">
-                We've sent a confirmation email to your inbox with all the details.
+                Your order is now in progress and ready for fulfillment.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-10 sm:mb-16 w-full sm:w-auto">

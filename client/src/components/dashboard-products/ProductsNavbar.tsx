@@ -1,4 +1,3 @@
-import { Bell, Settings } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import { useAuthStore } from "@/store/useAuthStore";
@@ -36,43 +35,39 @@ export default function ProductsNavbar() {
                 </NavLink>
 
                 <NavLink
-                    to="/collections"
+                    to="/admin/dashboard"
                     className={({ isActive }) =>
                         `shrink-0 transition-colors ${isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
                         }`
                     }
                 >
-                    Collections
+                    Dashboard
                 </NavLink>
 
                 <NavLink
-                    to="/stock-alerts"
+                    to="/admin/orders"
                     className={({ isActive }) =>
                         `shrink-0 transition-colors ${isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
                         }`
                     }
                 >
-                    Stock Alerts
+                    Orders
+                </NavLink>
+
+                <NavLink
+                    to="/admin/users"
+                    className={({ isActive }) =>
+                        `shrink-0 transition-colors ${isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
+                        }`
+                    }
+                >
+                    Users
                 </NavLink>
 
             </div>
 
             {/* RIGHT SIDE */}
             <div className="flex items-center gap-2 sm:gap-5">
-
-                {/* ICONS */}
-                <div className="flex items-center gap-2 sm:gap-4 text-gray-500">
-
-                    <Link to="/notifications" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Notifications">
-                        <Bell size={16} className="sm:w-[18px] sm:h-[18px]" />
-                    </Link>
-
-                    <Link to="/dashboard/settings" className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition" aria-label="Settings">
-                        <Settings size={16} className="sm:w-[18px] sm:h-[18px]" />
-                    </Link>
-
-                </div>
-
                 {/* USER */}
                 <div className="flex items-center gap-2 sm:gap-3 border-l pl-3 sm:pl-5">
 

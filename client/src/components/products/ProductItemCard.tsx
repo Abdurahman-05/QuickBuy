@@ -16,6 +16,7 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
     const subtitle = product.specifications && product.specifications.length > 0 
         ? product.specifications.map(s => s.value).join(' / ') 
         : `${product.category} / PREMIUM QUALITY`;
+    const thumbnail = product.images?.find((img) => Boolean(img)) || product.image;
 
     return (
         <div
@@ -25,10 +26,10 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
             {/* Image Container */}
             <div className={`relative aspect-square w-full bg-[#f6f6f6] overflow-hidden group-hover:shadow-md transition-shadow duration-300`}>
                 <img 
-                    src={product.image} 
+                    src={thumbnail} 
                     alt={product.name} 
                     className={`w-full h-full p-0 transition-transform duration-700 ease-out group-hover:scale-110 ${
-                        product.image.includes('unsplash.com') ? 'object-cover' : 'object-contain p-6 mix-blend-multiply'
+                        thumbnail.includes('unsplash.com') ? 'object-cover' : 'object-contain p-6 mix-blend-multiply'
                     }`}
                 />
                 

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Product } from "../../types/product";
 import { ShieldCheck, Truck } from "lucide-react"
 import { useCommerceStore } from "../../store/useCommerceStore";
+import { useAuthStore } from "../../store/useAuthStore";
 
 interface ProductInfoProps {
   product: Product;
@@ -11,16 +12,32 @@ interface ProductInfoProps {
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState("black");
-  const [selectedImage, setSelectedImage] = useState(product.image);
+  const relatedImages = useMemo(
+    () => Array.from(new Set([...(product.images || []), product.image].filter((img) => Boolean(img)))),
+    [product.images, product.image]
+  );
+  const [selectedImage, setSelectedImage] = useState(relatedImages[0] || product.image);
 
   // Sync selected image if product changes
   useEffect(() => {
-    setSelectedImage(product.image);
-  }, [product]);
+    setSelectedImage(relatedImages[0] || product.image);
+  }, [product, relatedImages]);
 
   const colors = ["black", "gray", "blue"];
+  const navigate = useNavigate();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const addToCart = useCommerceStore((state) => state.addToCart);
   const addToWishlist = useCommerceStore((state) => state.addToWishlist);
+
+  const handleAddToCart = async () => {
+    await addToCart(product, quantity);
+    navigate("/cart");
+  };
+
+  const handleAddToWishlist = () => {
+    addToWishlist(product);
+    navigate(isAuthenticated ? "/dashboard/wishlist" : "/login");
+  };
 
   return (
     <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
@@ -37,8 +54,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
         {/* Thumbnails */}
         <div className="grid grid-cols-4 gap-4">
-          {product.images.map((img, index) => (
-            <div
+          {relatedImages.map((img, index) => (
+            <button
+              type="button"
               key={index}
               onClick={() => setSelectedImage(img)}
               className={`aspect-square bg-white rounded-xl p-2 border-2 cursor-pointer transition-all ${selectedImage === img ? "border-black shadow-md" : "border-transparent hover:border-gray-200"
@@ -49,7 +67,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 alt={`${product.name} thumb ${index + 1}`}
                 className="w-full h-full object-contain"
               />
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -143,22 +161,20 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full">
-          <Link to="/cart" className="w-full sm:flex-1">
-            <button
-              onClick={() => addToCart(product, quantity)}
-              className="w-full bg-black text-white px-8 py-5 rounded-2xl font-bold shadow-xl hover:bg-gray-800 transition-all active:scale-95 text-sm uppercase tracking-widest text-center"
-            >
-              ADD TO CART
-            </button>
-          </Link>
-          <Link to="/dashboard/wishlist" className="w-full sm:flex-[0.5]">
-            <button
-              onClick={() => addToWishlist(product)}
-              className="w-full bg-gray-100 text-black px-8 py-5 rounded-2xl font-bold hover:bg-gray-200 transition-all active:scale-95 text-sm uppercase tracking-widest text-center"
-            >
-              WISHLIST
-            </button>
-          </Link>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="w-full sm:flex-1 bg-black text-white px-8 py-5 rounded-2xl font-bold shadow-xl hover:bg-gray-800 transition-all active:scale-95 text-sm uppercase tracking-widest text-center"
+          >
+            ADD TO CART
+          </button>
+          <button
+            type="button"
+            onClick={handleAddToWishlist}
+            className="w-full sm:flex-[0.5] bg-gray-100 text-black px-8 py-5 rounded-2xl font-bold hover:bg-gray-200 transition-all active:scale-95 text-sm uppercase tracking-widest text-center"
+          >
+            WISHLIST
+          </button>
         </div>
 
         {/* Extra Info */}

@@ -8,6 +8,25 @@ interface ProductsTableProps {
     products: Product[];
 }
 
+const normalizeCategory = (value: string) => {
+    const upper = (value || "").toUpperCase()
+    if (upper.includes("LAPTOP") || upper.includes("COMPUT")) return "LAPTOPS"
+    if (upper.includes("AUDIO") || upper.includes("SOUND")) return "AUDIO"
+    if (upper.includes("WEAR") || upper.includes("WATCH")) return "WEARABLES"
+    return upper || "GENERAL"
+}
+
+const resolveFilterCategory = (product: { category: string; name: string; description: string }) => {
+    const normalized = normalizeCategory(product.category)
+    if (["LAPTOPS", "AUDIO", "WEARABLES"].includes(normalized)) return normalized
+
+    const searchable = `${product.name} ${product.description}`.toLowerCase()
+    if (/(headphone|earbud|audio|sound|speaker|noise)/.test(searchable)) return "AUDIO"
+    if (/(laptop|notebook|macbook|ultrabook|comput|monitor)/.test(searchable)) return "LAPTOPS"
+    if (/(watch|wearable|smartphone|phone|band)/.test(searchable)) return "WEARABLES"
+    return "GENERAL"
+}
+
 export default function ProductsTable({ products }: ProductsTableProps) {
     const isLoading = useProductStore((state) => state.isLoading)
     const error = useProductStore((state) => state.error)
@@ -121,7 +140,7 @@ export default function ProductsTable({ products }: ProductsTableProps) {
 
                                     {/* CATEGORY */}
                                     <td className="text-gray-600 text-xs sm:text-sm whitespace-nowrap">
-                                        {p.category}
+                                        {resolveFilterCategory(p)}
                                     </td>
 
                                     {/* PRICE */}

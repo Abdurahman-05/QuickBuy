@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Product } from "../types/product";
+import api from "../lib/axios";
 
 export interface CommerceItem {
   id: string;
@@ -14,12 +15,14 @@ export interface CommerceItem {
 type CommerceState = {
   cartItems: CommerceItem[];
   wishlistItems: CommerceItem[];
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (id: string) => void;
-  updateCartQuantity: (id: string, quantity: number) => void;
+  fetchCart: () => Promise<void>;
+  addToCart: (product: Product, quantity?: number) => Promise<void>;
+  removeFromCart: (id: string) => Promise<void>;
+  updateCartQuantity: (id: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
   addToWishlist: (product: Product) => void;
   removeFromWishlist: (id: string) => void;
-  moveWishlistToCart: (id: string) => void;
+  moveWishlistToCart: (id: string) => Promise<void>;
   isInWishlist: (id: string) => boolean;
   cartCount: () => number;
   wishlistCount: () => number;
@@ -34,13 +37,67 @@ const toCommerceItem = (product: Product, quantity = 1): CommerceItem => ({
   quantity,
 });
 
+const hasAuthToken = () => {
+  try {
+    const raw = localStorage.getItem("auth-storage");
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    return Boolean(parsed?.state?.token);
+  } catch {
+    return false;
+  }
+};
+
+const mapCartResponse = (payload: any): CommerceItem[] => {
+  const items = Array.isArray(payload?.items) ? payload.items : [];
+  return items
+    .map((item: any) => {
+      const product = item?.product;
+      if (!product) return null;
+      const image = Array.isArray(product.images) && product.images[0]
+        ? product.images[0]
+        : "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
+      return {
+        id: String(product._id || product.id || ""),
+        name: String(product.name || ""),
+        price: Number(product.price || 0),
+        image,
+        description: String(product.brand || product.description || ""),
+        quantity: Math.max(1, Number(item.quantity || 1)),
+      } satisfies CommerceItem;
+    })
+    .filter(Boolean) as CommerceItem[];
+};
+
 export const useCommerceStore = create<CommerceState>()(
   persist(
     (set, get) => ({
       cartItems: [],
       wishlistItems: [],
 
-      addToCart: (product, quantity = 1) =>
+      fetchCart: async () => {
+        if (!hasAuthToken()) return;
+        try {
+          const response = await api.get("cart");
+          set({ cartItems: mapCartResponse(response.data) });
+        } catch {
+          // Keep local state when backend fetch fails.
+        }
+      },
+
+      addToCart: async (product, quantity = 1) => {
+        if (hasAuthToken()) {
+          try {
+            const response = await api.post("cart", {
+              productId: product.id,
+              quantity,
+            });
+            set({ cartItems: mapCartResponse(response.data) });
+            return;
+          } catch {
+            // Fall back to local cart update if API fails.
+          }
+        }
         set((state) => {
           const existing = state.cartItems.find((item) => item.id === product.id);
           if (existing) {
@@ -51,17 +108,51 @@ export const useCommerceStore = create<CommerceState>()(
             };
           }
           return { cartItems: [...state.cartItems, toCommerceItem(product, quantity)] };
-        }),
+        });
+      },
 
-      removeFromCart: (id) =>
-        set((state) => ({ cartItems: state.cartItems.filter((item) => item.id !== id) })),
+      removeFromCart: async (id) => {
+        if (hasAuthToken()) {
+          try {
+            const response = await api.delete(`cart/${id}`);
+            set({ cartItems: mapCartResponse(response.data) });
+            return;
+          } catch {
+            // Fall back to local update
+          }
+        }
+        set((state) => ({ cartItems: state.cartItems.filter((item) => item.id !== id) }));
+      },
 
-      updateCartQuantity: (id, quantity) =>
+      updateCartQuantity: async (id, quantity) => {
+        if (hasAuthToken()) {
+          try {
+            const response = await api.patch("cart/update", { productId: id, quantity: Math.max(1, quantity) });
+            set({ cartItems: mapCartResponse(response.data) });
+            return;
+          } catch {
+            // Fall back to local update
+          }
+        }
         set((state) => ({
           cartItems: state.cartItems.map((item) =>
             item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
           ),
-        })),
+        }));
+      },
+
+      clearCart: async () => {
+        if (hasAuthToken()) {
+          try {
+            await api.delete("cart");
+            set({ cartItems: [] });
+            return;
+          } catch {
+            // Fall back to local clear
+          }
+        }
+        set({ cartItems: [] });
+      },
 
       addToWishlist: (product) =>
         set((state) => {
@@ -72,21 +163,27 @@ export const useCommerceStore = create<CommerceState>()(
       removeFromWishlist: (id) =>
         set((state) => ({ wishlistItems: state.wishlistItems.filter((item) => item.id !== id) })),
 
-      moveWishlistToCart: (id) =>
-        set((state) => {
-          const wishlistItem = state.wishlistItems.find((item) => item.id === id);
-          if (!wishlistItem) return state;
-          const existingCart = state.cartItems.find((item) => item.id === id);
-          const cartItems = existingCart
-            ? state.cartItems.map((item) =>
-              item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-            )
-            : [...state.cartItems, { ...wishlistItem, quantity: 1 }];
-          return {
-            cartItems,
-            wishlistItems: state.wishlistItems.filter((item) => item.id !== id),
-          };
-        }),
+      moveWishlistToCart: async (id) => {
+        const target = get().wishlistItems.find((item) => item.id === id);
+        if (!target) return;
+        const tempProduct = {
+          id: target.id,
+          name: target.name,
+          price: target.price,
+          image: target.image,
+          images: [target.image, target.image, target.image, target.image] as [string, string, string, string],
+          category: "GENERAL",
+          rating: 0,
+          stockInfo: "In stock",
+          description: target.description,
+          specifications: [],
+          reviews: [],
+        } as Product;
+        await get().addToCart(tempProduct, 1);
+        set((state) => ({
+          wishlistItems: state.wishlistItems.filter((item) => item.id !== id),
+        }));
+      },
 
       isInWishlist: (id) => get().wishlistItems.some((item) => item.id === id),
       cartCount: () => get().cartItems.reduce((sum, item) => sum + item.quantity, 0),

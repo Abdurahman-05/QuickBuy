@@ -4,6 +4,7 @@ import StatusBadge from "../shared/StatusBadge";
 
 interface OrderCardProps {
   orderId: string;
+  productId?: string;
   productName: string;
   image: string;
   status: string;
@@ -13,6 +14,7 @@ interface OrderCardProps {
 
 const OrderCard: React.FC<OrderCardProps> = ({
   orderId,
+  productId,
   productName,
   image,
   status,
@@ -24,13 +26,12 @@ const OrderCard: React.FC<OrderCardProps> = ({
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
 
         {/* Product Image */}
-        <div className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-xl bg-gray-900 overflow-hidden flex-shrink-0 flex items-center justify-center group-hover:scale-[1.03] transition-transform duration-300">
-          <img
-            src={image}
-            alt={productName}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <Link
+          to={productId ? `/products/${productId}` : "/products"}
+          className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-xl bg-gray-900 overflow-hidden flex-shrink-0 flex items-center justify-center group-hover:scale-[1.03] transition-transform duration-300"
+        >
+          <img src={image} alt={productName} className="w-full h-full object-cover" />
+        </Link>
 
         {/* Order Details */}
         <div className="flex-1 min-w-0">
@@ -43,14 +44,17 @@ const OrderCard: React.FC<OrderCardProps> = ({
           </div>
 
           {/* Product Name */}
-          <h3 className="text-[15px] font-bold text-gray-900 leading-snug mb-1 truncate">
+          <Link
+            to={productId ? `/products/${productId}` : "/products"}
+            className="text-[15px] font-bold text-gray-900 leading-snug mb-1 truncate hover:text-red-500 transition-colors block"
+          >
             {productName}
-          </h3>
+          </Link>
 
           {/* Date */}
-          <p className="text-xs text-gray-400">
+          <Link to={productId ? `/products/${productId}` : "/products"} className="text-xs text-gray-400 hover:text-gray-700 transition-colors">
             Ordered on {date}
-          </p>
+          </Link>
         </div>
 
         {/* Price + Action */}

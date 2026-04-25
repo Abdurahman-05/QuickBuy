@@ -1,14 +1,17 @@
 import ShippingHeader from "../../components/user-dashboard/shipping-address/ShippingHeader";
 import AddressGrid from "../../components/user-dashboard/shipping-address/AddressGrid";
 import { MapPinPlus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ShippingAddresses = () => {
+    const navigate = useNavigate();
     return (
         <div className="relative px-2 sm:px-5 py-2 sm:py-4 min-h-screen">
             <ShippingHeader />
             <AddressGrid />
-            <Link to="/checkout"
+            <button
+                type="button"
+                onClick={() => navigate("/dashboard/addresses?new=1")}
                 className="
                     fixed
                     bottom-8
@@ -25,7 +28,7 @@ const ShippingAddresses = () => {
                 "
             >
                 <MapPinPlus className="w-6 h-6" />
-            </Link>
+            </button>
         </div>
     );
 };

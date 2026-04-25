@@ -1,13 +1,19 @@
 import { Plus } from "lucide-react";
-import { Link } from "react-router-dom";
 
-const AddAddressCard = () => {
+interface AddAddressCardProps {
+    onAddClick: () => void;
+}
+
+const AddAddressCard = ({ onAddClick }: AddAddressCardProps) => {
     return (
-        <Link to="/dashboard/settings"
+        <button
+            type="button"
+            onClick={onAddClick}
             className="
         bg-gray-200/60
         rounded-2xl
         h-[220px]
+        w-full
         flex flex-col items-center justify-center
         cursor-pointer
         hover:bg-gray-200
@@ -21,7 +27,7 @@ const AddAddressCard = () => {
             <p className="mt-4 text-xs font-semibold tracking-widest text-gray-800">
                 ADD NEW ADDRESS
             </p>
-        </Link>
+        </button>
     );
 };
 

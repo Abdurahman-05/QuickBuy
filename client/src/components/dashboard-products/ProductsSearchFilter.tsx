@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button"
 interface ProductsSearchFilterProps {
     value: string;
     onChange: (value: string) => void;
+    onClear: () => void;
 }
 
-export default function ProductsSearchFilter({ value, onChange }: ProductsSearchFilterProps) {
+export default function ProductsSearchFilter({ value, onChange, onClear }: ProductsSearchFilterProps) {
     return (
         <div className="w-full px-6 mt-6">
 
@@ -45,10 +46,11 @@ export default function ProductsSearchFilter({ value, onChange }: ProductsSearch
                 {/* FILTER BUTTON */}
                 <Button
                     variant="outline"
+                    onClick={onClear}
                     className="h-9 px-5 sm:px-4 py-2 rounded-full border-gray-200 bg-[#EEEEEE] hover:bg-gray-200 text-gray-700 text-xs font-medium flex items-center gap-2"
                 >
                     <ListFilter size={14} />
-                    Filter
+                    Clear
                 </Button>
 
             </div>
