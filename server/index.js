@@ -10,7 +10,7 @@ import { connectDB } from "./config/db.js";
 import { configureCloudinary } from "./config/cloudinary.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
-import productRoutes from "./routes/product.routes.js";
+import productRoutes from "./modules/product/product.routes.js";
 
 const app = express();
 
@@ -129,4 +129,8 @@ app.use("/api/products", productRoutes);
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
 const port = Number(process.env.PORT) || 5000;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    // ADD THIS LINE BELOW:
+    console.log("JWT Secret Check:", process.env.JWT_SECRET); 
+});
