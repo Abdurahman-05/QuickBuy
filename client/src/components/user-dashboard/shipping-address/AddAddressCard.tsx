@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const AddAddressCard = () => {
     return (
-        <Link to="/dashboard/addresses"
+        <Link to="/dashboard/settings"
             className="
         bg-gray-200/60
         rounded-2xl
