@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/products';
+const baseUrl = (import.meta.env.VITE_API_URL || "").trim();
+const API_URL = `${baseUrl.endsWith("/api") ? baseUrl : `${baseUrl.replace(/\/+$/, "")}/api`}/products`;
 
 export const fetchProducts = async () => {
   const response = await axios.get(API_URL);
