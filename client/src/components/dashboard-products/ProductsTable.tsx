@@ -1,44 +1,65 @@
 import { Pencil, Trash2 } from "lucide-react"
 import { Link } from "react-router-dom"
-import Mac from "../../assets/MacBook Pro.svg"
-import Headphone from "../../assets/XM5 Headphones.svg"
-import Camera from "../../assets/Polaroid Camera.svg"
-
-const products = [
-    {
-        name: "MacBook Pro 16\"",
-        sku: "MB-PRO-16-M3",
-        category: "Computing",
-        price: "$2,499.00",
-        stock: "12 in stock",
-        status: "Active",
-        image: Mac
-    },
-    {
-        name: "Sony WH-1000XM5",
-        sku: "SNY-XM5-BLK",
-        category: "Audio",
-        price: "$399.00",
-        stock: "45 in stock",
-        status: "Active",
-        image: Headphone,
-    },
-    {
-        name: "Instax Mini Evo",
-        sku: "FUJ-MINI-EVO",
-        category: "Photography",
-        price: "$199.99",
-        stock: "0 in stock",
-        status: "Draft",
-        image: Camera,
-    },
-]
+import { useEffect } from "react"
+import { useProductStore } from "../../store/useProductStore"
 
 export default function ProductsTable() {
+    const products = useProductStore((state) => state.products)
+    const isLoading = useProductStore((state) => state.isLoading)
+    const error = useProductStore((state) => state.error)
+    const successMessage = useProductStore((state) => state.successMessage)
+    const getAllProducts = useProductStore((state) => state.getAllProducts)
+    const updateProduct = useProductStore((state) => state.updateProduct)
+    const deleteProduct = useProductStore((state) => state.deleteProduct)
+
+    useEffect(() => {
+        getAllProducts()
+    }, [getAllProducts])
+
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteProduct(id)
+        } catch {
+            // Error is handled in the product store
+        }
+    }
+
+    const handleQuickUpdate = async (id: string, currentName: string, currentPrice: number) => {
+        const name = window.prompt("Update product name", currentName)
+        if (name === null || name.trim() === "") return
+
+        const priceInput = window.prompt("Update product price", String(currentPrice))
+        if (priceInput === null || priceInput.trim() === "") return
+
+        const price = Number(priceInput)
+        if (Number.isNaN(price)) return
+
+        try {
+            await updateProduct(id, { name: name.trim(), price })
+        } catch {
+            // Error is handled in the product store
+        }
+    }
+
     return (
         <div className="w-full px-4 sm:px-6 mt-6">
 
             <div className="bg-white rounded-[24px] sm:rounded-[28px] border p-4 sm:p-6 shadow-sm">
+                {isLoading && (
+                    <div className="pb-4 text-[11px] font-semibold text-gray-500 uppercase tracking-wider">
+                        Loading products...
+                    </div>
+                )}
+                {error && (
+                    <div className="pb-4 text-[11px] font-semibold text-red-500 uppercase tracking-wider">
+                        {error}
+                    </div>
+                )}
+                {successMessage && (
+                    <div className="pb-4 text-[11px] font-semibold text-green-600 uppercase tracking-wider">
+                        {successMessage}
+                    </div>
+                )}
 
                 {/* TABLE */}
                 <div className="overflow-x-auto">
@@ -62,13 +83,13 @@ export default function ProductsTable() {
 
                             {products.map((p, i) => (
                                 <tr
-                                    key={i}
+                                    key={p.id || i}
                                     className="border-t border-gray-100 hover:bg-gray-50/50 transition"
                                 >
 
                                     {/* PRODUCT */}
                                     <td className="py-4 sm:py-5">
-                                        <Link to={`/products/${p.sku.toLowerCase()}`} className="flex items-center gap-3 sm:gap-4 group cursor-pointer">
+                                        <Link to={`/products/${p.id}`} className="flex items-center gap-3 sm:gap-4 group cursor-pointer">
 
                                             <img
                                                 src={p.image}
@@ -83,7 +104,7 @@ export default function ProductsTable() {
                                                 </p>
 
                                                 <p className="text-[10px] sm:text-xs text-gray-400 truncate">
-                                                    SKU: {p.sku}
+                                                    SKU: {p.id}
                                                 </p>
 
                                             </div>
@@ -98,28 +119,36 @@ export default function ProductsTable() {
 
                                     {/* PRICE */}
                                     <td className="font-semibold text-gray-900 text-xs sm:text-sm whitespace-nowrap">
-                                        {p.price}
+                                        ${p.price.toFixed(2)}
                                     </td>
 
                                     {/* STOCK */}
                                     <td className="text-gray-600 text-xs sm:text-sm whitespace-nowrap">
-                                        {p.stock}
+                                        {p.stockInfo}
                                     </td>
 
                                     {/* STATUS */}
                                     <td className="whitespace-nowrap">
-                                        <StatusBadge status={p.status} />
+                                        <StatusBadge status={p.stockInfo.toLowerCase().includes("out") ? "Draft" : "Active"} />
                                     </td>
 
                                     {/* ACTIONS */}
                                     <td className="text-right">
                                         <div className="flex justify-end gap-2 sm:gap-3">
 
-                                            <button className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition">
+                                            <button
+                                                onClick={() => handleQuickUpdate(p.id, p.name, p.price)}
+                                                disabled={isLoading}
+                                                className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-50"
+                                            >
                                                 <Pencil className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500 hover:text-black" />
                                             </button>
 
-                                            <button className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition">
+                                            <button
+                                                onClick={() => handleDelete(p.id)}
+                                                disabled={isLoading}
+                                                className="p-1.5 sm:p-2 rounded-full hover:bg-gray-100 transition disabled:opacity-50"
+                                            >
                                                 <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-500 hover:text-red-500" />
                                             </button>
 

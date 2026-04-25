@@ -2,9 +2,6 @@ import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // Debugging Interceptor: Log all outgoing requests
@@ -15,6 +12,11 @@ api.interceptors.request.use(
       console.log("[API Payload]", config.data);
     }
     
+    // Let browser set multipart boundary automatically for file uploads.
+    if (config.data instanceof FormData && config.headers) {
+      delete config.headers["Content-Type"];
+    }
+
     const tokenStr = localStorage.getItem("auth-storage");
     if (tokenStr) {
       try {

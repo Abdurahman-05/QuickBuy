@@ -12,7 +12,7 @@ const DashboardLayout: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] font-sans text-gray-900 selection:bg-red-50 selection:text-red-600">
+    <div className="min-h-screen bg-[#F8F9FA] font-sans text-gray-900 selection:bg-red-50 selection:text-red-600 overflow-x-hidden relative w-full">
       
       {/* Sidebar - Fixed on Desktop */}
       <DashboardSidebar 

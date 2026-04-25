@@ -169,9 +169,7 @@ export const useAuthStore = create<AuthState>()(
       updateProfile: async (formData) => {
         set((state) => ({ ...state, isLoading: true, error: null, successMessage: null }));
         try {
-          const response = await api.put("users/profile", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
+          const response = await api.put("users/profile", formData);
           set((state) => ({ 
             ...state, 
             user: response.data, 

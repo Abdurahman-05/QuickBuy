@@ -1,9 +1,11 @@
 import React from "react";
-import { useSearchParams } from "react-router-dom";
 
-const SearchHeader: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get("q") || "All Products";
+interface SearchHeaderProps {
+  query: string;
+  totalItems: number;
+}
+
+const SearchHeader: React.FC<SearchHeaderProps> = ({ query, totalItems }) => {
 
   return (
     <div className="mb-12">
@@ -11,7 +13,7 @@ const SearchHeader: React.FC = () => {
         Results for "{query}"
       </h1>
       <p className="text-xs font-semibold tracking-widest uppercase text-gray-400">
-        48 ITEMS FOUND IN CURATED COLLECTION
+        {totalItems} ITEMS FOUND IN CURATED COLLECTION
       </p>
     </div>
   );

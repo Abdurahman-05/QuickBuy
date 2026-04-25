@@ -1,19 +1,27 @@
 import { Bell, Settings } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Link, NavLink } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProductsNavbar() {
+    const navigate = useNavigate();
+    const user = useAuthStore((state) => state.user);
+    const logout = useAuthStore((state) => state.logout);
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
     return (
         <div className="w-full bg-white border-b px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
 
             {/* LEFT NAV */}
             <div className="flex items-center gap-3 sm:gap-6 text-xs sm:text-sm overflow-x-auto whitespace-nowrap scrollbar-hide">
 
-                <NavLink 
-                    to="/dashboard"
-                    className={({ isActive }) => 
-                        `relative shrink-0 transition-colors ${
-                            isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
+                <NavLink
+                    to="/admin/products"
+                    className={({ isActive }) =>
+                        `relative shrink-0 transition-colors ${isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
                         }`
                     }
                 >
@@ -27,22 +35,20 @@ export default function ProductsNavbar() {
                     )}
                 </NavLink>
 
-                <NavLink 
-                    to="/collections" 
-                    className={({ isActive }) => 
-                        `shrink-0 transition-colors ${
-                            isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
+                <NavLink
+                    to="/collections"
+                    className={({ isActive }) =>
+                        `shrink-0 transition-colors ${isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
                         }`
                     }
                 >
                     Collections
                 </NavLink>
 
-                <NavLink 
-                    to="/stock-alerts" 
-                    className={({ isActive }) => 
-                        `shrink-0 transition-colors ${
-                            isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
+                <NavLink
+                    to="/stock-alerts"
+                    className={({ isActive }) =>
+                        `shrink-0 transition-colors ${isActive ? "font-semibold text-black" : "text-gray-400 hover:text-black"
                         }`
                     }
                 >
@@ -70,16 +76,21 @@ export default function ProductsNavbar() {
                 {/* USER */}
                 <div className="flex items-center gap-2 sm:gap-3 border-l pl-3 sm:pl-5">
 
-                    <Link to="/admin/dashboard">
-                        <Avatar className="h-7 w-7 sm:h-8 sm:w-8 hover:opacity-80 transition-opacity">
-                            <AvatarImage src="https://i.pravatar.cc/100" />
-                            <AvatarFallback>AU</AvatarFallback>
+                    <Link to="/admin/dashboard" className="flex items-center gap-2 group">
+                        <Avatar className="h-7 w-7 sm:h-8 sm:w-8 border border-transparent group-hover:border-red-500 transition-all">
+                            <AvatarImage src={user?.profileImage || ""} className="object-cover" />
+                            <AvatarFallback className="bg-gray-100 font-bold text-gray-400 text-xs text-center border">
+                                {user?.firstName?.[0]}{user?.lastName?.[0]}
+                            </AvatarFallback>
                         </Avatar>
                     </Link>
 
-                    <Link to="/login" className="hidden sm:block text-xs sm:text-sm font-bold text-black hover:underline">
+                    <button
+                        onClick={handleLogout}
+                        className="hidden sm:block text-xs sm:text-sm font-bold text-black hover:underline"
+                    >
                         Logout
-                    </Link>
+                    </button>
 
                 </div>
 

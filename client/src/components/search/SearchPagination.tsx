@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const SearchPagination: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 4;
+interface SearchPaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
-  const handlePrev = () => setCurrentPage((p) => Math.max(1, p - 1));
-  const handleNext = () => setCurrentPage((p) => Math.min(totalPages, p + 1));
+const SearchPagination: React.FC<SearchPaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+  if (totalPages <= 1) return null;
 
-  const pageNumbers = [1, 2, 3];
+  const handlePrev = () => onPageChange(Math.max(1, currentPage - 1));
+  const handleNext = () => onPageChange(Math.min(totalPages, currentPage + 1));
+
+  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
     <div className="flex items-center justify-center gap-3 mt-16 pb-16">
@@ -23,11 +28,11 @@ const SearchPagination: React.FC = () => {
         <ChevronLeft size={16} strokeWidth={2.5} />
       </button>
 
-      {/* Pages 1-3 */}
+      {/* Pages */}
       {pageNumbers.map((page) => (
         <button 
           key={page}
-          onClick={() => setCurrentPage(page)}
+          onClick={() => onPageChange(page)}
           className={`w-9 h-9 rounded-full text-[13px] font-bold flex items-center justify-center transition-colors ${
             currentPage === page 
               ? 'bg-gray-900 text-white' 
@@ -37,20 +42,6 @@ const SearchPagination: React.FC = () => {
           {page}
         </button>
       ))}
-
-      <span className="text-gray-400 text-sm font-bold tracking-widest px-1">...</span>
-
-      {/* Page 4 (Last) */}
-      <button 
-        onClick={() => setCurrentPage(4)}
-        className={`w-9 h-9 rounded-full text-[13px] font-bold flex items-center justify-center transition-colors ${
-          currentPage === 4 
-            ? 'bg-gray-900 text-white' 
-            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-        }`}
-      >
-        4
-      </button>
 
       {/* Next Button */}
       <button 

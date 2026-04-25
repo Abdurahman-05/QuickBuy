@@ -6,15 +6,17 @@ interface ProductFilterBarProps {
     setActiveCategory: (cat: string) => void;
     sortOption: string;
     setSortOption: (option: string) => void;
+    categories?: string[];
 }
 
 export default function ProductFilterBar({ 
     activeCategory, 
     setActiveCategory, 
     sortOption, 
-    setSortOption 
+    setSortOption,
+    categories = []
 }: ProductFilterBarProps) {
-    const categories = ["ALL", "LAPTOPS", "AUDIO", "WEARABLES", "HOME", "FOOTWEAR"];
+    const categoryOptions = ["ALL", ...categories];
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -52,7 +54,7 @@ export default function ProductFilterBar({
 
                 {/* Categories */}
                 <div className="flex items-center gap-5 sm:gap-8 overflow-x-auto scrollbar-none pb-2 sm:pb-0">
-                    {categories.map(cat => (
+                    {categoryOptions.map(cat => (
                         <button 
                             key={cat}
                             onClick={() => setActiveCategory(cat)}

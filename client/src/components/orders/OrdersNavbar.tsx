@@ -1,9 +1,18 @@
 import { Bell, Settings, Search } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useAuthStore } from "@/store/useAuthStore"
 
 export default function OrdersNavbar() {
+    const navigate = useNavigate();
+    const user = useAuthStore((state) => state.user);
+    const logout = useAuthStore((state) => state.logout);
+
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
     return (
         <div className="w-full bg-white border-b px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mt-14 lg:mt-0">
 
@@ -46,20 +55,24 @@ export default function OrdersNavbar() {
                 {/* User */}
                 <div className="flex items-center gap-3">
 
-                    <span className="text-[10px] sm:text-xs font-bold text-gray-900">
-                        ADMIN USER
+                    <span className="text-[10px] sm:text-xs font-bold text-gray-900 hidden sm:block">
+                        {user?.firstName?.toUpperCase()} {user?.lastName?.toUpperCase() || ""}
                     </span>
 
-                    <Link to="/admin/dashboard">
-                        <Avatar className="h-8 w-8 hover:opacity-80 transition">
-                            <AvatarImage src="https://i.pravatar.cc/100" />
-                            <AvatarFallback>AU</AvatarFallback>
+                    <Link to="/admin/dashboard" className="flex items-center gap-2 group">
+                        <Avatar className="h-8 w-8 border border-transparent group-hover:border-red-500 transition-all shrink-0">
+                            {user?.profileImage && user.profileImage.trim().length > 0 ? (
+                                <AvatarImage src={user.profileImage} className="object-cover" />
+                            ) : null}
+                            <AvatarFallback className="bg-gray-100 font-bold text-gray-400 text-xs text-center border">
+                                {user?.firstName?.[0] || ""}{user?.lastName?.[0] || ""}
+                            </AvatarFallback>
                         </Avatar>
                     </Link>
 
-                    <Link to="/login" className="text-[10px] sm:text-xs text-red-500 font-semibold hover:underline">
+                    <button onClick={handleLogout} className="text-[10px] sm:text-xs text-red-500 font-semibold hover:underline">
                         LOGOUT
-                    </Link>
+                    </button>
 
                 </div>
 

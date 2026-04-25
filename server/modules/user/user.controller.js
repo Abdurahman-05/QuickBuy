@@ -1,5 +1,24 @@
 import User from "./user.model.js";
 
+const getUploadedImageUrl = (file) => {
+  if (!file) return null;
+
+  if (typeof file.path === "string" && file.path.trim()) return file.path;
+  if (typeof file.secure_url === "string" && file.secure_url.trim()) return file.secure_url;
+  if (typeof file.url === "string" && file.url.trim()) return file.url;
+
+  if (file.path && typeof file.path === "object") {
+    if (typeof file.path.secure_url === "string" && file.path.secure_url.trim()) {
+      return file.path.secure_url;
+    }
+    if (typeof file.path.url === "string" && file.path.url.trim()) {
+      return file.path.url;
+    }
+  }
+
+  return null;
+};
+
 /**
  * @desc    Get user profile
  * @route   GET /api/users/profile
@@ -53,9 +72,17 @@ export const updateUserProfile = async (req, res) => {
       user.phone = req.body.phone !== undefined ? req.body.phone : user.phone;
       
       if (req.file) {
-        user.profileImage = req.file.path;
+        const uploadedImageUrl = getUploadedImageUrl(req.file);
+        if (!uploadedImageUrl) {
+          return res.status(400).json({ message: "Profile image upload failed. Please try another image." });
+        }
+        user.profileImage = uploadedImageUrl;
       } else if (req.body.profileImage !== undefined) {
-        user.profileImage = req.body.profileImage;
+        if (typeof req.body.profileImage === "string") {
+          user.profileImage = req.body.profileImage;
+        } else if (req.body.profileImage !== null) {
+          return res.status(400).json({ message: "Invalid profile image format." });
+        }
       }
       
       if (req.body.password) {
@@ -101,7 +128,7 @@ export const updateUserProfile = async (req, res) => {
     }
   } catch (error) {
     console.error("Update Profile Error:", error.message);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
 

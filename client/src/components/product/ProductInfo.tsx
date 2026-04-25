@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import type { Product } from "../../data/products";
+import type { Product } from "../../types/product";
 import { ShieldCheck, Truck } from "lucide-react"
 
 interface ProductInfoProps {
@@ -20,11 +20,11 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const colors = ["black", "gray", "blue"];
 
   return (
-    <div className="grid md:grid-cols-2 gap-10">
+    <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
 
       {/* LEFT: Image Gallery */}
       <div className="space-y-4">
-        <div className="bg-white rounded-2xl p-8 flex justify-center items-center shadow-sm border border-gray-100 aspect-square overflow-hidden">
+        <div className="bg-white rounded-2xl p-4 sm:p-6 lg:p-8 flex justify-center items-center shadow-sm border border-gray-100 aspect-square overflow-hidden">
           <img
             src={selectedImage}
             alt={product.name}
@@ -52,7 +52,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       </div>
 
       {/* RIGHT: Product Details */}
-      <div className="space-y-6 max-w-lg">
+      <div className="space-y-6 max-w-lg w-full">
         <div>
           <h1 className="text-3xl sm:text-4xl font-black text-gray-900 leading-tight tracking-tight mb-2">
             {product.name}
@@ -110,7 +110,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
 
         {/* Quantity */}
-        <div className="flex items-center gap-8 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8 py-4">
           <div className="space-y-2">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Quantity</p>
             <div className="flex items-center border-2 border-gray-100 rounded-xl px-4 py-2 gap-6 bg-gray-50/50">
@@ -153,7 +153,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
 
         {/* Extra Info */}
-        <div className="flex gap-8 pt-8 border-t border-gray-100">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-8 border-t border-gray-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
               <Truck />

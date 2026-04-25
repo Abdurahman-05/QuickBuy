@@ -1,9 +1,9 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { products } from "../data/products";
 import ProductItemCard from "../components/products/ProductItemCard";
 import ProductFilterBar from "../components/products/ProductFilterBar";
 import ProductPagination from "../components/products/ProductPagination";
+import { useProductStore } from "../store/useProductStore";
 
 const ITEMS_PER_PAGE = 12; // 4 columns × 3 rows
 
@@ -14,6 +14,14 @@ export default function Products() {
   const [activeCategory, setActiveCategory] = useState(categoryFromUrl);
   const [sortOption, setSortOption] = useState("NEWEST");
   const [currentPage, setCurrentPage] = useState(1);
+  const products = useProductStore((state) => state.products);
+  const isLoading = useProductStore((state) => state.isLoading);
+  const error = useProductStore((state) => state.error);
+  const getAllProducts = useProductStore((state) => state.getAllProducts);
+
+  useEffect(() => {
+    getAllProducts();
+  }, [getAllProducts]);
 
   // Sync category with URL param when it changes
   useEffect(() => {
@@ -22,6 +30,11 @@ export default function Products() {
   }, [categoryFromUrl]);
 
   // Filter and sort products
+  const categories = useMemo(() => {
+    const unique = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
+    return unique.sort((a, b) => a.localeCompare(b));
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -42,7 +55,7 @@ export default function Products() {
     }
 
     return result;
-  }, [activeCategory, sortOption]);
+  }, [activeCategory, sortOption, products]);
 
   // Pagination math
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -80,7 +93,7 @@ export default function Products() {
             </h1>
             <div className="flex flex-col items-center md:items-end gap-1">
               <p className="text-[11px] font-black text-black tracking-[0.15em] uppercase">
-                Showing {startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length}
+                Showing {filteredProducts.length === 0 ? 0 : startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length}
               </p>
               <p className="text-[10px] font-bold text-gray-400 tracking-[0.12em] uppercase">
                 Collection 2024
@@ -95,11 +108,24 @@ export default function Products() {
           setActiveCategory={handleCategoryChange}
           sortOption={sortOption}
           setSortOption={handleSortChange}
+          categories={categories}
         />
 
         {/* Product Grid — 4 cols × 3 rows */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 sm:gap-y-16">
-          {paginatedProducts.map((product) => (
+        {isLoading && (
+          <div className="py-20 text-center">
+            <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">Loading products...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="py-10 text-center">
+            <p className="text-red-500 text-sm font-bold uppercase tracking-widest">{error}</p>
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-x-8 gap-y-12 sm:gap-y-16">
+          {!isLoading && !error && paginatedProducts.map((product) => (
             <ProductItemCard key={product.id} product={product} />
           ))}
         </div>

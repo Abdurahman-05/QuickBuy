@@ -59,11 +59,11 @@ export default function Navbar() {
                         <Bell size={18} />
                     </Link>
 
-                    <Link to="/settings" className="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500">
+                    <Link to="/settings" className="p-2 rounded-lg hover:bg-gray-100 transition text-gray-500 hidden sm:flex">
                         <Settings size={18} />
                     </Link>
 
-                    <Link to="/login" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition text-gray-700">
+                    <Link to="/login" className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition text-gray-700">
                         <LogOut size={16} />
                         <span className="hidden sm:inline text-sm font-medium">Logout</span>
                     </Link>
@@ -72,7 +72,7 @@ export default function Navbar() {
                         <img
                             src="https://i.pravatar.cc/40?img=12"
                             alt="User avatar"
-                            className="w-9 h-9 rounded-full object-cover border hover:border-black transition-colors"
+                            className="w-8 h-8 lg:w-9 lg:h-9 rounded-full object-cover border hover:border-black transition-colors"
                         />
                     </Link>
                 </div>

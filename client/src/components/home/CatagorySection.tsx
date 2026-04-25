@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import CategoryCard from "../ui/CategoryCard";
 import ProductCard from "../ui/ProductCard";
 import PromoCard from "../ui/PromoCard";
-import { products } from "../../data/products";
+import { useProductStore } from "../../store/useProductStore";
 
 const categories = [
   { name: "Beauty picks", image: "/beauty.jpg" },
@@ -27,6 +28,14 @@ const promos = [
 ];
 
 function CatagorySection() {
+  const products = useProductStore((state) => state.products);
+  const getAllProducts = useProductStore((state) => state.getAllProducts);
+  useEffect(() => {
+    if (products.length === 0) {
+      getAllProducts();
+    }
+  }, [getAllProducts, products.length]);
+
   const lastViewed = products.slice(0, 5);
   const topSellers = products.slice(5, 10);
 

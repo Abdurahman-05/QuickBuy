@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { ListFilter } from "lucide-react";
 
 const OrdersHeader: React.FC = () => {
@@ -13,15 +14,15 @@ const OrdersHeader: React.FC = () => {
       {/* Controls */}
       <div className="flex items-center gap-2">
         {/* All Time Button */}
-        <button className="h-9 px-4 bg-gray-900 text-white text-xs font-bold tracking-wider uppercase rounded-full hover:bg-gray-800 transition-colors">
+        <Link to="/dashboard/orders" className="h-9 px-4 bg-gray-900 text-white text-xs font-bold tracking-wider uppercase rounded-full hover:bg-gray-800 transition-colors inline-flex items-center">
           All Time
-        </button>
+        </Link>
 
         {/* Filter Dropdown */}
         <div className="relative">
-          <button className="h-9 px-4 pr-8 bg-white border border-gray-200/80 text-xs font-bold text-gray-700 tracking-wider uppercase rounded-full hover:bg-gray-100 transition-colors flex items-center gap-2">
+          <Link to="/dashboard/orders" className="h-9 px-4 pr-8 bg-white border border-gray-200/80 text-xs font-bold text-gray-700 tracking-wider uppercase rounded-full hover:bg-gray-100 transition-colors flex items-center gap-2">
             Filter
-          </button>
+          </Link>
           <ListFilter
             size={14}
             className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"

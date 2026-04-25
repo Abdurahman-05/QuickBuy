@@ -6,7 +6,7 @@ export default function MainLayout() {
   const { pathname } = useLocation();
 
   return (
-    <div className="app min-h-screen flex flex-col bg-[#f5f5f5]">
+    <div className="app min-h-screen flex flex-col bg-[#f5f5f5] overflow-x-hidden w-full relative">
       <Navbar />
       <div 
         key={pathname}

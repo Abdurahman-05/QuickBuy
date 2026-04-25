@@ -1,10 +1,52 @@
 import { UploadCloud } from "lucide-react"
-import { useState } from "react"
+import { useState, type FormEvent, type MouseEvent } from "react"
+import { useProductStore } from "../../../store/useProductStore"
 
 export default function ProductForm() {
     const [open, setOpen] = useState(false)
     const [selected, setSelected] = useState("Select Category")
+    const [name, setName] = useState("")
+    const [price, setPrice] = useState("")
+    const [description, setDescription] = useState("")
+    const [stock, setStock] = useState("")
+    const [imageUrl, setImageUrl] = useState("")
     const options = ["Electronics", "Clothing", "Accessories"]
+    const createProduct = useProductStore((state) => state.createProduct)
+    const isLoading = useProductStore((state) => state.isLoading)
+    const error = useProductStore((state) => state.error)
+    const successMessage = useProductStore((state) => state.successMessage)
+    const clearError = useProductStore((state) => state.clearError)
+    const clearSuccessMessage = useProductStore((state) => state.clearSuccessMessage)
+
+    const handleSubmit = async (e?: FormEvent | MouseEvent) => {
+        e?.preventDefault()
+        clearError()
+        clearSuccessMessage()
+
+        const parsedPrice = Number(price)
+        if (!name.trim() || !description.trim() || Number.isNaN(parsedPrice) || selected === "Select Category") {
+            return
+        }
+
+        try {
+            await createProduct({
+                name: name.trim(),
+                description: description.trim(),
+                price: parsedPrice,
+                category: selected,
+                stock: Number(stock) || 0,
+                images: imageUrl.trim() ? [imageUrl.trim()] : [],
+            })
+            setName("")
+            setPrice("")
+            setDescription("")
+            setStock("")
+            setSelected("Select Category")
+            setImageUrl("")
+        } catch {
+            // Errors are already handled in store.
+        }
+    }
 
     return (
         <div className="bg-[#f9fafb] min-h-screen py-6 sm:py-8 lg:py-10 overflow-x-hidden">
@@ -21,12 +63,22 @@ export default function ProductForm() {
                     <div className="w-10 sm:w-12 h-[3px] bg-red-500 mt-2 sm:mt-3 rounded-full" />
                 </div>
 
+                {error && (
+                    <div className="mb-5 text-[11px] font-semibold text-red-500 uppercase tracking-wider">{error}</div>
+                )}
+                {successMessage && (
+                    <div className="mb-5 text-[11px] font-semibold text-green-600 uppercase tracking-wider">{successMessage}</div>
+                )}
+
                 {/* FORM GRID */}
-                <div className="
+                <form
+                    onSubmit={handleSubmit}
+                    className="
                     grid grid-cols-1
                     lg:grid-cols-3
                     gap-6 sm:gap-8 lg:gap-10
-                ">
+                "
+                >
 
                     {/* LEFT SIDE */}
                     <div className="lg:col-span-2 space-y-6 sm:space-y-8 lg:space-y-10 min-w-0">
@@ -40,6 +92,8 @@ export default function ProductForm() {
                             <input
                                 type="text"
                                 placeholder="e.g., Reference Headphones Mk.II"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
                                 className="mt-2 sm:mt-3 w-full bg-white border border-gray-200 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-sm outline-none focus:ring-2 focus:ring-black/10"
                             />
                         </div>
@@ -54,6 +108,8 @@ export default function ProductForm() {
                                 <input
                                     type="text"
                                     placeholder="0.00"
+                                    value={price}
+                                    onChange={(e) => setPrice(e.target.value)}
                                     className="mt-2 sm:mt-3 w-full bg-white border border-gray-200 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-sm outline-none focus:ring-2 focus:ring-black/10"
                                 />
                             </div>
@@ -66,6 +122,8 @@ export default function ProductForm() {
                                 <input
                                     type="text"
                                     placeholder="Units"
+                                    value={stock}
+                                    onChange={(e) => setStock(e.target.value)}
                                     className="mt-2 sm:mt-3 w-full bg-white border border-gray-200 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-sm outline-none focus:ring-2 focus:ring-black/10"
                                 />
                             </div>
@@ -79,6 +137,8 @@ export default function ProductForm() {
 
                             <textarea
                                 placeholder="Describe the technical excellence and editorial soul of this product..."
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
                                 className="mt-2 sm:mt-3 w-full h-32 sm:h-40 lg:h-44 bg-white border border-gray-200 rounded-xl sm:rounded-2xl px-4 sm:px-5 py-3 sm:py-4 text-sm outline-none resize-none focus:ring-2 focus:ring-black/10"
                             />
                         </div>
@@ -97,6 +157,7 @@ export default function ProductForm() {
 
                                 <button
                                     onClick={() => setOpen(!open)}
+                                    type="button"
                                     className="w-full flex items-center justify-between bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700"
                                 >
                                     {selected}
@@ -139,23 +200,22 @@ export default function ProductForm() {
                                 Product Visuals
                             </label>
 
-                            <div className="mt-4 sm:mt-5 border-2 border-dashed border-gray-200 rounded-xl sm:rounded-2xl h-44 sm:h-56 lg:h-64 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition cursor-pointer">
-
+                            <div className="mt-4 sm:mt-5 border-2 border-dashed border-gray-200 rounded-xl sm:rounded-2xl h-44 sm:h-56 lg:h-64 flex flex-col items-center justify-center text-center hover:bg-gray-100 transition p-4">
                                 <div className="bg-white p-3 sm:p-4 rounded-full shadow-sm mb-3 sm:mb-4">
                                     <UploadCloud className="text-gray-400 w-5 h-5 sm:w-6 sm:h-6" />
                                 </div>
-
-                                <p className="text-sm font-medium text-gray-700">
-                                    Drag & Drop Product Shot
-                                </p>
-
-                                <p className="text-xs text-gray-400 mt-1">
-                                    JPG or PNG • 2000px+
-                                </p>
+                                <p className="text-sm font-medium text-gray-700 mb-3">Product Image URL</p>
+                                <input
+                                    type="url"
+                                    placeholder="https://example.com/product-image.jpg"
+                                    value={imageUrl}
+                                    onChange={(e) => setImageUrl(e.target.value)}
+                                    className="w-full max-w-md bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-black/10"
+                                />
                             </div>
                         </div>
                     </div>
-                </div>
+                </form>
 
                 {/* ACTION BUTTONS */}
                 <div className="mt-10 flex flex-col lg:items-end items-center gap-4">
@@ -164,7 +224,11 @@ export default function ProductForm() {
                     <div className="flex flex-col items-center lg:items-end">
 
                         {/* Save Button */}
-                        <button className="
+                        <button
+                            type="submit"
+                            onClick={handleSubmit}
+                            disabled={isLoading}
+                            className="
             bg-black text-white
             px-10 sm:px-12
             py-3 sm:py-3.5
@@ -173,8 +237,10 @@ export default function ProductForm() {
             hover:bg-gray-900 active:scale-[0.98]
             transition-all duration-200
             shadow-md
-        ">
-                            SAVE PRODUCT
+            disabled:opacity-50 disabled:cursor-not-allowed
+        "
+                        >
+                            {isLoading ? "SAVING..." : "SAVE PRODUCT"}
                             <span className="ml-2">→</span>
                         </button>
 

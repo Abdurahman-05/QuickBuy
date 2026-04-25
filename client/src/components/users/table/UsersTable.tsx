@@ -5,6 +5,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
+    TableCell,
 } from "../../ui/table";
 
 import UserRow from "./UserRow";

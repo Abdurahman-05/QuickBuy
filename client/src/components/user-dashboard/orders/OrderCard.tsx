@@ -58,7 +58,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
           <p className="text-lg sm:text-xl font-extrabold text-gray-900 tracking-tight">
             {price}
           </p>
-          <Link to={`/dashboard/orders/${orderId.replace('#', '')}`} className="text-[11px] font-bold text-gray-900 tracking-wider uppercase hover:text-red-500 transition-colors underline decoration-1 underline-offset-2">
+          <Link to="/dashboard/orders" className="text-[11px] font-bold text-gray-900 tracking-wider uppercase hover:text-red-500 transition-colors underline decoration-1 underline-offset-2">
             View Details
           </Link>
         </div>
