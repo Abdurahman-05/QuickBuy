@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import CategoryCard from '../components/categories/CategoryCard';
 import NewsletterSection from '../components/categories/NewsletterSection';
+import api from "../lib/axios";
 import smartwatch from "../assets/Smartwatch.svg";
 import headphone from "../assets/heroimg.svg";
 
-const categories = [
+const categoriesTemplate = [
   // ── ROW 1: 3 equal columns ──
   {
     label: 'COMPUTING',
@@ -42,15 +43,60 @@ const categories = [
   },
   {
     label: 'ESSENTIALS',
-    title: 'Accessories',
+    title: 'General Collection',
     image: 'https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&q=80&w=800',
     linkText: 'View All',
-    linkTo: '/products',
+    linkTo: '/products?category=general',
     bgColor: '#e8eaed',
   },
 ];
 
 export default function Categories() {
+  const [apiCategories, setApiCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get("categories");
+        const incoming = Array.isArray(response.data)
+          ? response.data.map((c: any) => String(c?.name || "").trim()).filter(Boolean)
+          : [];
+        setApiCategories(incoming);
+      } catch {
+        setApiCategories([]);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const resolveCategoryParam = (preferred: string) => {
+    const normalizedPreferred = preferred.toLowerCase();
+    const exact = apiCategories.find((c) => c.toLowerCase() === normalizedPreferred);
+    if (exact) return exact.toLowerCase();
+    const soft = apiCategories.find((c) => c.toLowerCase().includes(normalizedPreferred));
+    if (soft) return soft.toLowerCase();
+    return preferred;
+  };
+
+  const categories = categoriesTemplate.map((cat) => {
+    if (cat.linkTo.includes("category=laptops")) {
+      return { ...cat, linkTo: `/products?category=${resolveCategoryParam("laptops")}` };
+    }
+    if (cat.linkTo.includes("category=audio")) {
+      return { ...cat, linkTo: `/products?category=${resolveCategoryParam("audio")}` };
+    }
+    if (cat.linkTo.includes("category=wearables")) {
+      return { ...cat, linkTo: `/products?category=${resolveCategoryParam("wearables")}` };
+    }
+    if (cat.linkTo.includes("category=home")) {
+      return { ...cat, linkTo: `/products?category=${resolveCategoryParam("wearables")}` };
+    }
+    if (cat.linkTo.includes("category=general")) {
+      return { ...cat, linkTo: "/products?category=all" };
+    }
+    return cat;
+  });
+
   return (
     <div className="min-h-screen bg-white">
       <main className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 pt-6 sm:pt-8 md:pt-10 pb-12 sm:pb-16 md:pb-24">

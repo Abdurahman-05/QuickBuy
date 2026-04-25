@@ -1,25 +1,14 @@
-import React, { useState } from 'react';
 import { Minus, Plus, X, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
+import { useCommerceStore } from '../store/useCommerceStore';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: 'SONIC-X PRO HEADPHONES',
-      description: 'COLOR: OBSIDIAN BLACK / BLUETOOTH 5.2',
-      price: 449.00,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&q=80',
-    },
-    {
-      id: 2,
-      name: 'AERO-WATCH SERIES 7',
-      description: 'SIZE: 44MM / ALPINE WHITE',
-      price: 299.00,
-      quantity: 2,
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&q=80',
-    },
-  ]);
+  const items = useCommerceStore((state) => state.cartItems);
+  const updateCartQuantity = useCommerceStore((state) => state.updateCartQuantity);
+  const removeFromCart = useCommerceStore((state) => state.removeFromCart);
+  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const tax = subtotal * 0.08;
+  const total = subtotal + tax;
 
   return (
     <div className="bg-white min-h-screen p-4 md:p-12 font-sans text-black">
@@ -35,6 +24,9 @@ const Cart = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* List of Items */}
           <div className="lg:col-span-2 space-y-8">
+            {items.length === 0 && (
+              <div className="text-gray-400 text-sm font-medium">Your cart is empty.</div>
+            )}
             {items.map((item) => (
               <div key={item.id} className="flex flex-col md:flex-row items-center gap-6 border-b border-gray-100 pb-8">
                 <div className="w-32 h-32 bg-[#F5F5F5] rounded-3xl flex items-center justify-center overflow-hidden">
@@ -55,11 +47,11 @@ const Cart = () => {
 
                   <div className="flex items-center gap-4 mt-6">
                     <div className="flex items-center bg-[#F9F9F9] rounded-full px-4 py-1 border border-gray-100">
-                      <button className="hover:text-black text-gray-400"><Minus size={14} /></button>
+                      <button onClick={() => updateCartQuantity(item.id, item.quantity - 1)} className="hover:text-black text-gray-400"><Minus size={14} /></button>
                       <span className="px-6 font-bold text-sm">{item.quantity < 10 ? `0${item.quantity}` : item.quantity}</span>
-                      <button className="hover:text-black text-gray-400"><Plus size={14} /></button>
+                      <button onClick={() => updateCartQuantity(item.id, item.quantity + 1)} className="hover:text-black text-gray-400"><Plus size={14} /></button>
                     </div>
-                    <button className="text-gray-300 hover:text-red-500 transition-colors">
+                    <button onClick={() => removeFromCart(item.id)} className="text-gray-300 hover:text-red-500 transition-colors">
                       <X size={18} />
                     </button>
                   </div>
@@ -76,7 +68,7 @@ const Cart = () => {
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-tight">
                   <span>Subtotal</span>
-                  <span className="text-black">$1,047.00</span>
+                  <span className="text-black">${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-tight">
                   <span>Shipping</span>
@@ -84,11 +76,11 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between text-[10px] font-bold text-gray-500 uppercase tracking-tight border-b border-gray-300 pb-4">
                   <span>Estimated Tax</span>
-                  <span className="text-black">$84.50</span>
+                  <span className="text-black">${tax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-baseline pt-4">
                   <span className="text-[10px] font-black uppercase tracking-tighter">Grand Total</span>
-                  <span className="text-3xl font-black">$1,131.50</span>
+                  <span className="text-3xl font-black">${total.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -100,10 +92,12 @@ const Cart = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-black text-white rounded-full py-5 flex items-center justify-center gap-3 hover:bg-gray-800 transition-all mb-6">
+              <Link to="/checkout" className="w-full block">
+              <button disabled={items.length === 0} className="w-full bg-black text-white rounded-full py-5 flex items-center justify-center gap-3 hover:bg-gray-800 transition-all mb-6 disabled:opacity-40 disabled:cursor-not-allowed">
                 <span className="text-[10px] font-bold tracking-widest uppercase">Proceed to Checkout</span>
                 <ArrowRight size={16} />
               </button>
+              </Link>
 
               <div className="flex justify-center gap-6 text-[8px] font-bold text-gray-400 uppercase tracking-[0.1em]">
                 <div className="flex items-center gap-1">

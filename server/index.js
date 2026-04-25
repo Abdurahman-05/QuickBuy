@@ -11,6 +11,7 @@ import { configureCloudinary } from "./config/cloudinary.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import categoryRoutes from "./routes/category.routes.js";
 import orderRoutes from "./modules/order/order.routes.js";
 import cartRoutes from "./modules/cart/cart.routes.js";
 
@@ -22,7 +23,6 @@ configureCloudinary();
 
 // Middlewares
 app.use(helmet());
-<<<<<<< HEAD
 const configuredOrigins = process.env.CLIENT_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) ?? [];
 app.use(cors({
   origin: (origin, callback) => {
@@ -32,13 +32,6 @@ app.use(cors({
     }
     return callback(new Error(`CORS blocked for origin: ${origin}`));
   }
-=======
-// Updated CORS to be more permissive for Swagger and frontend team testing
-app.use(cors({
-  origin: "*", 
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  credentials: true
->>>>>>> main
 }));
 app.use(morgan("dev"));
 app.use(express.json());
@@ -138,6 +131,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 

@@ -3,13 +3,16 @@ import { Heart, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface WishlistCardProps {
+    id: string;
     name: string;
-    price: string;
+    price: number;
     image: string;
     desc: string;
+    onMoveToCart: (id: string) => void;
+    onRemove: (id: string) => void;
 }
 
-const WishlistCard: React.FC<WishlistCardProps> = ({ name, price, image, desc }) => {
+const WishlistCard: React.FC<WishlistCardProps> = ({ id, name, price, image, desc, onMoveToCart, onRemove }) => {
     return (
         <div className="flex flex-col">
 
@@ -49,7 +52,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ name, price, image, desc })
             shadow-sm
           "
                 >
-                    {price}
+                    ${price.toFixed(2)}
                 </div>
             </div>
 
@@ -67,6 +70,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ name, price, image, desc })
             {/* ACTIONS */}
             <div className="mt-3 flex items-center gap-2">
                 <Link to="/cart"
+                    onClick={() => onMoveToCart(id)}
                     className="
             bg-black text-white 
             text-[11px] 
@@ -81,6 +85,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({ name, price, image, desc })
                 </Link>
 
                 <button
+                    onClick={() => onRemove(id)}
                     className="
             w-8 h-8 
             flex items-center justify-center 

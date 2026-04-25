@@ -2,7 +2,12 @@ import { Search, ListFilter } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
-export default function ProductsSearchFilter() {
+interface ProductsSearchFilterProps {
+    value: string;
+    onChange: (value: string) => void;
+}
+
+export default function ProductsSearchFilter({ value, onChange }: ProductsSearchFilterProps) {
     return (
         <div className="w-full px-6 mt-6">
 
@@ -13,10 +18,6 @@ export default function ProductsSearchFilter() {
                     className="relative flex-1 w-full bg-gray-200 rounded-full"
                     onSubmit={(e) => {
                         e.preventDefault();
-                        const formData = new FormData(e.currentTarget);
-                        const searchQuery = formData.get("q");
-                        // For generic UX handling, route to /search or trigger local table filtering
-                        if (searchQuery) window.location.href = `/search?q=${encodeURIComponent(searchQuery.toString())}`;
                     }}
                 >
                     <Search
@@ -27,6 +28,8 @@ export default function ProductsSearchFilter() {
                     <Input
                         name="q"
                         placeholder="Search product name, SKU, or category..."
+                        value={value}
+                        onChange={(e) => onChange(e.target.value)}
                         className="
                             w-full h-12
                             pl-10 pr-4

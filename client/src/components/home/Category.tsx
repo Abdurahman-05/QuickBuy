@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 const categories = [
   { name: 'Beauty picks', image: beautypicks, path: '/products?category=audio' },
   { name: 'Computer and accessories', image: computer, path: '/products?category=laptops' },
-  { name: 'Video games', image: vediogame, path: '/products?category=home' },
-  { name: 'Toys and games', image: toy, path: '/products' },
+  { name: 'Video games', image: vediogame, path: '/products?category=wearables' },
+  { name: 'Toys and games', image: toy, path: '/products?category=general' },
 ];
 
 const Category: React.FC = () => {

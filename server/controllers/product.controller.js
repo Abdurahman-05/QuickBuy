@@ -2,6 +2,22 @@ import { Product } from "../models/product.model.js";
 import { Category } from "../models/category.model.js";
 import { Review } from "../models/review.model.js";
 
+const getUploadedImageUrl = (file) => {
+  if (!file) return null;
+  if (typeof file.path === "string" && file.path.trim()) return file.path;
+  if (typeof file.secure_url === "string" && file.secure_url.trim()) return file.secure_url;
+  if (typeof file.url === "string" && file.url.trim()) return file.url;
+  if (file.path && typeof file.path === "object") {
+    if (typeof file.path.secure_url === "string" && file.path.secure_url.trim()) {
+      return file.path.secure_url;
+    }
+    if (typeof file.path.url === "string" && file.path.url.trim()) {
+      return file.path.url;
+    }
+  }
+  return null;
+};
+
 const mapProduct = (productDoc) => {
   const product = productDoc?.toObject?.() ?? productDoc;
   const categoryName = typeof product?.categoryId === "object" && product?.categoryId !== null
@@ -45,7 +61,6 @@ export const getProductById = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
-<<<<<<< HEAD
   try {
     const payload = {
       ...req.body,
@@ -60,15 +75,6 @@ export const addProduct = async (req, res) => {
     res.status(201).json(mapProduct(hydrated));
   } 
   catch (err) { res.status(400).json({ error: err.message }); }
-=======
-  try { 
-    const product = new Product(req.body);
-    await product.save();
-    res.status(201).json(product); 
-  } catch (err) { 
-    res.status(400).json({ error: err.message }); 
-  }
->>>>>>> main
 };
 
 export const updateProduct = async (req, res) => {
@@ -110,4 +116,16 @@ export const getReviews = async (req, res) => {
 export const addReview = async (req, res) => {
   try { res.status(201).json(await new Review({ ...req.body, productId: req.params.id }).save()); } 
   catch (err) { res.status(400).json({ error: err.message }); }
+};
+
+export const uploadProductImage = async (req, res) => {
+  try {
+    const imageUrl = getUploadedImageUrl(req.file);
+    if (!imageUrl) {
+      return res.status(400).json({ message: "Image upload failed. Please try another image." });
+    }
+    return res.status(200).json({ imageUrl });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };

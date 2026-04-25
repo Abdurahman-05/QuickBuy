@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import type { Product } from "../../types/product";
 import { ShieldCheck, Truck } from "lucide-react"
+import { useCommerceStore } from "../../store/useCommerceStore";
 
 interface ProductInfoProps {
   product: Product;
@@ -18,6 +19,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   }, [product]);
 
   const colors = ["black", "gray", "blue"];
+  const addToCart = useCommerceStore((state) => state.addToCart);
+  const addToWishlist = useCommerceStore((state) => state.addToWishlist);
 
   return (
     <div className="grid md:grid-cols-2 gap-8 lg:gap-10">
@@ -141,13 +144,19 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full">
           <Link to="/cart" className="w-full sm:flex-1">
-            <button className="w-full bg-black text-white px-8 py-5 rounded-2xl font-bold shadow-xl hover:bg-gray-800 transition-all active:scale-95 text-sm uppercase tracking-widest text-center">
+            <button
+              onClick={() => addToCart(product, quantity)}
+              className="w-full bg-black text-white px-8 py-5 rounded-2xl font-bold shadow-xl hover:bg-gray-800 transition-all active:scale-95 text-sm uppercase tracking-widest text-center"
+            >
               ADD TO CART
             </button>
           </Link>
-          <Link to="/cart" className="w-full sm:flex-[0.5]">
-            <button className="w-full bg-gray-100 text-black px-8 py-5 rounded-2xl font-bold hover:bg-gray-200 transition-all active:scale-95 text-sm uppercase tracking-widest text-center">
-              BUY NOW
+          <Link to="/dashboard/wishlist" className="w-full sm:flex-[0.5]">
+            <button
+              onClick={() => addToWishlist(product)}
+              className="w-full bg-gray-100 text-black px-8 py-5 rounded-2xl font-bold hover:bg-gray-200 transition-all active:scale-95 text-sm uppercase tracking-widest text-center"
+            >
+              WISHLIST
             </button>
           </Link>
         </div>

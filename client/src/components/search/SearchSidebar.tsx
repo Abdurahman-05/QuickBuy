@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { Star } from "lucide-react";
 
-// Helper component for Custom Checkbox with internal state
-const CheckboxOption = ({ label, initialChecked = false }: { label: string; initialChecked?: boolean }) => {
-  const [checked, setChecked] = useState(initialChecked);
+const CheckboxOption = ({ label, checked, onToggle }: { label: string; checked: boolean; onToggle: () => void }) => {
 
   return (
     <div 
       className="flex items-center gap-3 cursor-pointer group select-none"
-      onClick={() => setChecked(!checked)}
+      onClick={onToggle}
     >
       <div
         className={`w-[18px] h-[18px] rounded flex items-center justify-center transition-colors border ${
@@ -36,9 +34,32 @@ const CheckboxOption = ({ label, initialChecked = false }: { label: string; init
   );
 };
 
-const SearchSidebar: React.FC = () => {
+interface SearchSidebarProps {
+  selectedPriceRanges: string[];
+  selectedBrands: string[];
+  minRating: number | null;
+  finish: string | null;
+  brandOptions: string[];
+  onTogglePriceRange: (range: string) => void;
+  onToggleBrand: (brand: string) => void;
+  onToggleRating: () => void;
+  onSetFinish: (finish: string | null) => void;
+}
+
+const SearchSidebar: React.FC<SearchSidebarProps> = ({
+  selectedPriceRanges,
+  selectedBrands,
+  minRating,
+  finish,
+  brandOptions,
+  onTogglePriceRange,
+  onToggleBrand,
+  onToggleRating,
+  onSetFinish,
+}) => {
   const [activeFinish, setActiveFinish] = useState<string | null>(null);
-  const [ratingActive, setRatingActive] = useState(true);
+  const ratingActive = minRating !== null;
+  const resolvedFinish = finish ?? activeFinish;
 
   return (
     <aside className="w-full lg:w-56 flex-shrink-0 mb-12 lg:mb-0">
@@ -49,9 +70,9 @@ const SearchSidebar: React.FC = () => {
           Price Range
         </h3>
         <div className="flex flex-col gap-4">
-          <CheckboxOption label="$0 - $100" />
-          <CheckboxOption label="$100 - $500" initialChecked={true} />
-          <CheckboxOption label="$500+" />
+          <CheckboxOption label="$0 - $100" checked={selectedPriceRanges.includes("0-100")} onToggle={() => onTogglePriceRange("0-100")} />
+          <CheckboxOption label="$100 - $500" checked={selectedPriceRanges.includes("100-500")} onToggle={() => onTogglePriceRange("100-500")} />
+          <CheckboxOption label="$500+" checked={selectedPriceRanges.includes("500+")} onToggle={() => onTogglePriceRange("500+")} />
         </div>
       </div>
 
@@ -61,9 +82,14 @@ const SearchSidebar: React.FC = () => {
           Brand
         </h3>
         <div className="flex flex-col gap-4">
-          <CheckboxOption label="Soniq" />
-          <CheckboxOption label="Bosem" />
-          <CheckboxOption label="AudioLux" />
+          {brandOptions.length > 0 ? brandOptions.map((brand) => (
+            <CheckboxOption
+              key={brand}
+              label={brand}
+              checked={selectedBrands.includes(brand)}
+              onToggle={() => onToggleBrand(brand)}
+            />
+          )) : <span className="text-xs text-gray-400">No brands available</span>}
         </div>
       </div>
 
@@ -74,7 +100,7 @@ const SearchSidebar: React.FC = () => {
         </h3>
         <button 
           className="flex items-center gap-2 group focus:outline-none"
-          onClick={() => setRatingActive(!ratingActive)}
+          onClick={onToggleRating}
         >
           <Star 
             size={14} 
@@ -93,23 +119,39 @@ const SearchSidebar: React.FC = () => {
         </h3>
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => setActiveFinish(activeFinish === 'black' ? null : 'black')}
-            className={`w-6 h-6 rounded-full bg-black focus:outline-none transition-all ${activeFinish === 'black' ? 'ring-2 ring-offset-2 ring-gray-900' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
+            onClick={() => {
+              const next = resolvedFinish === 'black' ? null : 'black';
+              setActiveFinish(next);
+              onSetFinish(next);
+            }}
+            className={`w-6 h-6 rounded-full bg-black focus:outline-none transition-all ${resolvedFinish === 'black' ? 'ring-2 ring-offset-2 ring-gray-900' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
             aria-label="Black"
           />
           <button 
-            onClick={() => setActiveFinish(activeFinish === 'gray' ? null : 'gray')}
-            className={`w-6 h-6 rounded-full bg-gray-500 focus:outline-none transition-all ${activeFinish === 'gray' ? 'ring-2 ring-offset-2 ring-gray-900' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
+            onClick={() => {
+              const next = resolvedFinish === 'gray' ? null : 'gray';
+              setActiveFinish(next);
+              onSetFinish(next);
+            }}
+            className={`w-6 h-6 rounded-full bg-gray-500 focus:outline-none transition-all ${resolvedFinish === 'gray' ? 'ring-2 ring-offset-2 ring-gray-900' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
             aria-label="Dark Gray"
           />
           <button 
-            onClick={() => setActiveFinish(activeFinish === 'lightGray' ? null : 'lightGray')}
-            className={`w-6 h-6 rounded-full bg-gray-200 focus:outline-none transition-all ${activeFinish === 'lightGray' ? 'ring-2 ring-offset-2 ring-gray-900' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
+            onClick={() => {
+              const next = resolvedFinish === 'lightGray' ? null : 'lightGray';
+              setActiveFinish(next);
+              onSetFinish(next);
+            }}
+            className={`w-6 h-6 rounded-full bg-gray-200 focus:outline-none transition-all ${resolvedFinish === 'lightGray' ? 'ring-2 ring-offset-2 ring-gray-900' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
             aria-label="Light Gray"
           />
           <button 
-            onClick={() => setActiveFinish(activeFinish === 'white' ? null : 'white')}
-            className={`w-6 h-6 rounded-full bg-white border border-gray-200 focus:outline-none transition-all ${activeFinish === 'white' ? 'ring-2 ring-offset-2 ring-gray-900 border-transparent' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
+            onClick={() => {
+              const next = resolvedFinish === 'white' ? null : 'white';
+              setActiveFinish(next);
+              onSetFinish(next);
+            }}
+            className={`w-6 h-6 rounded-full bg-white border border-gray-200 focus:outline-none transition-all ${resolvedFinish === 'white' ? 'ring-2 ring-offset-2 ring-gray-900 border-transparent' : 'hover:ring-2 hover:ring-offset-2 hover:ring-gray-300'}`} 
             aria-label="White"
           />
         </div>

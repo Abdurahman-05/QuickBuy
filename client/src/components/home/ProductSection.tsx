@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import type { Product } from '../../data/products';
+import type { Product } from '../../types/product';
+import { useCommerceStore } from '../../store/useCommerceStore';
 
 interface ProductSectionProps {
   title: string;
@@ -9,6 +10,9 @@ interface ProductSectionProps {
 
 const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
   const navigate = useNavigate();
+  const addToCart = useCommerceStore((state) => state.addToCart);
+  const addToWishlist = useCommerceStore((state) => state.addToWishlist);
+  const isInWishlist = useCommerceStore((state) => state.isInWishlist);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
@@ -47,12 +51,15 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
               />
               <Link
                 to="/dashboard/wishlist"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addToWishlist(product);
+                }}
                 className="absolute right-3 top-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-white/40 text-gray-700 hover:text-red-500 flex items-center justify-center transition-colors shadow-sm"
                 aria-label="Add to wishlist"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" fill={isInWishlist(product.id) ? "currentColor" : "none"} />
                 </svg>
               </Link>
             </div>
@@ -83,7 +90,10 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
 
                 <Link
                   to="/cart"
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addToCart(product, 1);
+                  }}
                   className="flex items-center justify-center gap-2 bg-[#1b1b1b] hover:bg-[#e60000] text-white rounded-full transition-all duration-300 w-full h-8 sm:h-9 relative overflow-hidden group/btn shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(230,0,0,0.23)] hover:-translate-y-0.5 active:scale-95"
                 >
                   <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover/btn:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

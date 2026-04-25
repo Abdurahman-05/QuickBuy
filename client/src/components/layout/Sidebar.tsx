@@ -26,7 +26,7 @@ export default function Sidebar() {
         <>
             {/* MOBILE TOP BAR */}
             <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b flex items-center justify-between px-4 z-[70]">
-                <Link to="/" className="text-lg font-bold text-red-500">
+                <Link to="/admin/dashboard" className="text-lg font-bold text-red-500">
                     QuickBuy
                 </Link>
 
@@ -72,7 +72,7 @@ export default function Sidebar() {
                 </div>
 
                 {/* BRAND */}
-                <Link to="/" className="mb-8 pt-2 block">
+                <Link to="/admin/dashboard" className="mb-8 pt-2 block">
                     <h1 className="text-2xl font-bold text-red-500">
                         QuickBuy
                     </h1>
@@ -118,29 +118,23 @@ export default function Sidebar() {
                         <span className="text-sm font-medium">NEW ENTRY</span>
                     </Link>
 
-                    <NavLink
+                    <Link
                         to="/support"
                         onClick={() => setOpen(false)}
-                        className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2 transition ${isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
-                            }`
-                        }
+                        className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl transition"
                     >
                         <HelpCircle size={18} />
                         Support
-                    </NavLink>
+                    </Link>
 
-                    <NavLink
+                    <Link
                         to="/dashboard/settings"
                         onClick={() => setOpen(false)}
-                        className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2 transition ${isActive ? "bg-gray-100 text-black font-medium rounded-xl" : "text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl"
-                            }`
-                        }
+                        className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl transition"
                     >
                         <Settings size={18} />
                         Settings
-                    </NavLink>
+                    </Link>
                 </div>
             </div>
         </>

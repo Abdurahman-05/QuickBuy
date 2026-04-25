@@ -3,11 +3,25 @@ import Navbar from "../components/ui/Navbar"
 import StatCard from "../components/admin-dashboard/StatCard"
 import OrdersTable from "../components/admin-dashboard/DashboardOrderTable"
 import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import { useProductStore } from "../store/useProductStore"
+import { useAuthStore } from "../store/useAuthStore"
 
 import { Plus } from "lucide-react"
 
 export default function Dashboard() {
     const navigate = useNavigate()
+    const products = useProductStore((state) => state.products)
+    const getAllProducts = useProductStore((state) => state.getAllProducts)
+    const users = useAuthStore((state) => state.users)
+    const getAllUsers = useAuthStore((state) => state.getAllUsers)
+
+    useEffect(() => {
+        getAllProducts()
+        getAllUsers()
+    }, [getAllProducts, getAllUsers])
+
+    const totalRevenue = products.reduce((sum, p) => sum + p.price, 0)
     return (
         <div className="flex min-h-screen bg-gray-50 w-full overflow-x-hidden">
 
@@ -73,9 +87,9 @@ export default function Dashboard() {
                     ">
                         <StatCard
                             title="Total Products"
-                            value={156}
-                            change="+12% this month"
-                            trend="up"
+                            value={products.length}
+                            change="Live inventory"
+                            trend="stable"
                             type="products"
                             path="/admin/products"
                         />
@@ -91,8 +105,8 @@ export default function Dashboard() {
 
                         <StatCard
                             title="Total Users"
-                            value={842}
-                            change="Stable performance"
+                            value={users.length}
+                            change="Live from backend"
                             trend="stable"
                             type="users"
                             path="/admin/users"
@@ -100,9 +114,9 @@ export default function Dashboard() {
 
                         <StatCard
                             title="Revenue"
-                            value={45200}
-                            change="Record breaking week"
-                            trend="up"
+                            value={Number(totalRevenue.toFixed(0))}
+                            change="Based on listed products"
+                            trend="stable"
                             type="revenue"
                             path="/admin/dashboard"
                         />

@@ -1,8 +1,9 @@
 import express from "express";
 import {
   getProducts, getProductById, addProduct, updateProduct, deleteProduct,
-  getCategories, addCategory, getReviews, addReview
+  getCategories, addCategory, getReviews, addReview, uploadProductImage
 } from "../controllers/product.controller.js";
+import { upload } from "../config/cloudinary.js";
 
 const router = express.Router();
 
@@ -64,25 +65,10 @@ router.post("/categories", addCategory);
  */
 router.get("/", getProducts);
 router.post("/", addProduct);
+router.post("/upload-image", upload.single("image"), uploadProductImage);
 
-<<<<<<< HEAD
-/** @swagger
- * /api/products/categories:
- *   get:
- *     tags: [Categories]
- *     summary: Get categories
- *   post:
- *     tags: [Categories]
- *     summary: Add category
- */
-router.get("/categories", getCategories);
-router.post("/categories", addCategory);
-
-/** @swagger
-=======
 /**
  * @swagger
->>>>>>> main
  * /api/products/{id}:
  *   get:
  *     tags: [Products]
@@ -135,12 +121,8 @@ router.get("/:id", getProductById);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
 
-<<<<<<< HEAD
-/** @swagger
-=======
 /**
  * @swagger
->>>>>>> main
  * /api/products/{id}/reviews:
  *   get:
  *     tags: [Reviews]

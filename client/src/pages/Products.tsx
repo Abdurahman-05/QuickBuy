@@ -6,13 +6,35 @@ import ProductPagination from "../components/products/ProductPagination";
 import { useProductStore } from "../store/useProductStore";
 
 const ITEMS_PER_PAGE = 12; // 4 columns × 3 rows
+const FILTER_CATEGORIES = ["ALL", "LAPTOPS", "AUDIO", "WEARABLES"];
+
+const normalizeCategory = (value: string) => {
+  const upper = value.toUpperCase();
+  if (upper.includes("LAPTOP") || upper.includes("COMPUT")) return "LAPTOPS";
+  if (upper.includes("AUDIO") || upper.includes("SOUND")) return "AUDIO";
+  if (upper.includes("WEAR") || upper.includes("WATCH")) return "WEARABLES";
+  return upper;
+};
+
+const resolveFilterCategory = (product: { category: string; name: string; description: string }) => {
+  const normalized = normalizeCategory(product.category || "");
+  if (FILTER_CATEGORIES.includes(normalized) && normalized !== "ALL") return normalized;
+
+  const searchable = `${product.name} ${product.description}`.toLowerCase();
+  if (/(headphone|earbud|audio|sound|speaker|noise)/.test(searchable)) return "AUDIO";
+  if (/(laptop|notebook|macbook|ultrabook|comput|monitor)/.test(searchable)) return "LAPTOPS";
+  if (/(watch|wearable|smartphone|phone|band)/.test(searchable)) return "WEARABLES";
+  return "ALL";
+};
 
 export default function Products() {
-  const [searchParams] = useSearchParams();
-  const categoryFromUrl = searchParams.get("category")?.toUpperCase() || "ALL";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rawCategoryFromUrl = searchParams.get("category") || "ALL";
+  const categoryFromUrl = normalizeCategory(rawCategoryFromUrl);
 
-  const [activeCategory, setActiveCategory] = useState(categoryFromUrl);
-  const [sortOption, setSortOption] = useState("NEWEST");
+  const [activeCategory, setActiveCategory] = useState(
+    FILTER_CATEGORIES.includes(categoryFromUrl) ? categoryFromUrl : "ALL"
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const products = useProductStore((state) => state.products);
   const isLoading = useProductStore((state) => state.isLoading);
@@ -25,37 +47,20 @@ export default function Products() {
 
   // Sync category with URL param when it changes
   useEffect(() => {
-    setActiveCategory(categoryFromUrl);
+    setActiveCategory(FILTER_CATEGORIES.includes(categoryFromUrl) ? categoryFromUrl : "ALL");
     setCurrentPage(1);
   }, [categoryFromUrl]);
 
   // Filter and sort products
-  const categories = useMemo(() => {
-    const unique = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
-    return unique.sort((a, b) => a.localeCompare(b));
-  }, [products]);
-
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
     if (activeCategory !== "ALL") {
-      result = result.filter(p => p.category.toUpperCase() === activeCategory);
-    }
-
-    switch (sortOption) {
-      case "PRICE_LOW_HIGH":
-        result.sort((a, b) => a.price - b.price);
-        break;
-      case "PRICE_HIGH_LOW":
-        result.sort((a, b) => b.price - a.price);
-        break;
-      case "NEWEST":
-      default:
-        break;
+      result = result.filter((p) => resolveFilterCategory(p) === activeCategory);
     }
 
     return result;
-  }, [activeCategory, sortOption, products]);
+  }, [activeCategory, products]);
 
   // Pagination math
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -66,11 +71,19 @@ export default function Products() {
   const handleCategoryChange = (cat: string) => {
     setActiveCategory(cat);
     setCurrentPage(1);
-  };
-
-  const handleSortChange = (option: string) => {
-    setSortOption(option);
-    setCurrentPage(1);
+    if (cat === "ALL") {
+      setSearchParams((prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("category");
+        return next;
+      });
+      return;
+    }
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("category", cat.toLowerCase());
+      return next;
+    });
   };
 
   const handlePageChange = (page: number) => {
@@ -106,9 +119,6 @@ export default function Products() {
         <ProductFilterBar
           activeCategory={activeCategory}
           setActiveCategory={handleCategoryChange}
-          sortOption={sortOption}
-          setSortOption={handleSortChange}
-          categories={categories}
         />
 
         {/* Product Grid — 4 cols × 3 rows */}
