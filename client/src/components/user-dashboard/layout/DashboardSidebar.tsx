@@ -9,6 +9,7 @@ import {
   LogOut,
   X,
 } from "lucide-react";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 interface DashboardSidebarProps {
   isOpen?: boolean;
@@ -16,6 +17,13 @@ interface DashboardSidebarProps {
 }
 
 const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isOpen, onClose }) => {
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  const fullName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || "User";
+  const userInitials =
+    `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase() || "U";
+
   const navItems = [
     { name: "Profile Overview", path: "/dashboard", icon: CircleUser, end: true },
     { name: "My Orders", path: "/dashboard/orders", icon: ShoppingBag },
@@ -59,14 +67,20 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isOpen, onClose }) 
         {/* User Card */}
         <div className="px-7 mt-8 py-4 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-gray-100 shadow-sm">
-            <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-              alt="User"
-              className="w-full h-full object-cover"
-            />
+            {user?.profileImage ? (
+              <img
+                src={user.profileImage}
+                alt={fullName}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 text-gray-700 flex items-center justify-center text-xs font-bold">
+                {userInitials}
+              </div>
+            )}
           </div>
           <div className="min-w-0">
-            <p className="text-[13px] font-bold text-gray-900 truncate">Alex Rivera</p>
+            <p className="text-[13px] font-bold text-gray-900 truncate">{fullName}</p>
             <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
                 <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
@@ -117,6 +131,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ isOpen, onClose }) 
         <div className="px-6 pb-8 mt-auto">
           <Link 
             to="/login"
+            onClick={logout}
             className="flex items-center gap-3 px-4 py-3 text-[13px] font-bold text-gray-400 hover:text-red-600 hover:bg-red-50/50 transition-all duration-300 w-full rounded-xl"
           >
             <LogOut size={18} strokeWidth={2} />

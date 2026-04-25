@@ -29,7 +29,7 @@ const Category: React.FC = () => {
           <Link
             key={category.name}
             to={category.path}
-            className="group cursor-pointer rounded-lg bg-[#efefef] p-10 flex flex-col items-center hover:shadow-xl transition-all duration-300 border-4 border-transparent"
+            className="group cursor-pointer rounded-lg bg-[#efefef] p-6 md:p-10 flex flex-col items-center hover:shadow-xl transition-all duration-300 border-4 border-transparent"
           >
             <div className="w-full aspect-square mb-4 flex items-center justify-center">
               <img

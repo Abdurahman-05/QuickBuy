@@ -1,5 +1,6 @@
 import { MoreHorizontal } from "lucide-react"
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar"
+import { Link } from "react-router-dom"
 
 const orders = [
     {
@@ -38,10 +39,10 @@ export default function OrdersTable() {
                     Recent Orders
                 </h2>
 
-                <button className="text-xs sm:text-sm font-medium relative w-fit">
-                    View All Archive
+                <Link to="/admin/orders" className="text-xs sm:text-sm font-medium relative w-fit hover:text-red-500 transition-colors">
+                    View All Orders
                     <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-red-500" />
-                </button>
+                </Link>
             </div>
 
             {/* DESKTOP HEADER */}

@@ -1,19 +1,25 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import chapaLogo from '../assets/chapa.jpg';
 import telebirrLogo from '../assets/telebirr.jpg';
 
 export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('chapa');
+  const navigate = useNavigate();
+
+  const handleCompletePurchase = () => {
+    navigate('/order-confirmation');
+  };
 
   return (
     <div className="bg-white min-h-screen font-sans text-[#1a1a1a] pb-20">
       {/* 1. Header matching Figma */}
-      <div className="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center">
-        <h1 className="text-2xl font-black text-[#E11D48] tracking-tighter">QUICKBUY</h1>
-    
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex justify-between items-center gap-4">
+        <Link to="/" className="text-2xl font-black text-[#E11D48] tracking-tighter">QUICKBUY</Link>
+        <Link to="/cart" className="text-[11px] font-bold uppercase tracking-widest text-gray-500 hover:text-gray-900 transition-colors">Back to Cart</Link>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 mt-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 mt-4">
         
         {/* Left Side: Shipping & Payment */}
         <div className="lg:col-span-7 space-y-12">
@@ -107,7 +113,7 @@ export default function Checkout() {
 
         {/* Right Side: Order Summary */}
         <div className="lg:col-span-5">
-          <div className="bg-[#F6F6F6] p-10 rounded-[40px] sticky top-10">
+          <div className="bg-[#F6F6F6] p-6 sm:p-8 lg:p-10 rounded-[28px] sm:rounded-[40px] sticky top-6 sm:top-10">
             <h2 className="text-xl font-bold mb-10 text-gray-800">Order Summary</h2>
             
             {/* Cart Items */}
@@ -158,7 +164,10 @@ export default function Checkout() {
               <span className="text-3xl font-black">$753.84</span>
             </div>
 
-            <button className="w-full py-6 bg-[#1a1a1a] text-white rounded-[20px] font-black tracking-widest text-[11px] uppercase hover:bg-black transition-all shadow-xl">
+            <button
+              onClick={handleCompletePurchase}
+              className="w-full py-6 bg-[#1a1a1a] text-white rounded-[20px] font-black tracking-widest text-[11px] uppercase hover:bg-black transition-all shadow-xl"
+            >
               Complete Purchase
             </button>
             

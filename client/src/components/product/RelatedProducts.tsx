@@ -1,5 +1,5 @@
-import { products } from "../../data/products";
 import ProductCard from "../ui/ProductCard";
+import { useProductStore } from "../../store/useProductStore";
 
 interface RelatedProductsProps {
   currentProductId: string;
@@ -7,6 +7,8 @@ interface RelatedProductsProps {
 }
 
 const RelatedProducts = ({ currentProductId, category }: RelatedProductsProps) => {
+  const products = useProductStore((state) => state.products);
+
   // Find up to 4 related products in the same category, excluding the current one
   const related = products
     .filter((p) => p.category === category && p.id !== currentProductId)
