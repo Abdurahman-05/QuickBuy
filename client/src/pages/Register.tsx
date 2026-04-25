@@ -66,7 +66,7 @@ export default function Register() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-20 px-12 grid grid-cols-1 md:grid-cols-2 gap-24 items-start">
+    <div className="max-w-6xl mx-auto py-12 md:py-20 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
       {/* Left Section - Matches Figma */}
       <section>
         <h1 className="text-5xl font-bold mb-6 tracking-tight">Create Account</h1>

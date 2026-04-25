@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#111111] text-white py-16 px-6 lg:px-20 mt-20 rounded-t-[40px]">
+    <footer className="w-full bg-[#111111] text-white py-12 md:py-16 px-6 lg:px-20 mt-20 rounded-t-[40px]">
       <div className="mx-auto max-w-[1440px] flex flex-col md:flex-row justify-between items-start gap-12">
         
         {/* 1. LOGO & SLOGAN (Matches Navbar exactly) */}

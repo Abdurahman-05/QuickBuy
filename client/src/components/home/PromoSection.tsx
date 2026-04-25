@@ -28,7 +28,7 @@ const PromoSection: React.FC = () => {
             className="group relative bg-[#f2f2f2] rounded-[3rem] overflow-hidden flex flex-col sm:flex-row items-center min-h-[400px] md:min-h-[420px] hover:shadow-2xl transition-all duration-500 border border-transparent hover:border-white"
           >
             {/* Text Content */}
-            <div className="flex-1 p-10 md:p-14 z-10 w-full sm:w-3/5 text-center sm:text-left">
+            <div className="flex-1 p-8 md:p-14 z-10 w-full sm:w-3/5 text-center sm:text-left">
               <h2 className="text-2xl md:text-3xl font-[1000] text-gray-900 mb-6 leading-tight">
                 {promo.title}
               </h2>

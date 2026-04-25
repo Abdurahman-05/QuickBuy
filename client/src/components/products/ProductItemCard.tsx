@@ -55,21 +55,18 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                 </p>
             </div>
 
-            <div className="flex items-center justify-between px-0.5 pt-1">
-
+            <div className="mt-auto pt-2">
                 <Link
-                    to="/cart"
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center bg-[#1b1b1b] text-white rounded-full transition-all duration-500 overflow-hidden w-8 hover:w-[160px] h-8 relative group/btn"
+                  to="/cart"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex items-center justify-center gap-2 bg-[#1b1b1b] hover:bg-[#e60000] text-white rounded-full transition-all duration-300 w-full h-8 sm:h-9 relative overflow-hidden group/btn shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(230,0,0,0.23)] hover:-translate-y-0.5 active:scale-95"
                 >
-                    <div className="absolute inset-0 flex items-center justify-center w-8 shrink-0">
-                        <svg className="w-4 h-4 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-                        </svg>
-                    </div>
-                    <span className="ml-[36px] text-[10px] font-black uppercase tracking-widest whitespace-nowrap opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300">
-                        Add to cart
-                    </span>
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover/btn:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
+                    Add to cart
+                  </span>
                 </Link>
             </div>
         </div>

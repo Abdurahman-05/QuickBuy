@@ -8,7 +8,7 @@ const Hero: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between w-full h-full relative">
 
         {/* LEFT SIDE: TEXT CONTENT */}
-        <div className="z-10 flex-[1.2] max-w-xl flex flex-col items-start gap-6 md:gap-10 text-center md:text-left items-center md:items-start">
+        <div className="z-10 flex-[1.2] max-w-xl flex flex-col items-center md:items-start gap-6 md:gap-10 text-center md:text-left">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-black leading-[1.1] tracking-tight">
             SHOP COMPUTERS <br className="hidden md:block" /> & ACCESSORIES.
           </h1>
@@ -46,7 +46,7 @@ const Hero: React.FC = () => {
               {/* FLOATING PRODUCT CARD */}
               <Link
                 to="/products"
-                className="absolute -bottom-10 md:bottom-2 left-4 sm:left-10 md:-left-8 lg:-left-12 z-10 bg-white/70 backdrop-blur-md rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] p-5 md:p-6 w-full max-w-[200px] sm:max-w-[230px] border border-white/50 flex flex-col gap-2 group transition-all duration-700 hover:-translate-y-2 cursor-pointer"
+                className="absolute -bottom-10 md:bottom-2 left-2 sm:left-10 md:-left-8 lg:-left-12 z-10 bg-white/70 backdrop-blur-md rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] p-4 sm:p-5 md:p-6 w-full max-w-[180px] sm:max-w-[200px] md:max-w-[230px] border border-white/50 flex flex-col gap-2 group transition-all duration-700 hover:-translate-y-2 cursor-pointer"
               >
                 <h3 className="text-[13px] md:text-[15px] font-semibold text-black leading-tight tracking-tight">
                   Bluetooth wireless <br /> headphones
