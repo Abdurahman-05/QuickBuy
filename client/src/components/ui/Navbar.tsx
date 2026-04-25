@@ -111,7 +111,7 @@ export default function Navbar() {
                   <HeartIcon />
                 </Link>
                 <div className="flex items-center gap-2 sm:gap-3 border-l pl-2 sm:pl-4 border-gray-100">
-                  <Link to="/dashboard" className="flex items-center gap-2 group">
+                  <Link to={user?.role === "ADMIN" ? "/admin/dashboard" : "/dashboard"} className="flex items-center gap-2 group">
                     <img 
                       src={user?.profileImage || profileFallback}
                       alt="Profile" 

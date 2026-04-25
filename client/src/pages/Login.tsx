@@ -12,23 +12,31 @@ const Login: React.FC = () => {
   const clearError = useAuthStore((state) => state.clearError);
   const clearSuccessMessage = useAuthStore((state) => state.clearSuccessMessage);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as any)?.from?.pathname || '/';
+  const from = (location.state as any)?.from?.pathname;
 
   useEffect(() => {
     console.log("[Login UI] UI ERROR UPDATED:", error);
   }, [error]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      console.log("[Login UI] AUTH SUCCESS - Redirecting to:", from);
-      navigate(from, { replace: true });
+    if (isAuthenticated && user) {
+      if (from) {
+        console.log("[Login UI] AUTH SUCCESS - Redirecting to:", from);
+        navigate(from, { replace: true });
+      } else if (user.role === "ADMIN") {
+        console.log("[Login UI] AUTH SUCCESS - Redirecting to Admin Dashboard");
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        console.log("[Login UI] AUTH SUCCESS - Redirecting to Home");
+        navigate("/", { replace: true });
+      }
     }
-    // REMOVED unmount clearing to allow errors to persist
-  }, [isAuthenticated, navigate, from]);
+  }, [isAuthenticated, user, navigate, from]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);

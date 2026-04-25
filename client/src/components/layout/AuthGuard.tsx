@@ -54,8 +54,9 @@ export const AdminRoute: React.FC<Props> = ({ children }) => {
 export const GuestRoute: React.FC<Props> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
+  const user = useAuthStore((state) => state.user);
   const location = useLocation();
-  const from = (location.state as any)?.from?.pathname || "/";
+  const from = (location.state as any)?.from?.pathname;
 
   if (isCheckingAuth) {
     return (
@@ -65,8 +66,11 @@ export const GuestRoute: React.FC<Props> = ({ children }) => {
     );
   }
 
-  if (isAuthenticated) {
-    return <Navigate to={from} replace />;
+  if (isAuthenticated && user) {
+    if (from) {
+      return <Navigate to={from} replace />;
+    }
+    return <Navigate to={user.role === "ADMIN" ? "/admin/dashboard" : "/"} replace />;
   }
 
   return <>{children}</>;

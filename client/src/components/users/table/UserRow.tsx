@@ -21,7 +21,7 @@ export default function UserRow({ user }: any) {
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0">
 
                     <Avatar className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 overflow-hidden rounded-full border border-gray-200">
-                        {user.profileImage ? (
+                        {user.profileImage && user.profileImage.trim().length > 0 ? (
                             <AvatarImage src={user.profileImage} className="object-cover" />
                         ) : (
                             <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400 font-bold text-[10px]">
