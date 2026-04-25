@@ -16,6 +16,18 @@ router.get("/", getProducts);
 router.post("/", addProduct);
 
 /** @swagger
+ * /api/products/categories:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Get categories
+ *   post:
+ *     tags: [Categories]
+ *     summary: Add category
+ */
+router.get("/categories", getCategories);
+router.post("/categories", addCategory);
+
+/** @swagger
  * /api/products/{id}:
  *   get:
  *     tags: [Products]
@@ -30,18 +42,6 @@ router.post("/", addProduct);
 router.get("/:id", getProductById);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
-
-/** @swagger
- * /api/products/categories:
- *   get:
- *     tags: [Categories]
- *     summary: Get categories
- *   post:
- *     tags: [Categories]
- *     summary: Add category
- */
-router.get("/categories", getCategories);
-router.post("/categories", addCategory);
 
 /** @swagger
  * /api/products/{id}/reviews:

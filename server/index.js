@@ -20,7 +20,16 @@ configureCloudinary();
 
 // Middlewares
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? "http://localhost:5173" }));
+const configuredOrigins = process.env.CLIENT_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) ?? [];
+app.use(cors({
+  origin: (origin, callback) => {
+    const isLocalhostDevOrigin = /^http:\/\/localhost:\d+$/.test(origin ?? "");
+    if (!origin || configuredOrigins.includes(origin) || isLocalhostDevOrigin) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  }
+}));
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

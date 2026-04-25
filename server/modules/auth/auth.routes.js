@@ -1,6 +1,7 @@
 import express from "express";
-import { registerUser, authUser, getMe, forgotPassword, resetPassword } from "./auth.controller.js";
+import { registerUser, authUser, getMe, forgotPassword, resetPassword, uploadRegistrationProfileImage } from "./auth.controller.js";
 import { protect } from "../../middleware/authMiddleware.js";
+import { upload } from "../../config/cloudinary.js";
 
 const router = express.Router();
 
@@ -90,6 +91,7 @@ router.get("/me", protect, getMe);
  *         description: Internal Server Error
  */
 router.post("/register", registerUser);
+router.post("/upload-profile-image", upload.single("profileImage"), uploadRegistrationProfileImage);
 
 /**
  * @swagger
