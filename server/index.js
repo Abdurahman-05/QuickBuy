@@ -11,6 +11,7 @@ import { configureCloudinary } from "./config/cloudinary.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import orderRoutes from "./modules/order/order.routes.js";
 
 const app = express();
 
@@ -124,6 +125,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
