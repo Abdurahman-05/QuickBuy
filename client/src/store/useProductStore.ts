@@ -1,13 +1,15 @@
 import { create } from "zustand";
 import api from "../lib/axios";
 import { useAuthStore } from "./useAuthStore";
-import type { Product } from "../data/products";
+import type { Product } from "../types/product";
 
 type ProductInput = {
   name: string;
   description: string;
   price: number;
   category: string;
+  stock?: number;
+  images?: string[];
   image?: File | string | null;
 };
 
@@ -17,7 +19,7 @@ interface ProductState {
   isLoading: boolean;
   error: string | null;
   successMessage: string | null;
-  getAllProducts: () => Promise<void>;
+  getAllProducts: (params?: { search?: string; category?: string }) => Promise<void>;
   getProductById: (id: string) => Promise<void>;
   createProduct: (payload: ProductInput) => Promise<void>;
   updateProduct: (id: string, payload: Partial<ProductInput>) => Promise<void>;
@@ -31,7 +33,9 @@ const getErrorMessage = (error: any, fallback: string) =>
   (typeof error?.response?.data === "string" ? error.response.data : fallback);
 
 const normalizeProduct = (raw: any): Product => {
-  const image = raw?.image || raw?.profileImage || "";
+  const normalizedRating = Math.max(0, Math.min(5, Math.round(Number(raw?.rating || 0))));
+  const categoryValue = raw?.category || raw?.categoryName || raw?.categoryId?.name || "GENERAL";
+  const image = raw?.image || raw?.profileImage || raw?.images?.[0] || "";
   const rawImages = Array.isArray(raw?.images) ? raw.images : [];
   const images: [string, string, string, string] = [
     rawImages[0] || image,
@@ -48,6 +52,15 @@ const normalizeProduct = (raw: any): Product => {
         ? `${stockValue} in stock`
         : "Out of stock";
 
+  const normalizedReviews = Array.isArray(raw?.reviews)
+    ? raw.reviews.map((review: any) => ({
+      author: String(review?.author || review?.userName || "Anonymous"),
+      rating: Math.max(0, Math.min(5, Math.round(Number(review?.rating || 0)))),
+      text: String(review?.text || review?.comment || ""),
+      avatar: review?.avatar,
+    }))
+    : [];
+
   return {
     id: String(raw?._id || raw?.id || ""),
     name: String(raw?.name || ""),
@@ -55,13 +68,13 @@ const normalizeProduct = (raw: any): Product => {
     originalPrice: raw?.originalPrice ? Number(raw.originalPrice) : undefined,
     image,
     images,
-    category: String(raw?.category || "GENERAL"),
-    rating: Number(raw?.rating || 0),
+    category: String(categoryValue).toUpperCase(),
+    rating: normalizedRating,
     stockInfo,
     recommended: Boolean(raw?.recommended),
     description: String(raw?.description || ""),
     specifications: Array.isArray(raw?.specifications) ? raw.specifications : [],
-    reviews: Array.isArray(raw?.reviews) ? raw.reviews : [],
+    reviews: normalizedReviews,
   };
 };
 
@@ -78,16 +91,20 @@ const withAdminAuth = () => {
 };
 
 const buildPayload = (payload: Partial<ProductInput>) => {
-  const hasFile = payload.image instanceof File;
-  if (!hasFile) return payload;
+  const { image, images, ...rest } = payload;
+  const cleaned = Object.fromEntries(Object.entries(rest).filter(([, value]) => value !== undefined));
+  const imageFromSingleField = typeof image === "string" ? image : undefined;
+  const payloadImages = Array.isArray(images) && images.length > 0
+    ? images
+    : imageFromSingleField
+      ? [imageFromSingleField]
+      : undefined;
 
-  const formData = new FormData();
-  if (payload.name !== undefined) formData.append("name", payload.name);
-  if (payload.description !== undefined) formData.append("description", payload.description);
-  if (payload.price !== undefined) formData.append("price", String(payload.price));
-  if (payload.category !== undefined) formData.append("category", payload.category);
-  if (payload.image instanceof File) formData.append("image", payload.image);
-  return formData;
+  return {
+    ...cleaned,
+    ...(payloadImages ? { images: payloadImages } : {}),
+    ...(payload.category ? { category: payload.category.toUpperCase() } : {}),
+  };
 };
 
 export const useProductStore = create<ProductState>()((set) => ({
@@ -100,10 +117,10 @@ export const useProductStore = create<ProductState>()((set) => ({
   clearError: () => set((state) => ({ ...state, error: null })),
   clearSuccessMessage: () => set((state) => ({ ...state, successMessage: null })),
 
-  getAllProducts: async () => {
+  getAllProducts: async (params) => {
     set((state) => ({ ...state, isLoading: true, error: null }));
     try {
-      const response = await api.get("products");
+      const response = await api.get("products", { params });
       const incoming = Array.isArray(response.data?.products)
         ? response.data.products
         : Array.isArray(response.data)
@@ -128,9 +145,18 @@ export const useProductStore = create<ProductState>()((set) => ({
     try {
       const response = await api.get(`products/${id}`);
       const incoming = response.data?.product ?? response.data;
+      let reviews: any[] = [];
+      try {
+        const reviewsResponse = await api.get(`products/${id}/reviews`);
+        if (Array.isArray(reviewsResponse.data)) {
+          reviews = reviewsResponse.data;
+        }
+      } catch {
+        // Keep product details available even if reviews request fails.
+      }
       set((state) => ({
         ...state,
-        product: normalizeProduct(incoming),
+        product: normalizeProduct({ ...incoming, reviews }),
         isLoading: false,
       }));
     } catch (error: any) {
@@ -153,7 +179,7 @@ export const useProductStore = create<ProductState>()((set) => ({
         ...config,
         headers: {
           ...config.headers,
-          ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+          "Content-Type": "application/json",
         },
       });
 
@@ -180,7 +206,7 @@ export const useProductStore = create<ProductState>()((set) => ({
         ...config,
         headers: {
           ...config.headers,
-          ...(body instanceof FormData ? {} : { "Content-Type": "application/json" }),
+          "Content-Type": "application/json",
         },
       });
       const updated = normalizeProduct(response.data?.product ?? response.data);

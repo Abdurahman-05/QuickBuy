@@ -30,6 +30,11 @@ export default function Products() {
   }, [categoryFromUrl]);
 
   // Filter and sort products
+  const categories = useMemo(() => {
+    const unique = Array.from(new Set(products.map((p) => p.category).filter(Boolean)));
+    return unique.sort((a, b) => a.localeCompare(b));
+  }, [products]);
+
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
@@ -50,7 +55,7 @@ export default function Products() {
     }
 
     return result;
-  }, [activeCategory, sortOption]);
+  }, [activeCategory, sortOption, products]);
 
   // Pagination math
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
@@ -103,6 +108,7 @@ export default function Products() {
           setActiveCategory={handleCategoryChange}
           sortOption={sortOption}
           setSortOption={handleSortChange}
+          categories={categories}
         />
 
         {/* Product Grid — 4 cols × 3 rows */}
