@@ -24,6 +24,12 @@ const Login: React.FC = () => {
   }, [error]);
 
   useEffect(() => {
+    return () => {
+      clearSuccessMessage();
+    };
+  }, [clearSuccessMessage]);
+
+  useEffect(() => {
     if (isAuthenticated && user) {
       if (from) {
         const fromIsAdmin = from.startsWith("/admin");
@@ -51,11 +57,13 @@ const Login: React.FC = () => {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     if (error) clearError();
+    if (successMessage) clearSuccessMessage();
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     if (error) clearError();
+    if (successMessage) clearSuccessMessage();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
