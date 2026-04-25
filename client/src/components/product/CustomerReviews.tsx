@@ -6,7 +6,7 @@ interface CustomerReviewsProps {
 
 const CustomerReviews = ({ product }: CustomerReviewsProps) => {
   return (
-    <div className="pt-16 border-t border-gray-200">
+    <div id="product-reviews" className="pt-16 border-t border-gray-200">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
         <div>
            <h2 className="text-3xl font-black text-gray-900 tracking-tight uppercase">
@@ -55,7 +55,12 @@ const CustomerReviews = ({ product }: CustomerReviewsProps) => {
         ) : (
           <div className="col-span-full py-12 text-center bg-white rounded-3xl border border-dashed border-gray-300">
             <p className="text-gray-400 font-medium">No reviews yet for this product. Be the first to share your experience!</p>
-            <button className="mt-4 text-sm font-black text-red-500 uppercase tracking-widest hover:text-red-600">Write a review</button>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="mt-4 text-sm font-black text-red-500 uppercase tracking-widest hover:text-red-600"
+            >
+              Back to top
+            </button>
           </div>
         )}
       </div>

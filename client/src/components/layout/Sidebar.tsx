@@ -5,15 +5,16 @@ import {
     Package,
     ShoppingCart,
     Users,
-    HelpCircle,
-    Settings,
     Plus,
     Menu,
     X,
+    LogOut,
 } from "lucide-react"
+import { useAuthStore } from "@/store/useAuthStore"
 
 export default function Sidebar() {
     const [open, setOpen] = useState(false)
+    const logout = useAuthStore((state) => state.logout)
 
     const navItems = [
         { name: "Dashboard", icon: LayoutDashboard, path: "/admin/dashboard" },
@@ -119,21 +120,15 @@ export default function Sidebar() {
                     </Link>
 
                     <Link
-                        to="/support"
-                        onClick={() => setOpen(false)}
+                        to="/login"
+                        onClick={() => {
+                            logout()
+                            setOpen(false)
+                        }}
                         className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl transition"
                     >
-                        <HelpCircle size={18} />
-                        Support
-                    </Link>
-
-                    <Link
-                        to="/dashboard/settings"
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-3 px-3 py-2 text-gray-500 hover:text-black hover:bg-gray-50 rounded-xl transition"
-                    >
-                        <Settings size={18} />
-                        Settings
+                        <LogOut size={18} />
+                        Logout
                     </Link>
                 </div>
             </div>

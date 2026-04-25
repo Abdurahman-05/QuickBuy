@@ -5,22 +5,26 @@ interface ProductTabsProps {
 }
 
 const ProductTabs = ({ product }: ProductTabsProps) => {
+  const scrollToSection = (sectionId: string) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div className="bg-white rounded-[32px] p-8 sm:p-12 shadow-sm border border-gray-100">
       {/* Tabs Header */}
       <div className="flex gap-12 border-b border-gray-100 pb-0 text-sm uppercase tracking-[0.2em] font-black overflow-x-auto whitespace-nowrap scrollbar-hide">
-        <button className="border-b-4 border-red-500 pb-5 text-black">
+        <button onClick={() => scrollToSection("product-description")} className="border-b-4 border-red-500 pb-5 text-black">
           Description
         </button>
-        <button className="text-gray-300 pb-5 hover:text-gray-500 transition-colors">Specifications</button>
-        <button className="text-gray-300 pb-5 hover:text-gray-500 transition-colors">Customer Reviews</button>
+        <button onClick={() => scrollToSection("product-specifications")} className="text-gray-300 pb-5 hover:text-gray-500 transition-colors">Specifications</button>
+        <button onClick={() => scrollToSection("product-reviews")} className="text-gray-300 pb-5 hover:text-gray-500 transition-colors">Customer Reviews</button>
       </div>
 
       {/* Content */}
       <div className="grid lg:grid-cols-5 gap-16 mt-12">
 
         {/* LEFT: Rich Description */}
-        <div className="lg:col-span-3 space-y-8">
+        <div id="product-description" className="lg:col-span-3 space-y-8">
           <h2 className="text-3xl font-black text-black leading-tight">
             Detailed Overview
           </h2>
@@ -49,7 +53,7 @@ const ProductTabs = ({ product }: ProductTabsProps) => {
         </div>
 
         {/* RIGHT: Technical Specifications */}
-        <div className="lg:col-span-2 space-y-6 bg-gray-50/50 p-8 rounded-[24px] border border-gray-100">
+        <div id="product-specifications" className="lg:col-span-2 space-y-6 bg-gray-50/50 p-8 rounded-[24px] border border-gray-100">
           <h3 className="text-xl font-black uppercase tracking-widest items-center flex gap-3">
              <span className="w-8 h-1 bg-red-500 rounded-full" />
              Tech Specs

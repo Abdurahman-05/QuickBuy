@@ -1,21 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Home } from "lucide-react";
 
 interface AddressCardProps {
+    id: number;
     title: string;
     recipient: string;
     address: string;
     phone: string;
     isPrimary: boolean;
+    onDeliverHere: (id: number) => void;
+    onEdit: (id: number) => void;
 }
 
 const AddressCard: React.FC<AddressCardProps> = ({
+    id,
     title,
     recipient,
     address,
     phone,
     isPrimary,
+    onDeliverHere,
+    onEdit,
 }) => {
     return (
         <div
@@ -83,12 +88,20 @@ const AddressCard: React.FC<AddressCardProps> = ({
             </div>
 
             <div className="mt-5 flex items-center justify-between gap-3">
-                <Link to="/checkout" className="text-[10px] text-gray-500 uppercase tracking-widest font-bold hover:text-gray-900 transition-colors">
+                <button
+                    type="button"
+                    onClick={() => onDeliverHere(id)}
+                    className="text-[10px] text-gray-500 uppercase tracking-widest font-bold hover:text-gray-900 transition-colors"
+                >
                     Deliver Here
-                </Link>
-                <Link to="/dashboard/settings" className="text-[10px] text-red-500 uppercase tracking-widest font-bold hover:text-red-600 transition-colors">
-                    Edit Profile
-                </Link>
+                </button>
+                <button
+                    type="button"
+                    onClick={() => onEdit(id)}
+                    className="text-[10px] text-red-500 uppercase tracking-widest font-bold hover:text-red-600 transition-colors"
+                >
+                    Edit Address
+                </button>
             </div>
         </div>
     );

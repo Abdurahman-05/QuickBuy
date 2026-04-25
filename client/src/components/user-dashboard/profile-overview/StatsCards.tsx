@@ -1,24 +1,39 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import StatCard from "../shared/StatCard";
 import { ShoppingBag, Trophy, Bookmark } from "lucide-react";
+import { useOrderStore } from "@/store/useOrderStore";
+import { useCommerceStore } from "@/store/useCommerceStore";
 
 const StatsCards: React.FC = () => {
+  const { myOrders, getMyOrders } = useOrderStore();
+  const wishlistCount = useCommerceStore((state) => state.wishlistCount());
+
+  useEffect(() => {
+    getMyOrders();
+  }, [getMyOrders]);
+
+  const totalSpent = useMemo(
+    () => myOrders.reduce((sum, order) => sum + Number(order.totalPrice || 0), 0),
+    [myOrders]
+  );
+  const pointsBalance = useMemo(() => Math.round(totalSpent), [totalSpent]);
+
   const stats = [
     {
       title: "TOTAL ORDERS",
-      value: "24",
+      value: String(myOrders.length),
       icon: ShoppingBag,
       iconColor: "#E53935",
     },
     {
       title: "POINTS BALANCE",
-      value: "12,450",
+      value: pointsBalance.toLocaleString(),
       icon: Trophy,
       iconColor: "#E53935",
     },
     {
       title: "WISHLIST ITEMS",
-      value: "18",
+      value: String(wishlistCount),
       icon: Bookmark,
       iconColor: "#E53935",
     },

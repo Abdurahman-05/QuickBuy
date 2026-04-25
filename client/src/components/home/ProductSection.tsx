@@ -27,7 +27,9 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
-        {products.map((product) => (
+        {products.map((product) => {
+          const thumbnail = product.images?.find((img) => Boolean(img)) || product.image;
+          return (
           <div
             key={product.id}
             onClick={() => navigate(`/products/${product.id}`)}
@@ -45,7 +47,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
             {/* Product Image Area */}
             <div className="w-full aspect-square mb-4 flex items-center justify-center relative bg-white/40 rounded-md overflow-hidden group-hover:shadow-sm transition-shadow duration-300">
               <img
-                src={product.image}
+                src={thumbnail}
                 alt={product.name}
                 className="max-h-[85%] max-w-[85%] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out"
               />
@@ -106,7 +108,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
               </div>
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </section>
   );

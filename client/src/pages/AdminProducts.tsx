@@ -54,6 +54,10 @@ export default function AdminProducts() {
                             setSearchQuery(value)
                             setCurrentPage(1)
                         }}
+                        onClear={() => {
+                            setSearchQuery("")
+                            setCurrentPage(1)
+                        }}
                     />
                     <ProductsTable products={paginatedProducts} />
                     <ProductsPaginationFooter

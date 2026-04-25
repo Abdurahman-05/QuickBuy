@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import StatusBadge from "../shared/StatusBadge";
+import { useOrderStore } from "@/store/useOrderStore";
 
 const RecentOrders: React.FC = () => {
-  const orders = [
-    { id: "#QB-89231", date: "Oct 12, 2023", status: "Delivered", total: "$1,299.00" },
-    { id: "#QB-89204", date: "Sep 28, 2023", status: "Processing", total: "$49.00" },
-    { id: "#QB-89188", date: "Sep 15, 2023", status: "Delivered", total: "$349.99" },
-  ];
+  const { myOrders, getMyOrders } = useOrderStore();
+  const orders = useMemo(
+    () =>
+      myOrders.slice(0, 3).map((order) => ({
+        id: `#${order._id.slice(-6).toUpperCase()}`,
+        date: new Date(order.createdAt).toLocaleDateString(),
+        status: order.orderStatus,
+        total: `$${Number(order.totalPrice || 0).toFixed(2)}`,
+      })),
+    [myOrders]
+  );
+
+  useEffect(() => {
+    getMyOrders();
+  }, [getMyOrders]);
 
   return (
     <div>

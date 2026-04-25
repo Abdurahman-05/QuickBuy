@@ -8,8 +8,10 @@ interface Props {
 
 export const ProtectedRoute: React.FC<Props> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const token = useAuthStore((state) => state.token);
   const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
   const location = useLocation();
+  const hasSession = isAuthenticated || Boolean(token);
 
   if (isCheckingAuth) {
     return (
@@ -19,7 +21,15 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (hasSession && !resolvedRole) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+      </div>
+    );
+  }
+
+  if (!hasSession) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -28,9 +38,13 @@ export const ProtectedRoute: React.FC<Props> = ({ children }) => {
 
 export const AdminRoute: React.FC<Props> = ({ children }) => {
   const user = useAuthStore((state) => state.user);
+  const role = useAuthStore((state) => state.role);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const token = useAuthStore((state) => state.token);
   const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
   const location = useLocation();
+  const hasSession = isAuthenticated || Boolean(token);
+  const resolvedRole = user?.role ?? role;
 
   if (isCheckingAuth) {
     return (
@@ -40,12 +54,73 @@ export const AdminRoute: React.FC<Props> = ({ children }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (hasSession && !resolvedRole) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+      </div>
+    );
+  }
+
+  if (!hasSession) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (user?.role !== "ADMIN") {
-    return <Navigate to="/" replace />;
+  if (resolvedRole !== "ADMIN") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+export const UserRoute: React.FC<Props> = ({ children }) => {
+  const user = useAuthStore((state) => state.user);
+  const role = useAuthStore((state) => state.role);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const token = useAuthStore((state) => state.token);
+  const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
+  const location = useLocation();
+  const hasSession = isAuthenticated || Boolean(token);
+  const resolvedRole = user?.role ?? role;
+
+  if (isCheckingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+      </div>
+    );
+  }
+
+  if (!hasSession) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (resolvedRole === "ADMIN") {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+export const StorefrontRoute: React.FC<Props> = ({ children }) => {
+  const user = useAuthStore((state) => state.user);
+  const role = useAuthStore((state) => state.role);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const token = useAuthStore((state) => state.token);
+  const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
+  const hasSession = isAuthenticated || Boolean(token);
+  const resolvedRole = user?.role ?? role;
+
+  if (isCheckingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+      </div>
+    );
+  }
+
+  if (hasSession && resolvedRole === "ADMIN") {
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return <>{children}</>;
@@ -68,9 +143,15 @@ export const GuestRoute: React.FC<Props> = ({ children }) => {
 
   if (isAuthenticated && user) {
     if (from) {
-      return <Navigate to={from} replace />;
+      const fromIsAdmin = from.startsWith("/admin");
+      if (user.role === "ADMIN" && fromIsAdmin) {
+        return <Navigate to={from} replace />;
+      }
+      if (user.role !== "ADMIN" && !fromIsAdmin) {
+        return <Navigate to={from} replace />;
+      }
     }
-    return <Navigate to={user.role === "ADMIN" ? "/admin/dashboard" : "/"} replace />;
+    return <Navigate to={user.role === "ADMIN" ? "/admin/dashboard" : "/dashboard"} replace />;
   }
 
   return <>{children}</>;

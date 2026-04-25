@@ -1,14 +1,24 @@
 import { Minus, Plus, X, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 import { useCommerceStore } from '../store/useCommerceStore';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useAuthStore } from '../store/useAuthStore';
 
 const Cart = () => {
   const items = useCommerceStore((state) => state.cartItems);
   const updateCartQuantity = useCommerceStore((state) => state.updateCartQuantity);
   const removeFromCart = useCommerceStore((state) => state.removeFromCart);
+  const fetchCart = useCommerceStore((state) => state.fetchCart);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchCart();
+    }
+  }, [isAuthenticated, fetchCart]);
 
   return (
     <div className="bg-white min-h-screen p-4 md:p-12 font-sans text-black">

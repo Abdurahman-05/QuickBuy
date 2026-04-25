@@ -3,7 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Checkout from "./pages/Checkout";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import { useAuthStore } from "./store/useAuthStore";
-import { ProtectedRoute, AdminRoute, GuestRoute } from "./components/layout/AuthGuard";
+import { useCommerceStore } from "./store/useCommerceStore";
+import { ProtectedRoute, AdminRoute, GuestRoute, UserRoute, StorefrontRoute } from "./components/layout/AuthGuard";
 
 import "./App.css";
 import MainLayout from "./layouts/MainLayout";
@@ -50,19 +51,21 @@ const PageLoader = () => (
 export default function App() {
   const getMe = useAuthStore((state) => state.getMe);
   const token = useAuthStore((state) => state.token);
+  const fetchCart = useCommerceStore((state) => state.fetchCart);
 
   useEffect(() => {
     if (token) {
       getMe();
+      fetchCart();
     }
-  }, [getMe, token]);
+  }, [getMe, fetchCart, token]);
 
   return (
     <Suspense fallback={<PageLoader />}>
       <ScrollToTop />
       <Routes>
         {/* Main Application Layout (Navbar + Footer) */}
-        <Route element={<MainLayout />}>
+        <Route element={<StorefrontRoute><MainLayout /></StorefrontRoute>}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/search" element={<SearchResults />} />
@@ -79,9 +82,9 @@ export default function App() {
           <Route 
             path="/checkout" 
             element={
-              <ProtectedRoute>
+              <UserRoute>
                 <Checkout />
-              </ProtectedRoute>
+              </UserRoute>
             } 
           />
         </Route>
@@ -122,9 +125,9 @@ export default function App() {
         <Route 
           path="/order-confirmation" 
           element={
-            <ProtectedRoute>
+            <UserRoute>
               <OrderConfirmation />
-            </ProtectedRoute>
+            </UserRoute>
           } 
         />
 
@@ -182,9 +185,9 @@ export default function App() {
         <Route 
           path="/dashboard" 
           element={
-            <ProtectedRoute>
+            <UserRoute>
               <DashboardLayout />
-            </ProtectedRoute>
+            </UserRoute>
           }
         >
           <Route index element={<ProfileOverview />} />

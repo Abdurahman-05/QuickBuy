@@ -47,13 +47,22 @@ const ProductDetails = () => {
       <div className="bg-[#f5f5f5] min-h-screen px-4 sm:px-6 py-10">
         <div className="max-w-7xl mx-auto">
           <p className="text-red-500 text-sm font-bold uppercase tracking-widest">{error}</p>
+          <button
+            onClick={() => {
+              if (!id) return;
+              void getProductById(id);
+            }}
+            className="mt-4 px-4 py-2 rounded-full bg-black text-white text-xs font-bold uppercase tracking-wider hover:bg-gray-800"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
   }
 
   if (!product) {
-    return <Navigate to="/404" replace />;
+    return <Navigate to="/products" replace />;
   }
 
   return (
