@@ -1,12 +1,20 @@
 import { Product } from "../models/product.model.js";
+import { Category } from "../models/category.model.js";
+import { connectDB } from "../config/db.js";
+import "dotenv/config";
 
 const seedData = [
-  { name: "Wireless Headphones", price: 299, brand: "Sony", stock: 10, rating: 4.5 },
-  { name: "Smart Watch", price: 199, brand: "Apple", stock: 5, rating: 4.8 }
+  { name: "Sony WH-1000XM5", price: 399, brand: "Sony", stock: 45, rating: 4.8, description: "Active Noise Cancelling" },
+  { name: "MacBook Pro 16", price: 2499, brand: "Apple", stock: 12, rating: 4.9, description: "M3 Pro / 16GB / 512GB" },
+  { name: "Instax Mini Evo", price: 199, brand: "Fujifilm", stock: 30, rating: 4.7, description: "Photography hybrid" }
 ];
 
-export const seedDB = async () => {
+const runSeed = async () => {
+  await connectDB();
   await Product.deleteMany({});
   await Product.insertMany(seedData);
-  console.log("Database Seeded!");
+  console.log("Database seeded successfully!");
+  process.exit();
 };
+
+runSeed();

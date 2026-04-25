@@ -7,6 +7,10 @@ const router = express.Router();
  * /api/categories:
  *   get:
  *     summary: Get all categories
+ *     tags: [Categories]
+ *     responses:
+ *       200:
+ *         description: Success
  */
 router.get("/", async (req, res) => res.json(await Category.find()));
 

@@ -45,6 +45,7 @@ export const getProductById = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
+<<<<<<< HEAD
   try {
     const payload = {
       ...req.body,
@@ -59,6 +60,15 @@ export const addProduct = async (req, res) => {
     res.status(201).json(mapProduct(hydrated));
   } 
   catch (err) { res.status(400).json({ error: err.message }); }
+=======
+  try { 
+    const product = new Product(req.body);
+    await product.save();
+    res.status(201).json(product); 
+  } catch (err) { 
+    res.status(400).json({ error: err.message }); 
+  }
+>>>>>>> main
 };
 
 export const updateProduct = async (req, res) => {

@@ -11,6 +11,8 @@ import { configureCloudinary } from "./config/cloudinary.js";
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
 import productRoutes from "./routes/product.routes.js";
+import orderRoutes from "./modules/order/order.routes.js";
+import cartRoutes from "./modules/cart/cart.routes.js";
 
 const app = express();
 
@@ -20,6 +22,7 @@ configureCloudinary();
 
 // Middlewares
 app.use(helmet());
+<<<<<<< HEAD
 const configuredOrigins = process.env.CLIENT_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) ?? [];
 app.use(cors({
   origin: (origin, callback) => {
@@ -29,6 +32,13 @@ app.use(cors({
     }
     return callback(new Error(`CORS blocked for origin: ${origin}`));
   }
+=======
+// Updated CORS to be more permissive for Swagger and frontend team testing
+app.use(cors({
+  origin: "*", 
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  credentials: true
+>>>>>>> main
 }));
 app.use(morgan("dev"));
 app.use(express.json());
@@ -39,6 +49,9 @@ const specs = swaggerJsdoc({
   definition: {
     openapi: "3.0.0",
     info: { title: "QuickBuy API", version: "1.0.0" },
+    servers: [
+      { url: "http://localhost:5000", description: "Development server" }
+    ],
     components: {
       schemas: {
         User: {
@@ -113,9 +126,10 @@ const specs = swaggerJsdoc({
           bearerFormat: "JWT"
         }
       }
-    }
+    },
+    security: [{ bearerAuth: [] }]
   },
-  apis: ["./routes/*.js", "./modules/**/*.js"], // Scans all routes
+  apis: ["./routes/*.js", "./modules/**/*.js"], 
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
@@ -124,6 +138,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/cart", cartRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
