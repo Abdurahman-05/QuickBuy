@@ -28,6 +28,9 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                 <img 
                     src={thumbnail} 
                     alt={product.name} 
+                    onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
+                    }}
                     className={`w-full h-full p-0 transition-transform duration-700 ease-out group-hover:scale-110 ${
                         thumbnail.includes('unsplash.com') ? 'object-cover' : 'object-contain p-6 mix-blend-multiply'
                     }`}

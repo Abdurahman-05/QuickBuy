@@ -135,13 +135,13 @@ export default function Products() {
         )}
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-x-8 gap-y-12 sm:gap-y-16">
-          {!isLoading && !error && paginatedProducts.map((product) => (
+          {!isLoading && paginatedProducts.map((product) => (
             <ProductItemCard key={product.id} product={product} />
           ))}
         </div>
 
         {/* Empty state */}
-        {filteredProducts.length === 0 && (
+        {!isLoading && filteredProducts.length === 0 && (
           <div className="py-20 text-center">
             <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">No products found in this category.</p>
           </div>
