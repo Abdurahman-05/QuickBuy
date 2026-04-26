@@ -1,5 +1,5 @@
 import React from 'react';
-import { Filter, Download, MoreHorizontal } from 'lucide-react';
+import { Filter, Download, MoreHorizontal, Package } from 'lucide-react';
 
 const AdminDashboard = () => {
   const transactions = [
