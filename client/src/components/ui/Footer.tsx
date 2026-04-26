@@ -1,200 +1,94 @@
 import { Link } from "react-router-dom";
 
-type FooterLink = {
-  label: string;
-  to: string;
-};
-
-const companyLinks: FooterLink[] = [
-  { label: "About us", to: "/about" },
-  { label: "carriers", to: "/careers" },
-  { label: "locations", to: "/locations" },
-  { label: "blog", to: "/blog" },
-];
-
-const customerCareLinks: FooterLink[] = [
-  { label: "size guide", to: "/size-guide" },
-  { label: "Help and FAQs", to: "/help" },
-  { label: "return a order", to: "/returns" },
-  { label: "refer a friend", to: "/refer" },
-];
-
-const socialLinks: FooterLink[] = [
-  { label: "Instagram", to: "https://instagram.com" },
-  { label: "Facebook", to: "https://facebook.com" },
-  { label: "tiktok", to: "https://tiktok.com" },
-  { label: "twitter", to: "https://x.com" },
-];
-
 export default function Footer() {
   return (
-    <footer className="mt-16 h-auto overflow-x-hidden rounded-t-[40px] bg-black text-white">
-      <div className="mx-auto flex w-full max-w-[1920px] flex-col gap-8 px-4 py-[15px] sm:px-6 lg:px-10">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-[1.25fr_0.75fr_0.75fr_0.75fr] lg:gap-4">
-          <section className="md:col-span-2 lg:col-span-1 lg:pr-8">
-            <h2
-              className="max-w-[460px] text-[28px] font-bold leading-[100%] tracking-[0%] text-white sm:text-[32px] lg:text-[36px]"
-              style={{ fontFamily: "Inter, sans-serif" }}
-            >
-              Recieve an exclusive
-              <br />
-              <span className="text-[#ff0000]">20%</span> discount code
-              <br />
-              when you signup.
-            </h2>
-
-            <form
-              className="mt-8 w-full max-w-[340px] border-b border-zinc-500 pb-2 sm:mt-10"
-              onSubmit={(event) => event.preventDefault()}
-            >
-              <div className="flex items-center justify-between gap-2 sm:gap-4">
-                <input
-                  type="email"
-                  placeholder="enter your email"
-                  aria-label="Enter your email"
-                  className="min-w-0 flex-1 bg-transparent text-[16px] font-semibold leading-[100%] tracking-[0%] text-zinc-500 outline-none placeholder:text-[16px] placeholder:font-semibold placeholder:leading-[100%] placeholder:tracking-[0%] placeholder:text-zinc-500 sm:text-[18px] sm:placeholder:text-[18px] lg:text-[20px] lg:placeholder:text-[20px]"
-                  style={{ fontFamily: "Inter, sans-serif" }}
-                />
-                <button
-                  type="submit"
-                  className="shrink-0 text-[16px] font-semibold leading-[100%] tracking-[0%] text-zinc-100 sm:text-[18px] lg:text-[20px]"
-                  style={{ fontFamily: "Inter, sans-serif" }}
-                >
-                  Subscribe
-                </button>
-              </div>
-            </form>
-          </section>
-
-          <FooterColumn title="company" links={companyLinks} bordered />
-          <FooterColumn
-            title="customer care"
-            links={customerCareLinks}
-            bordered
-          />
-          <FooterExternalColumn
-            title="Follow us on"
-            links={socialLinks}
-            bordered
-            rightBorder
-          />
-        </div>
-
-        <div className="flex flex-col gap-4 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            to="/"
-            className="inline-flex h-[32px] w-[130px] items-center gap-2 text-[34px] font-semibold leading-none tracking-tight text-white"
-            style={{ fontFamily: "Inter, sans-serif" }}
-          >
+    <footer className="w-full bg-[#111111] text-white py-12 md:py-16 px-6 lg:px-20 mt-20 rounded-t-[40px]">
+      <div className="mx-auto max-w-[1440px] flex flex-col md:flex-row justify-between items-start gap-12">
+        
+        {/* 1. LOGO & SLOGAN (Matches Navbar exactly) */}
+        <div className="flex flex-col gap-6">
+          <Link to="/" className="flex items-center gap-2">
             <svg
               width="22"
               height="26"
               viewBox="0 0 22 26"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              className="h-[26px] w-[22px] shrink-0"
+              className="h-[26px] w-[22px]"
             >
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
-                d="M21.0009 23.4923C21.0609 24.1336 20.846 24.7744 20.411 25.2506C19.9762 25.7265 19.3565 25.9997 18.7106 25.9997H2.30017C1.65426 25.9997 1.03462 25.7265 0.59978 25.2506C0.164751 24.7744 -0.0501556 24.1335 0.0099147 23.4923L1.71856 5.24314C1.74296 4.98108 1.96349 4.7809 2.22737 4.7809H4.90809C4.90345 4.87363 4.90103 4.96717 4.90103 5.06111V6.65065C4.59482 6.93832 4.41883 7.33805 4.41883 7.76644C4.41883 8.61434 5.11046 9.30416 5.96058 9.30416C6.8109 9.30416 7.50254 8.61434 7.50254 7.76644C7.50254 7.30258 7.2951 6.87282 6.94575 6.58433V5.06111C6.94575 4.96657 6.95039 4.87343 6.95785 4.7809H14.0156C14.0228 4.87343 14.0277 4.96657 14.0277 5.06111V6.61716C13.7017 6.90624 13.5082 7.32412 13.5082 7.76644C13.5082 8.61434 14.1998 9.30416 15.05 9.30416C15.9003 9.30416 16.5919 8.61434 16.5919 7.76644C16.5919 7.32415 16.3984 6.90626 16.0724 6.61716V5.06111C16.0724 4.96717 16.07 4.87363 16.0654 4.7809H18.7832C19.0471 4.7809 19.2676 4.98108 19.2922 5.24314L21.0009 23.4923ZM15.561 6.87495C15.8708 7.05235 16.0805 7.38517 16.0805 7.76635C16.0805 8.3332 15.6182 8.79425 15.0497 8.79425C14.4814 8.79425 14.0192 8.33322 14.0192 7.76635C14.0192 7.38515 14.2288 7.05232 14.5387 6.87495V5.06107C14.5387 2.83249 12.7207 1.01965 10.4863 1.01965C8.25193 1.01965 6.43418 2.83254 6.43418 5.06107V6.85441C6.76458 7.02596 6.99097 7.37007 6.99097 7.7664C6.99097 8.33325 6.52872 8.79431 5.96022 8.79431C5.39193 8.79431 4.92948 8.33327 4.92948 7.7664C4.92948 7.40072 5.12261 7.07998 5.41189 6.89755V5.06107C5.41189 2.27028 7.68821 0 10.4863 0C13.2843 0 15.5609 2.27028 15.5609 5.06107L15.561 6.87495Z"
-                fill="white"
+                d="M21.0009 23.4923C21.0609 24.1336 20.846 24.7744 20.411 25.2506C19.9762 25.7265 19.3565 25.9997 18.7106 25.9997H2.30017C1.65426 25.9997 1.03462 25.7265 0.59978 25.2506C0.164751 24.7744 -0.0501556 24.1335 0.0099147 23.4923L1.71856 5.24314C1.74296 4.98108 1.96349 4.7809 2.22737 4.7809H18.7832C19.0471 4.7809 19.2676 4.98108 19.2922 5.24314L21.0009 23.4923Z"
+                fill="#FF0000"
               />
             </svg>
-            <span>
-              Quick<span className="text-[#ff0000]">Buy</span>
+            <span className="text-[24px] font-bold tracking-tight text-white">
+              Quick<span className="text-red-600">Buy</span>
             </span>
           </Link>
-
-          <p
-            className="text-[18px] font-bold leading-[100%] tracking-[0%] text-zinc-100 lg:mr-12"
-            style={{ fontFamily: "Inter, sans-serif" }}
-          >
-            © 2025. All rights reserved
+          <p className="text-[11px] leading-relaxed tracking-[0.2em] text-gray-400 max-w-[280px] uppercase font-medium">
+            Curating the world's most advanced electronics for the modern minimalist.
           </p>
         </div>
+
+        {/* 2. CUSTOMER CARE LINKS (Center) */}
+        <div className="flex flex-col gap-5">
+          <h3 className="text-[12px] font-extrabold uppercase tracking-[0.3em] text-white">
+            Customer Care
+          </h3>
+          <ul className="flex flex-col gap-3 text-[12px] text-gray-400 uppercase tracking-[0.1em] font-semibold">
+            <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Policy</Link></li>
+            <li><Link to="/returns" className="hover:text-white transition-colors">Returns & Exchanges</Link></li>
+            <li><Link to="/support" className="hover:text-white transition-colors">Support Center</Link></li>
+          </ul>
+        </div>
+
+        {/* 3. FOLLOW US & COPYRIGHT (Right) */}
+        <div className="flex flex-col md:items-end gap-8">
+          <div className="flex flex-col md:items-end gap-5">
+            <h3 className="text-[12px] font-extrabold uppercase tracking-[0.3em] text-white">
+              Follow Us
+            </h3>
+            <div className="flex gap-6 text-gray-400">
+               {/* Minimalist Social Icons */}
+               <button className="hover:text-white"><ShareIcon /></button>
+               <button className="hover:text-white"><GlobeIcon /></button>
+               <button className="hover:text-white"><AtIcon /></button>
+            </div>
+          </div>
+          <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-medium md:text-right mt-4">
+            © 2026  QuickBuy Electronics. All rights reserved.
+          </p>
+        </div>
+
       </div>
     </footer>
   );
 }
 
-function FooterColumn({
-  title,
-  links,
-  bordered,
-}: {
-  title: string;
-  links: FooterLink[];
-  bordered?: boolean;
-}) {
+// Minimalist Icons for Footer
+function ShareIcon() {
   return (
-    <section
-      className={`${bordered ? "border-zinc-500 pt-1 lg:mr-4 lg:border-l-2 lg:pl-8" : ""} lg:pb-0`}
-    >
-      <h3
-        className="text-[24px] font-semibold capitalize leading-[100%] tracking-[0%] text-zinc-100 sm:text-[26px] lg:whitespace-nowrap"
-        style={{ fontFamily: "Inter, sans-serif" }}
-      >
-        {title}
-      </h3>
-      <ul
-        className="mt-4 space-y-1.5 text-[18px] font-semibold leading-[100%] tracking-[0%] text-zinc-400 lg:mt-5 lg:space-y-2"
-        style={{ fontFamily: "Inter, sans-serif" }}
-      >
-        {links.map((link) => (
-          <li key={link.label}>
-            <Link
-              to={link.to}
-              className="transition-colors duration-200 hover:text-zinc-200"
-            >
-              {link.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+    </svg>
   );
 }
 
-function FooterExternalColumn({
-  title,
-  links,
-  bordered,
-  rightBorder,
-}: {
-  title: string;
-  links: FooterLink[];
-  bordered?: boolean;
-  rightBorder?: boolean;
-}) {
+function GlobeIcon() {
   return (
-    <section
-      className={`${bordered ? "border-zinc-500 pt-1 lg:border-l-2 lg:pl-8" : ""} ${rightBorder ? "lg:mr-12 lg:border-r-2 lg:border-zinc-500 lg:pr-8" : ""} lg:pb-0`}
-    >
-      <h3
-        className="text-[24px] font-semibold leading-[100%] tracking-[0%] text-zinc-100 sm:text-[26px] lg:whitespace-nowrap lg:text-center"
-        style={{ fontFamily: "Inter, sans-serif" }}
-      >
-        {title}
-      </h3>
-      <ul
-        className="mt-4 space-y-1.5 text-[18px] font-semibold leading-[100%] tracking-[0%] text-zinc-400 lg:mt-5 lg:space-y-2"
-        style={{ fontFamily: "Inter, sans-serif" }}
-      >
-        {links.map((link) => (
-          <li key={link.label}>
-            <a
-              href={link.to}
-              className="transition-colors duration-200 hover:text-zinc-200"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+    </svg>
+  );
+}
+
+function AtIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 006 0v-1a10 10 0 10-3.92 7.94"/>
+    </svg>
   );
 }

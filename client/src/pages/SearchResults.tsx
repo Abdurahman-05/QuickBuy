@@ -1,0 +1,126 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import SearchHeader from "../components/search/SearchHeader";
+import SearchSidebar from "../components/search/SearchSidebar";
+import SearchSortBar from "../components/search/SearchSortBar";
+import SearchGrid from "../components/search/SearchGrid";
+import SearchPagination from "../components/search/SearchPagination";
+import { useProductStore } from "../store/useProductStore";
+
+const ITEMS_PER_PAGE = 12;
+
+const SearchResults: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("q") || "";
+  const [sortParam, setSortParam] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [minRating, setMinRating] = useState<number | null>(null);
+  const [finish, setFinish] = useState<string | null>(null);
+  const products = useProductStore((state) => state.products);
+  const isLoading = useProductStore((state) => state.isLoading);
+  const error = useProductStore((state) => state.error);
+  const getAllProducts = useProductStore((state) => state.getAllProducts);
+
+  useEffect(() => {
+    getAllProducts({ search: query || undefined });
+    setCurrentPage(1);
+  }, [getAllProducts, query]);
+
+  const filteredProducts = useMemo(() => {
+    const result = [...products];
+    const byPrice = selectedPriceRanges.length === 0
+      ? result
+      : result.filter((p) => selectedPriceRanges.some((range) => {
+        if (range === "0-100") return p.price >= 0 && p.price <= 100;
+        if (range === "100-500") return p.price > 100 && p.price <= 500;
+        if (range === "500+") return p.price > 500;
+        return false;
+      }));
+    const byBrand = selectedBrands.length === 0
+      ? byPrice
+      : byPrice.filter((p) => selectedBrands.some((b) => p.name.toLowerCase().includes(b.toLowerCase())));
+    const byRating = minRating ? byBrand.filter((p) => p.rating >= minRating) : byBrand;
+    const byFinish = finish
+      ? byRating.filter((p) => `${p.name} ${p.description}`.toLowerCase().includes(finish.toLowerCase()))
+      : byRating;
+    return byFinish;
+  }, [products, selectedPriceRanges, selectedBrands, minRating, finish]);
+
+  const sortedProducts = useMemo(() => {
+    const result = [...filteredProducts];
+    switch (sortParam) {
+      case "price_asc":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "price_desc":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      default:
+        break;
+    }
+    return result;
+  }, [filteredProducts, sortParam]);
+
+  const brandOptions = useMemo(
+    () => Array.from(new Set(products.map((p) => (p.name.split(" ")[0] || "").trim()).filter(Boolean))).slice(0, 8),
+    [products]
+  );
+
+  const totalPages = Math.ceil(sortedProducts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedProducts = sortedProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  return (
+    <div className="bg-white min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 py-10 lg:py-12">
+
+        {/* Header */}
+        <SearchHeader query={query || "All Products"} totalItems={sortedProducts.length} />
+
+        {/* Main Layout (Sidebar + Content) */}
+        <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-16 mt-16">
+
+          {/* Sidebar */}
+          <SearchSidebar
+            selectedPriceRanges={selectedPriceRanges}
+            selectedBrands={selectedBrands}
+            minRating={minRating}
+            finish={finish}
+            brandOptions={brandOptions}
+            onTogglePriceRange={(range) =>
+              setSelectedPriceRanges((prev) => prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range])
+            }
+            onToggleBrand={(brand) =>
+              setSelectedBrands((prev) => prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand])
+            }
+            onToggleRating={() => setMinRating((prev) => (prev ? null : 4.5))}
+            onSetFinish={setFinish}
+          />
+
+          {/* Right Content Area */}
+          <div className="flex-1 w-full">
+            <SearchSortBar
+              sortParam={sortParam}
+              onChange={setSortParam}
+              totalItems={sortedProducts.length}
+            />
+            {isLoading && <p className="text-sm font-semibold text-gray-400 mb-8">Loading products...</p>}
+            {error && <p className="text-sm font-semibold text-red-500 mb-8">{error}</p>}
+            {!isLoading && !error && <SearchGrid products={paginatedProducts} />}
+            <SearchPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+};
+
+export default SearchResults;

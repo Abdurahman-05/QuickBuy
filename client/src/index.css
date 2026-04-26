@@ -14,6 +14,8 @@ body {
   line-height: 1.5;
   color: #0a0a0a;
   background: #fafafa;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 code {
@@ -21,4 +23,21 @@ code {
   padding: 0.15em 0.35em;
   background: #f0f0f0;
   border-radius: 4px;
+}
+
+/* ── Global Smooth Navigation Animations ── */
+@keyframes page-entry {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-page-entry {
+  animation: page-entry 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
