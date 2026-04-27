@@ -23,6 +23,9 @@ export const pay = async (req, res) => {
       return_url: `${process.env.FRONTEND_URL}/order-confirmation?tx_ref=${tx_ref}`,
       "customization[title]": "QuickBuy Order Payment",
       "customization[description]": `Payment for Order ${orderId}`,
+      callback_url: `${process.env.BACKEND_URL}/api/payments/callback/${tx_ref}`,
+      return_url: `${process.env.FRONTEND_URL}/order-confirmation?tx_ref=${tx_ref}`,
+};
     };
 
     const response = await axios.post(
