@@ -32,6 +32,12 @@ const orderSchema = new mongoose.Schema(
       required: true,
       default: 0.0,
     },
+    // Chapa Transaction Reference
+    tx_ref: {
+      type: String,
+      unique: true,
+      sparse: true, 
+    },
     paymentStatus: {
       type: String,
       enum: ["PENDING", "PAID", "REJECTED"],
@@ -67,5 +73,4 @@ const orderSchema = new mongoose.Schema(
 );
 
 const Order = mongoose.model("Order", orderSchema);
-
 export default Order;

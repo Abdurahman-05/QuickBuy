@@ -5,6 +5,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
+import paymentRoutes from "./routes/payment.routes.js";
 
 import { connectDB } from "./config/db.js";
 import { configureCloudinary } from "./config/cloudinary.js";
@@ -130,6 +131,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
