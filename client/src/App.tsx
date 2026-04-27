@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Checkout from "./pages/Checkout";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import { useAuthStore } from "./store/useAuthStore";
@@ -49,6 +49,7 @@ const PageLoader = () => (
 );
 
 export default function App() {
+  const location = useLocation();
   const getMe = useAuthStore((state) => state.getMe);
   const token = useAuthStore((state) => state.token);
   const fetchCart = useCommerceStore((state) => state.fetchCart);
@@ -63,7 +64,8 @@ export default function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <ScrollToTop />
-      <Routes>
+      <div key={location.pathname} className="animate-page-entry">
+      <Routes location={location}>
         {/* Main Application Layout (Navbar + Footer) */}
         <Route element={<StorefrontRoute><MainLayout /></StorefrontRoute>}>
           <Route path="/" element={<Home />} />
@@ -200,6 +202,7 @@ export default function App() {
         {/* 404 Fallback */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </div>
     </Suspense>
   );
 }

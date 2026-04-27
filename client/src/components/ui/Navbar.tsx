@@ -105,24 +105,34 @@ export default function Navbar() {
 
           {/* Action Icons */}
           <div className="flex items-center gap-3 sm:gap-4 md:gap-6 text-black">
-            <Link to="/cart" className="hover:text-red-500 transition-colors relative" aria-label="Cart">
+            <Link
+              to={isAuthenticated ? "/cart" : "/login"}
+              className="hover:text-red-500 transition-colors relative"
+              aria-label="Cart"
+              title={isAuthenticated ? "Cart" : "Login to access cart"}
+            >
               <CartIcon />
-              {cartCount > 0 && (
+              {isAuthenticated && cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
             </Link>
+            <Link
+              to={isAuthenticated ? "/dashboard/wishlist" : "/login"}
+              className="hover:text-red-500 transition-colors relative"
+              aria-label="Wishlist"
+              title={isAuthenticated ? "Wishlist" : "Login to access wishlist"}
+            >
+              <HeartIcon />
+              {isAuthenticated && wishlistCount > 0 && (
+                <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
             {isAuthenticated ? (
               <>
-                <Link to="/dashboard/wishlist" className="hover:text-red-500 transition-colors relative" aria-label="Wishlist">
-                  <HeartIcon />
-                  {wishlistCount > 0 && (
-                    <span className="absolute -top-2 -right-2 min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
-                      {wishlistCount}
-                    </span>
-                  )}
-                </Link>
                 <div className="flex items-center gap-2 sm:gap-3 border-l pl-2 sm:pl-4 border-gray-100">
                   <Link to={user?.role === "ADMIN" ? "/admin/dashboard" : "/dashboard"} className="flex items-center gap-2 group">
                     <img 

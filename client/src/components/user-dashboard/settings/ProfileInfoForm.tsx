@@ -20,6 +20,7 @@ const ProfileInfoForm: React.FC = () => {
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -53,6 +54,19 @@ const ProfileInfoForm: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+      if (!allowedTypes.includes(file.type)) {
+        setFileError("Please select a PNG or JPG image.");
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        setFileError("Image is too large. Please select a file up to 2MB.");
+        return;
+      }
+
+      setFileError(null);
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       if (error) clearError();
@@ -88,7 +102,14 @@ const ProfileInfoForm: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Feedback Messages */}
-      {error && (
+      {fileError && (
+        <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm animate-in fade-in slide-in-from-top-1">
+          <AlertCircle size={18} />
+          <span className="font-medium">{fileError}</span>
+        </div>
+      )}
+
+      {error && !fileError && (
         <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-600 text-sm animate-in fade-in slide-in-from-top-1">
           <AlertCircle size={18} />
           <span className="font-medium">{error}</span>
@@ -116,7 +137,7 @@ const ProfileInfoForm: React.FC = () => {
               )}
             </div>
             <label className="absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-2xl">
-              <input type="file" className="hidden" onChange={handleFileChange} accept="image/*" />
+              <input type="file" className="hidden" onChange={handleFileChange} accept=".png,.jpg,.jpeg,image/png,image/jpeg" />
               <span className="text-[10px] font-black uppercase tracking-widest">Change</span>
             </label>
           </div>

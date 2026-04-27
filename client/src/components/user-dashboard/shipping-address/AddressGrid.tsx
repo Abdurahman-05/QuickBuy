@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AddAddressCard from "./AddAddressCard";
 import AddressCard from "./AddressCard";
+import api from "../../../lib/axios";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 type AddressEntry = {
-    id: number;
+    id: string;
     title: string;
     recipient: string;
     address: string;
@@ -12,39 +14,74 @@ type AddressEntry = {
     isPrimary: boolean;
 };
 
+type RawAddress = {
+    _id?: string;
+    id?: string;
+    label?: string;
+    title?: string;
+    recipient?: string;
+    fullName?: string;
+    name?: string;
+    address?: string;
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+    phone?: string;
+    isPrimary?: boolean;
+    primary?: boolean;
+};
+
+const toReadableAddress = (raw: RawAddress): string => {
+    const inlineAddress = (raw.address || "").trim();
+    if (inlineAddress) return inlineAddress;
+
+    return [raw.street, raw.city, raw.state, raw.zipCode, raw.country]
+        .map((part) => (part || "").trim())
+        .filter(Boolean)
+        .join(", ");
+};
+
+const toAddressEntry = (raw: RawAddress, idx: number): AddressEntry | null => {
+    const id = String(raw._id || raw.id || `addr-${idx + 1}`);
+    const address = toReadableAddress(raw);
+    if (!address) return null;
+
+    return {
+        id,
+        title: (raw.title || raw.label || "Shipping Address").trim(),
+        recipient: (raw.recipient || raw.fullName || raw.name || "Account User").trim(),
+        address,
+        phone: (raw.phone || "Not provided").trim(),
+        isPrimary: Boolean(raw.isPrimary ?? raw.primary),
+    };
+};
+
+const extractAddresses = (payload: any): AddressEntry[] => {
+    const candidates = Array.isArray(payload)
+        ? payload
+        : Array.isArray(payload?.addresses)
+            ? payload.addresses
+            : Array.isArray(payload?.data)
+                ? payload.data
+                : [];
+
+    return candidates
+        .map((item: RawAddress, idx: number) => toAddressEntry(item, idx))
+        .filter(Boolean) as AddressEntry[];
+};
+
 const AddressGrid = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [addresses, setAddresses] = useState<AddressEntry[]>([
-        {
-            id: 1,
-            title: "Home Office",
-            recipient: "Alex Mercer",
-            address:
-                "742 Highview Estates, Suite 900 Cupertino, CA 95014 United States",
-            phone: "+1 (555) 012-3456",
-            isPrimary: true,
-        },
-        {
-            id: 2,
-            title: "Studio Space",
-            recipient: "Alex Mercer",
-            address:
-                "1200 Industrial Way, Bldg 4 Seattle, WA 98101 United States",
-            phone: "+1 (555) 987-6543",
-            isPrimary: false,
-        },
-        {
-            id: 3,
-            title: "London Office",
-            recipient: "A. Mercer / Logistics",
-            address: "30 St Mary Axe London EC3A 8BF United Kingdom",
-            phone: "+44 20 7946 0123",
-            isPrimary: false,
-        },
-    ]);
+    const [addresses, setAddresses] = useState<AddressEntry[]>([]);
+    const [isLoadingAddresses, setIsLoadingAddresses] = useState(false);
     const [editingAddress, setEditingAddress] = useState<AddressEntry | null>(null);
     const [isAdding, setIsAdding] = useState(false);
+    const user = useAuthStore((state) => state.user);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const getMe = useAuthStore((state) => state.getMe);
     const [formData, setFormData] = useState({
         title: "",
         recipient: "",
@@ -59,7 +96,7 @@ const AddressGrid = () => {
         setFormData({ title: "", recipient: "", address: "", phone: "", isPrimary: false });
     };
 
-    const openEditModal = (id: number) => {
+    const openEditModal = (id: string) => {
         const target = addresses.find((a) => a.id === id);
         if (!target) return;
         setEditingAddress(target);
@@ -78,10 +115,38 @@ const AddressGrid = () => {
         setIsAdding(false);
     };
 
-    const saveAddress = () => {
+    const saveAddress = async () => {
         if (!formData.title.trim() || !formData.recipient.trim() || !formData.address.trim() || !formData.phone.trim()) {
             return;
         }
+
+        try {
+            const payload = {
+                title: formData.title.trim(),
+                recipient: formData.recipient.trim(),
+                address: formData.address.trim(),
+                phone: formData.phone.trim(),
+                isPrimary: formData.isPrimary,
+            };
+
+            if (editingAddress) {
+                await api.patch(`users/addresses/${editingAddress.id}`, payload);
+            } else {
+                await api.post("users/addresses", payload);
+            }
+
+            const response = await api.get("users/addresses");
+            const backendAddresses = extractAddresses(response.data);
+            if (backendAddresses.length > 0) {
+                setAddresses(backendAddresses);
+            }
+            await getMe();
+            closeModal();
+            return;
+        } catch {
+            // Fall back to local state if address endpoints are unavailable.
+        }
+
         if (editingAddress) {
             setAddresses((prev) =>
                 prev.map((item) => {
@@ -92,7 +157,7 @@ const AddressGrid = () => {
                 })
             );
         } else {
-            const nextId = Math.max(0, ...addresses.map((a) => a.id)) + 1;
+            const nextId = `local-${Date.now()}`;
             const nextEntry: AddressEntry = { id: nextId, ...formData };
             setAddresses((prev) =>
                 formData.isPrimary
@@ -103,7 +168,70 @@ const AddressGrid = () => {
         closeModal();
     };
 
+    const removeAddress = async (id: string) => {
+        try {
+            await api.delete(`users/addresses/${id}`);
+            const response = await api.get("users/addresses");
+            const backendAddresses = extractAddresses(response.data);
+            setAddresses(backendAddresses);
+            await getMe();
+            return;
+        } catch {
+            // Fall back to local state when backend endpoint is unavailable.
+        }
+
+        setAddresses((prev) => prev.filter((item) => item.id !== id));
+    };
+
     const primaryAddressId = useMemo(() => addresses.find((a) => a.isPrimary)?.id, [addresses]);
+
+    useEffect(() => {
+        let mounted = true;
+
+        const hydrateAddresses = async () => {
+            if (!isAuthenticated) {
+                if (mounted) setAddresses([]);
+                return;
+            }
+
+            setIsLoadingAddresses(true);
+            try {
+                const response = await api.get("users/addresses");
+                const backendAddresses = extractAddresses(response.data);
+                if (mounted && backendAddresses.length > 0) {
+                    setAddresses(backendAddresses);
+                    setIsLoadingAddresses(false);
+                    return;
+                }
+            } catch {
+                // Fall through to auth profile fallback.
+            }
+
+            const fallbackAddress = user?.address
+                ? toAddressEntry(
+                    {
+                        id: user._id ? `${user._id}-profile` : "profile-address",
+                        title: "Primary Address",
+                        recipient: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Account User",
+                        phone: user.phone || "Not provided",
+                        ...user.address,
+                        isPrimary: true,
+                    },
+                    0
+                )
+                : null;
+
+            if (mounted) {
+                setAddresses(fallbackAddress ? [fallbackAddress] : []);
+                setIsLoadingAddresses(false);
+            }
+        };
+
+        void hydrateAddresses();
+        return () => {
+            mounted = false;
+        };
+    }, [isAuthenticated, user]);
 
     useEffect(() => {
         if (searchParams.get("new") !== "1") return;
@@ -131,8 +259,14 @@ const AddressGrid = () => {
                     isPrimary={addr.id === primaryAddressId}
                     onDeliverHere={() => navigate("/checkout")}
                     onEdit={openEditModal}
+                    onRemove={removeAddress}
                 />
             ))}
+            {!isLoadingAddresses && addresses.length === 0 && (
+                <div className="rounded-2xl border border-dashed border-gray-300 bg-white/70 px-6 py-10 text-center text-sm text-gray-500">
+                    No saved addresses yet. Add your first shipping address.
+                </div>
+            )}
 
         </div>
         {(isAdding || editingAddress) && (

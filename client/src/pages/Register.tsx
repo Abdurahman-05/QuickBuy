@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
 import api from '../lib/axios';
-import { UploadCloud, Image as ImageIcon, Loader2, CheckCircle2, Sparkles, X } from "lucide-react";
+import { UploadCloud, Image as ImageIcon, Loader2, CheckCircle2, X } from "lucide-react";
 
 export default function Register() {
   const [step, setStep] = useState(1);
@@ -167,9 +167,8 @@ export default function Register() {
           ) : (
             <>
               <div className="rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 space-y-4 shadow-[0_10px_25px_-20px_rgba(0,0,0,0.45)]">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center">
                   <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-gray-400">Security & profile</p>
-                  <Sparkles className="w-4 h-4 text-gray-400" />
                 </div>
                 <p className="text-sm text-gray-600">Set your password and add a profile image to personalize your account.</p>
               </div>
@@ -211,7 +210,6 @@ export default function Register() {
                         <p className="text-sm sm:text-[15px] font-semibold text-gray-900 leading-tight">
                           {isUploadingImage ? "Uploading profile image..." : "Upload profile image"}
                         </p>
-                        {!isUploadingImage && <Sparkles className="w-4 h-4 text-gray-400 shrink-0" />}
                       </div>
                       <p className="text-xs sm:text-[13px] text-gray-500 mt-1 leading-relaxed">
                         Drag and drop image here, or tap to browse. Works beautifully on mobile too.
