@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import api from "../lib/axios";
+import { resolveApiOrigin } from "../lib/apiBaseUrl";
 import { useAuthStore } from "./useAuthStore";
 import type { Product } from "../types/product";
 
@@ -39,8 +40,7 @@ const resolveImageUrl = (value: any) => {
   const raw = String(value || "").trim();
   if (!raw) return "";
   if (/^https?:\/\//i.test(raw)) return raw;
-  const apiBase = String(import.meta.env.VITE_API_URL || "http://localhost:5000").trim();
-  const origin = apiBase.replace(/\/api\/?$/, "").replace(/\/+$/, "");
+  const origin = resolveApiOrigin().replace(/\/api\/?$/, "").replace(/\/+$/, "");
   const normalizedPath = raw.startsWith("/") ? raw : `/${raw}`;
   return `${origin}${normalizedPath}`;
 };

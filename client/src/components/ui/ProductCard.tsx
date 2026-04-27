@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Product } from "../../types/product";
 import { useCommerceStore } from "../../store/useCommerceStore";
+import { useAuthStore } from "../../store/useAuthStore";
 
 interface ProductCardProps {
     product: Product;
@@ -8,6 +9,7 @@ interface ProductCardProps {
 
 function ProductCard({ product }: ProductCardProps) {
     const addToCart = useCommerceStore((state) => state.addToCart);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     return (
         <article className="group bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full flex flex-col relative">
             
@@ -65,8 +67,11 @@ function ProductCard({ product }: ProductCardProps) {
                     ${product.price?.toFixed(2)}
                 </p>
                 <Link 
-                    to="/cart"
-                    onClick={() => addToCart(product, 1)}
+                    to={isAuthenticated ? "/cart" : "/login"}
+                    onClick={() => {
+                        if (!isAuthenticated) return;
+                        addToCart(product, 1);
+                    }}
                     className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors"
                     aria-label="Add to cart"
                 >

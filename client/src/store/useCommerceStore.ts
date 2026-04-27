@@ -86,6 +86,7 @@ export const useCommerceStore = create<CommerceState>()(
       },
 
       addToCart: async (product, quantity = 1) => {
+        if (!hasAuthToken()) return;
         if (hasAuthToken()) {
           try {
             const response = await api.post("cart", {
@@ -154,11 +155,13 @@ export const useCommerceStore = create<CommerceState>()(
         set({ cartItems: [] });
       },
 
-      addToWishlist: (product) =>
+      addToWishlist: (product) => {
+        if (!hasAuthToken()) return;
         set((state) => {
           if (state.wishlistItems.some((item) => item.id === product.id)) return state;
           return { wishlistItems: [...state.wishlistItems, toCommerceItem(product)] };
-        }),
+        });
+      },
 
       removeFromWishlist: (id) =>
         set((state) => ({ wishlistItems: state.wishlistItems.filter((item) => item.id !== id) })),

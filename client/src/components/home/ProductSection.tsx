@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Product } from '../../types/product';
 import { useCommerceStore } from '../../store/useCommerceStore';
+import { useAuthStore } from '../../store/useAuthStore';
 
 interface ProductSectionProps {
   title: string;
@@ -13,6 +14,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
   const addToCart = useCommerceStore((state) => state.addToCart);
   const addToWishlist = useCommerceStore((state) => state.addToWishlist);
   const isInWishlist = useCommerceStore((state) => state.isInWishlist);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
@@ -52,9 +54,10 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                 className="max-h-[85%] max-w-[85%] object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500 ease-out"
               />
               <Link
-                to="/dashboard/wishlist"
+                to={isAuthenticated ? "/dashboard/wishlist" : "/login"}
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (!isAuthenticated) return;
                   addToWishlist(product);
                 }}
                 className="absolute right-3 top-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-white/40 text-gray-700 hover:text-red-500 flex items-center justify-center transition-colors shadow-sm"
@@ -91,9 +94,10 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                 </p>
 
                 <Link
-                  to="/cart"
+                  to={isAuthenticated ? "/cart" : "/login"}
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (!isAuthenticated) return;
                     addToCart(product, 1);
                   }}
                   className="flex items-center justify-center gap-2 bg-[#1b1b1b] hover:bg-[#e60000] text-white rounded-full transition-all duration-300 w-full h-8 sm:h-9 relative overflow-hidden group/btn shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(230,0,0,0.23)] hover:-translate-y-0.5 active:scale-95"

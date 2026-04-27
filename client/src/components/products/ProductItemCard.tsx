@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import type { Product } from '../../types/product';
 import { useCommerceStore } from '../../store/useCommerceStore';
+import { useAuthStore } from '../../store/useAuthStore';
 
 interface ProductItemCardProps {
     product: Product;
@@ -11,6 +12,7 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
     const addToCart = useCommerceStore((state) => state.addToCart);
     const addToWishlist = useCommerceStore((state) => state.addToWishlist);
     const isInWishlist = useCommerceStore((state) => state.isInWishlist(product.id));
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
     // Generate a sleek subtitle based on specs or category to match the design
     const subtitle = product.specifications && product.specifications.length > 0 
@@ -42,9 +44,10 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                 </div>
 
                 <Link
-                    to="/dashboard/wishlist"
+                    to={isAuthenticated ? "/dashboard/wishlist" : "/login"}
                     onClick={(e) => {
                         e.stopPropagation();
+                        if (!isAuthenticated) return;
                         addToWishlist(product);
                     }}
                     className="absolute right-4 top-4 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-white/40 text-gray-700 hover:text-red-500 flex items-center justify-center transition-colors"
@@ -68,9 +71,10 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
 
             <div className="mt-auto pt-2">
                 <Link
-                  to="/cart"
+                  to={isAuthenticated ? "/cart" : "/login"}
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (!isAuthenticated) return;
                     addToCart(product, 1);
                   }}
                   className="flex items-center justify-center gap-2 bg-[#1b1b1b] hover:bg-[#e60000] text-white rounded-full transition-all duration-300 w-full h-8 sm:h-9 relative overflow-hidden group/btn shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(230,0,0,0.23)] hover:-translate-y-0.5 active:scale-95"
