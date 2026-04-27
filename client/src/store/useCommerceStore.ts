@@ -10,6 +10,7 @@ export interface CommerceItem {
   image: string;
   description: string;
   quantity: number;
+  ownerKey?: string;
 }
 
 type CommerceState = {
@@ -26,6 +27,7 @@ type CommerceState = {
   isInWishlist: (id: string) => boolean;
   cartCount: () => number;
   wishlistCount: () => number;
+  wishlistItemsForCurrentUser: () => CommerceItem[];
 };
 
 const toCommerceItem = (product: Product, quantity = 1): CommerceItem => ({
@@ -45,6 +47,20 @@ const hasAuthToken = () => {
     return Boolean(parsed?.state?.token);
   } catch {
     return false;
+  }
+};
+
+const getCurrentOwnerKey = () => {
+  try {
+    const raw = localStorage.getItem("auth-storage");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    const user = parsed?.state?.user;
+    const id = typeof user?._id === "string" ? user._id.trim() : "";
+    const email = typeof user?.email === "string" ? user.email.trim().toLowerCase() : "";
+    return id || email || null;
+  } catch {
+    return null;
   }
 };
 
@@ -86,6 +102,7 @@ export const useCommerceStore = create<CommerceState>()(
       },
 
       addToCart: async (product, quantity = 1) => {
+        if (!hasAuthToken()) return;
         if (hasAuthToken()) {
           try {
             const response = await api.post("cart", {
@@ -154,17 +171,31 @@ export const useCommerceStore = create<CommerceState>()(
         set({ cartItems: [] });
       },
 
-      addToWishlist: (product) =>
+      addToWishlist: (product) => {
+        if (!hasAuthToken()) return;
+        const ownerKey = getCurrentOwnerKey();
+        if (!ownerKey) return;
         set((state) => {
-          if (state.wishlistItems.some((item) => item.id === product.id)) return state;
-          return { wishlistItems: [...state.wishlistItems, toCommerceItem(product)] };
-        }),
+          if (state.wishlistItems.some((item) => item.id === product.id && item.ownerKey === ownerKey)) return state;
+          return { wishlistItems: [...state.wishlistItems, { ...toCommerceItem(product), ownerKey }] };
+        });
+      },
 
       removeFromWishlist: (id) =>
-        set((state) => ({ wishlistItems: state.wishlistItems.filter((item) => item.id !== id) })),
+        set((state) => {
+          const ownerKey = getCurrentOwnerKey();
+          if (!ownerKey) return state;
+          return {
+            wishlistItems: state.wishlistItems.filter(
+              (item) => !(item.id === id && item.ownerKey === ownerKey)
+            ),
+          };
+        }),
 
       moveWishlistToCart: async (id) => {
-        const target = get().wishlistItems.find((item) => item.id === id);
+        const ownerKey = getCurrentOwnerKey();
+        if (!ownerKey) return;
+        const target = get().wishlistItems.find((item) => item.id === id && item.ownerKey === ownerKey);
         if (!target) return;
         const tempProduct = {
           id: target.id,
@@ -181,13 +212,28 @@ export const useCommerceStore = create<CommerceState>()(
         } as Product;
         await get().addToCart(tempProduct, 1);
         set((state) => ({
-          wishlistItems: state.wishlistItems.filter((item) => item.id !== id),
+          wishlistItems: state.wishlistItems.filter(
+            (item) => !(item.id === id && item.ownerKey === ownerKey)
+          ),
         }));
       },
 
-      isInWishlist: (id) => get().wishlistItems.some((item) => item.id === id),
+      isInWishlist: (id) => {
+        const ownerKey = getCurrentOwnerKey();
+        if (!ownerKey) return false;
+        return get().wishlistItems.some((item) => item.id === id && item.ownerKey === ownerKey);
+      },
       cartCount: () => get().cartItems.reduce((sum, item) => sum + item.quantity, 0),
-      wishlistCount: () => get().wishlistItems.length,
+      wishlistCount: () => {
+        const ownerKey = getCurrentOwnerKey();
+        if (!ownerKey) return 0;
+        return get().wishlistItems.filter((item) => item.ownerKey === ownerKey).length;
+      },
+      wishlistItemsForCurrentUser: () => {
+        const ownerKey = getCurrentOwnerKey();
+        if (!ownerKey) return [];
+        return get().wishlistItems.filter((item) => item.ownerKey === ownerKey);
+      },
     }),
     {
       name: "commerce-storage",

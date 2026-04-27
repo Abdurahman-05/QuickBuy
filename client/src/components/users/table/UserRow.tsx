@@ -1,11 +1,12 @@
 import { TableCell, TableRow } from "../../ui/table";
 import { Avatar, AvatarImage } from "../../ui/avatar";
 import { Badge } from "../../ui/badge";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Mail, Copy, Check } from "lucide-react";
 import { useState } from "react";
 
 export default function UserRow({ user }: any) {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
     // Format date beautifully
     const joinedDate = user.createdAt 
         ? new Date(user.createdAt).toLocaleDateString('en-US', {
@@ -71,31 +72,56 @@ export default function UserRow({ user }: any) {
             {/* ACTIONS */}
             <TableCell className="text-right pr-3 sm:pr-6 relative">
                 <div className="flex justify-end">
-                    <button onClick={() => setMenuOpen((o) => !o)} className="p-1.5 sm:p-2 rounded-full hover:bg-black/5 transition">
+                    <button
+                        onClick={() => setMenuOpen((o) => !o)}
+                        className={`p-1.5 sm:p-2 rounded-full transition ${menuOpen ? "bg-black/10" : "hover:bg-black/5"}`}
+                    >
                         <MoreHorizontal className="h-4 w-4 text-gray-500" />
                     </button>
                 </div>
                 {menuOpen && (
-                    <div className="absolute right-2 top-10 z-20 w-40 bg-white border border-gray-200 rounded-xl shadow-lg text-left">
+                    <div className="absolute right-2 top-10 z-20 w-52 bg-white border border-gray-200 rounded-xl shadow-xl text-left overflow-hidden">
+                        <div className="px-3 py-2 border-b border-gray-100 bg-gray-50/70">
+                            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-gray-400">Quick Actions</p>
+                        </div>
                         <button
                             onClick={() => {
                                 navigator.clipboard.writeText(user.email);
+                                setCopied(true);
+                                setTimeout(() => setCopied(false), 1400);
                                 setMenuOpen(false);
                             }}
-                            className="w-full px-3 py-2 text-xs hover:bg-gray-50"
+                            className="w-full px-3 py-2.5 text-xs hover:bg-gray-50 flex items-center gap-2 transition-colors"
                         >
-                            Copy email
+                            {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} className="text-gray-500" />}
+                            <span>{copied ? "Email copied" : "Copy email"}</span>
                         </button>
-                        <a
-                            href={`mailto:${user.email}`}
-                            className="block w-full px-3 py-2 text-xs hover:bg-gray-50"
-                            onClick={() => setMenuOpen(false)}
+                        <button
+                            onClick={() => {
+                                const recipient = String(user.email || "").trim();
+                                if (!recipient) {
+                                    setMenuOpen(false);
+                                    return;
+                                }
+                                const fullName = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+                                const subject = encodeURIComponent(`QuickBuy Account Update for ${fullName || "Customer"}`);
+                                const body = encodeURIComponent(
+                                    `Hi ${fullName || "there"},\n\nI hope you are doing well.\n\nRegards,\nQuickBuy Admin Team`
+                                );
+                                const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+                                const mailLink = document.createElement("a");
+                                mailLink.href = mailtoUrl;
+                                mailLink.click();
+                                setMenuOpen(false);
+                            }}
+                            className="w-full px-3 py-2.5 text-xs hover:bg-gray-50 flex items-center gap-2 transition-colors"
                         >
-                            Send email
-                        </a>
+                            <Mail size={14} className="text-gray-500" />
+                            <span>Send email</span>
+                        </button>
                         <button
                             onClick={() => setMenuOpen(false)}
-                            className="w-full px-3 py-2 text-xs text-red-500 hover:bg-red-50"
+                            className="w-full px-3 py-2.5 text-xs text-red-500 hover:bg-red-50 border-t border-gray-100 transition-colors"
                         >
                             Close
                         </button>

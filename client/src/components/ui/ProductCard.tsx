@@ -1,13 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { Product } from "../../types/product";
 import { useCommerceStore } from "../../store/useCommerceStore";
+import { useAuthStore } from "../../store/useAuthStore";
 
 interface ProductCardProps {
     product: Product;
 }
 
 function ProductCard({ product }: ProductCardProps) {
+    const navigate = useNavigate();
     const addToCart = useCommerceStore((state) => state.addToCart);
+    const quantityInCart = useCommerceStore(
+        (state) => state.cartItems.find((item) => item.id === product.id)?.quantity ?? 0
+    );
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     return (
         <article className="group bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 w-full flex flex-col relative">
             
@@ -64,14 +70,28 @@ function ProductCard({ product }: ProductCardProps) {
                 <p className="font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
                     ${product.price?.toFixed(2)}
                 </p>
-                <button
-                    type="button"
-                    onClick={() => addToCart(product, 1)}
-                    className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors"
-                    aria-label="Add to cart"
-                >
-                    <span className="text-lg leading-none mb-1">+</span>
-                </button>
+                <div className="flex items-center gap-2">
+                    {isAuthenticated && quantityInCart > 0 && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-gray-900 px-2 py-1 text-[10px] font-black text-white shadow-sm transition-transform duration-300 group-hover:scale-105">
+                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                            x{quantityInCart}
+                        </span>
+                    )}
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (!isAuthenticated) {
+                                navigate("/login");
+                                return;
+                            }
+                            addToCart(product, 1);
+                        }}
+                        className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors"
+                        aria-label="Add to cart"
+                    >
+                        <span className="text-lg leading-none mb-1">+</span>
+                    </button>
+                </div>
             </div>
         </article>
     );

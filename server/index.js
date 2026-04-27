@@ -33,6 +33,33 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const configuredOrigins = (process.env.CLIENT_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const alwaysAllowedOrigins = ["https://quick-buy-coral.vercel.app"];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      const isLocalhostDev = /^http:\/\/localhost:\d+$/.test(origin || "");
+      const isVercelPreview = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin || "");
+      if (
+        !origin ||
+        isLocalhostDev ||
+        isVercelPreview ||
+        configuredOrigins.includes(origin) ||
+        alwaysAllowedOrigins.includes(origin)
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
+    credentials: true,
+  })
+);
+app.use(helmet());
+
 // Swagger Setup
 const specs = swaggerJsdoc({
   definition: {
