@@ -12,6 +12,7 @@ export const pay = async (req, res) => {
 
     const tx_ref = `tx-${orderId}-${Date.now()}`;
 
+    // Cleaned up the chapaData object (removed duplicates and fixed syntax)
     const chapaData = {
       amount: order.totalPrice.toString(),
       currency: "ETB",
@@ -44,6 +45,7 @@ export const pay = async (req, res) => {
       return res.status(400).json({ message: "Payment initialization failed" });
     }
   } catch (error) {
+    console.error("Chapa Pay Error:", error.response?.data || error.message);
     res.status(500).json({ message: error.response?.data?.message || error.message });
   }
 };
@@ -74,6 +76,7 @@ export const verify = async (req, res) => {
     }
     res.status(400).json({ status: "failed", message: "Payment not verified" });
   } catch (error) {
+    console.error("Chapa Verify Error:", error.response?.data || error.message);
     res.status(500).json({ message: "Verification error" });
   }
 };
