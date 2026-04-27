@@ -1,9 +1,18 @@
+import { useMemo } from "react";
 import WishlistCard from "./WishlistCard";
 import { useCommerceStore } from "../../../store/useCommerceStore";
+import { useAuthStore } from "../../../store/useAuthStore";
 const WishlistGrid = () => {
-    const products = useCommerceStore((state) => state.wishlistItems);
+    const wishlistItems = useCommerceStore((state) => state.wishlistItems);
     const moveWishlistToCart = useCommerceStore((state) => state.moveWishlistToCart);
     const removeFromWishlist = useCommerceStore((state) => state.removeFromWishlist);
+    const user = useAuthStore((state) => state.user);
+
+    const ownerKey = user?._id?.trim() || user?.email?.trim().toLowerCase() || "";
+    const products = useMemo(
+        () => wishlistItems.filter((item) => item.ownerKey === ownerKey),
+        [wishlistItems, ownerKey]
+    );
 
     return (
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

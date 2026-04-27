@@ -32,6 +32,12 @@ export default function AdminProducts() {
     const safePage = Math.min(currentPage, totalPages)
     const paginatedProducts = filteredProducts.slice((safePage - 1) * pageSize, safePage * pageSize)
 
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages)
+        }
+    }, [currentPage, totalPages])
+
     return (
         <div className="flex min-h-screen bg-[#f6f6f6] w-full overflow-x-hidden">
 

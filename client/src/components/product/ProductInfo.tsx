@@ -30,12 +30,20 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const addToWishlist = useCommerceStore((state) => state.addToWishlist);
 
   const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
     await addToCart(product, quantity);
   };
 
   const handleAddToWishlist = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
     addToWishlist(product);
-    navigate(isAuthenticated ? "/dashboard/wishlist" : "/login");
+    navigate("/dashboard/wishlist");
   };
 
   return (

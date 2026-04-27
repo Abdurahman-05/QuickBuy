@@ -1,6 +1,6 @@
 import { Minus, Plus, X, ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 import { useCommerceStore } from '../store/useCommerceStore';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
 
@@ -19,6 +19,10 @@ const Cart = () => {
       fetchCart();
     }
   }, [isAuthenticated, fetchCart]);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="bg-white min-h-screen p-4 md:p-12 font-sans text-black">

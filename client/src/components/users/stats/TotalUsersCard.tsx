@@ -44,7 +44,7 @@ export default function TotalUsersCard() {
 
                     <div className="flex items-center gap-2 mt-3 text-red-500 text-sm font-medium">
                         <span className="text-base">↗</span>
-                        <span>{total > 0 ? "Live from backend" : "No users yet"}</span>
+                        <span>{total > 0 ? "Synced with backend" : "No users yet"}</span>
                     </div>
                 </div>
 
