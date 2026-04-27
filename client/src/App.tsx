@@ -81,6 +81,7 @@ export default function App() {
           <Route path="/notifications" element={<Categories />} />
           <Route path="/collections" element={<Categories />} />
           <Route path="/stock-alerts" element={<Categories />} />
+          <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route 
             path="/checkout" 
             element={
