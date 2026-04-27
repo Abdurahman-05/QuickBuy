@@ -7,13 +7,24 @@ import { useOrderStore } from "@/store/useOrderStore"
 export default function OrdersTable() {
     const { allOrders, getAllOrders, updateOrderStatus, verifyPayment } = useOrderStore()
     const [activeMenuId, setActiveMenuId] = useState<string | null>(null)
+    const [currentPage, setCurrentPage] = useState(1)
     const navigate = useNavigate()
+    const ordersPerPage = 3
 
     useEffect(() => {
         getAllOrders()
     }, [getAllOrders])
 
-    const recentOrders = allOrders.slice(0, 3)
+    const totalPages = Math.max(1, Math.ceil(allOrders.length / ordersPerPage))
+    const safeCurrentPage = Math.min(currentPage, totalPages)
+    const startIndex = (safeCurrentPage - 1) * ordersPerPage
+    const recentOrders = allOrders.slice(startIndex, startIndex + ordersPerPage)
+
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages)
+        }
+    }, [currentPage, totalPages])
 
     return (
         <div className="bg-white rounded-2xl border shadow-sm p-4 sm:p-6 lg:p-7 w-full min-w-0">
@@ -143,8 +154,61 @@ export default function OrdersTable() {
 
                     </div>
                 )})}
+                {recentOrders.length === 0 && (
+                    <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-500">
+                        No orders found.
+                    </div>
+                )}
 
             </div>
+            {allOrders.length > ordersPerPage && (
+                <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-gray-100 pt-4">
+                    <p className="text-xs text-gray-500">
+                        Showing {startIndex + 1}-{Math.min(startIndex + ordersPerPage, allOrders.length)} of {allOrders.length} orders
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setCurrentPage((prev) => Math.max(1, prev - 1))
+                                setActiveMenuId(null)
+                            }}
+                            disabled={safeCurrentPage === 1}
+                            className="h-8 px-3 rounded-lg border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                            Prev
+                        </button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <button
+                                key={page}
+                                type="button"
+                                onClick={() => {
+                                    setCurrentPage(page)
+                                    setActiveMenuId(null)
+                                }}
+                                className={`h-8 min-w-8 px-2 rounded-lg text-xs font-bold border transition-colors ${
+                                    safeCurrentPage === page
+                                        ? "bg-gray-900 text-white border-gray-900"
+                                        : "bg-white text-gray-700 border-gray-200 hover:bg-gray-50"
+                                }`}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                                setActiveMenuId(null)
+                            }}
+                            disabled={safeCurrentPage === totalPages}
+                            className="h-8 px-3 rounded-lg border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

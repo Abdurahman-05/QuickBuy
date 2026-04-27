@@ -18,6 +18,10 @@ body {
   max-width: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 code {
   font-size: 0.9em;
   padding: 0.15em 0.35em;
@@ -40,4 +44,13 @@ code {
 .animate-page-entry {
   animation: page-entry 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-page-entry {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

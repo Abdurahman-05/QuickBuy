@@ -9,12 +9,10 @@ export default function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // We use 'instant' behavior for high-quality, professional page resets
-    // smoothly handling the transition visually via CSS animations instead.
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: "instant",
+      behavior: "smooth",
     });
   }, [pathname]);
 

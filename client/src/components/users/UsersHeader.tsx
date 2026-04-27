@@ -1,7 +1,10 @@
 import { Bell, Settings, Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function UsersHeader() {
+    const logout = useAuthStore((state) => state.logout);
+
     return (
         <div className="
             flex flex-col lg:flex-row
@@ -29,18 +32,18 @@ export default function UsersHeader() {
                     text-xs sm:text-sm
                     overflow-x-auto scrollbar-none
                 ">
-                    <button className="relative font-medium text-black whitespace-nowrap">
+                    <Link to="/admin/users" className="relative font-medium text-black whitespace-nowrap">
                         Overview
                         <span className="absolute left-1/2 -translate-x-1/2 -bottom-2 w-1 h-1 bg-red-500 rounded-full"></span>
-                    </button>
+                    </Link>
 
-                    <button className="text-gray-400 hover:text-gray-600 transition whitespace-nowrap">
+                    <Link to="/admin/orders" className="text-gray-400 hover:text-gray-600 transition whitespace-nowrap">
                         Activity
-                    </button>
+                    </Link>
 
-                    <button className="text-gray-400 hover:text-gray-600 transition whitespace-nowrap">
+                    <Link to="/admin/products" className="text-gray-400 hover:text-gray-600 transition whitespace-nowrap">
                         Permissions
-                    </button>
+                    </Link>
                 </div>
             </div>
 
@@ -79,10 +82,10 @@ export default function UsersHeader() {
 
                 {/* ICONS */}
                 <div className="flex items-center gap-2 sm:gap-3 text-gray-500">
-                    <Link to="/dashboard/settings" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
+                    <Link to="/admin/dashboard" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
                         <Bell className="w-4 h-4 text-gray-400 hover:text-black transition" />
                     </Link>
-                    <Link to="/dashboard/settings" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
+                    <Link to="/admin/users" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
                         <Settings className="w-4 h-4 text-gray-400 hover:text-black transition" />
                     </Link>
                 </div>
@@ -91,7 +94,11 @@ export default function UsersHeader() {
                 <div className="hidden sm:block w-px h-5 bg-gray-200" />
 
                 {/* LOGOUT */}
-                <Link to="/login" className="text-xs sm:text-sm text-gray-500 font-medium hover:text-black hover:underline transition whitespace-nowrap">
+                <Link
+                    to="/login"
+                    onClick={() => logout()}
+                    className="text-xs sm:text-sm text-gray-500 font-medium hover:text-black hover:underline transition whitespace-nowrap"
+                >
                     Logout
                 </Link>
             </div>

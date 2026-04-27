@@ -2,14 +2,15 @@ import React from "react";
 import { Home } from "lucide-react";
 
 interface AddressCardProps {
-    id: number;
+    id: string;
     title: string;
     recipient: string;
     address: string;
     phone: string;
     isPrimary: boolean;
-    onDeliverHere: (id: number) => void;
-    onEdit: (id: number) => void;
+    onDeliverHere: (id: string) => void;
+    onEdit: (id: string) => void;
+    onRemove: (id: string) => void;
 }
 
 const AddressCard: React.FC<AddressCardProps> = ({
@@ -21,6 +22,7 @@ const AddressCard: React.FC<AddressCardProps> = ({
     isPrimary,
     onDeliverHere,
     onEdit,
+    onRemove,
 }) => {
     return (
         <div
@@ -95,13 +97,22 @@ const AddressCard: React.FC<AddressCardProps> = ({
                 >
                     Deliver Here
                 </button>
-                <button
-                    type="button"
-                    onClick={() => onEdit(id)}
-                    className="text-[10px] text-red-500 uppercase tracking-widest font-bold hover:text-red-600 transition-colors"
-                >
-                    Edit Address
-                </button>
+                <div className="flex items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={() => onEdit(id)}
+                        className="text-[10px] text-red-500 uppercase tracking-widest font-bold hover:text-red-600 transition-colors"
+                    >
+                        Edit Address
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => onRemove(id)}
+                        className="text-[10px] text-gray-400 uppercase tracking-widest font-bold hover:text-red-500 transition-colors"
+                    >
+                        Remove
+                    </button>
+                </div>
             </div>
         </div>
     );

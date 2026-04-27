@@ -2,26 +2,70 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import OrderCard from "./OrderCard";
 import { useOrderStore } from "@/store/useOrderStore";
+import type { OrderRecord } from "@/types/order";
 
-const OrdersList: React.FC = () => {
+interface OrdersListProps {
+  statusFilter: "ALL" | "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  timeFilter: "ALL_TIME" | "LAST_30_DAYS" | "LAST_90_DAYS" | "THIS_YEAR";
+}
+
+const isOrderInTimeFilter = (order: OrderRecord, timeFilter: OrdersListProps["timeFilter"]) => {
+  if (timeFilter === "ALL_TIME") return true;
+
+  const createdAt = new Date(order.createdAt);
+  if (Number.isNaN(createdAt.getTime())) return false;
+
+  const now = new Date();
+  if (timeFilter === "LAST_30_DAYS") {
+    const threshold = new Date(now);
+    threshold.setDate(now.getDate() - 30);
+    return createdAt >= threshold;
+  }
+  if (timeFilter === "LAST_90_DAYS") {
+    const threshold = new Date(now);
+    threshold.setDate(now.getDate() - 90);
+    return createdAt >= threshold;
+  }
+
+  return createdAt.getFullYear() === now.getFullYear();
+};
+
+const OrdersList: React.FC<OrdersListProps> = ({ statusFilter, timeFilter }) => {
   const { myOrders, getMyOrders, isLoading, error } = useOrderStore();
 
   useEffect(() => {
     getMyOrders();
   }, [getMyOrders]);
 
+  const filteredOrders = myOrders.filter((order) => {
+    const matchesStatus = statusFilter === "ALL" || order.orderStatus === statusFilter;
+    const matchesTime = isOrderInTimeFilter(order, timeFilter);
+    return matchesStatus && matchesTime;
+  });
+
   return (
     <div>
       {error && <p className="text-xs text-red-500 font-semibold mb-3">{error}</p>}
       {/* Order Cards */}
       <div className="flex flex-col gap-4">
-        {myOrders.map((order) => {
+        {filteredOrders.map((order) => {
           const firstItem = order.orderItems[0];
+          const rawProduct = firstItem?.product as unknown;
+          const productId =
+            typeof rawProduct === "string"
+              ? rawProduct
+              : rawProduct && typeof rawProduct === "object"
+                ? String(
+                    (rawProduct as { _id?: string; id?: string })._id ||
+                      (rawProduct as { _id?: string; id?: string }).id ||
+                      ""
+                  )
+                : "";
           return (
             <OrderCard
               key={order._id}
               orderId={`#${order._id.slice(-6).toUpperCase()}`}
-              productId={firstItem?.product}
+              productId={productId || undefined}
               productName={firstItem?.name || "Order Item"}
               image={firstItem?.image || "https://via.placeholder.com/100"}
               status={order.orderStatus}
@@ -30,9 +74,9 @@ const OrdersList: React.FC = () => {
             />
           );
         })}
-        {!isLoading && myOrders.length === 0 && (
+        {!isLoading && filteredOrders.length === 0 && (
           <div className="bg-white border border-gray-200/60 rounded-xl p-6 text-sm text-gray-500">
-            You have no orders yet.
+            No orders match your current filters.
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import type { Product } from '../../types/product';
 import { useCommerceStore } from '../../store/useCommerceStore';
+import { useAuthStore } from '../../store/useAuthStore';
 
 interface ProductItemCardProps {
     product: Product;
@@ -11,6 +12,10 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
     const addToCart = useCommerceStore((state) => state.addToCart);
     const addToWishlist = useCommerceStore((state) => state.addToWishlist);
     const isInWishlist = useCommerceStore((state) => state.isInWishlist(product.id));
+    const quantityInCart = useCommerceStore(
+        (state) => state.cartItems.find((item) => item.id === product.id)?.quantity ?? 0
+    );
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
     // Generate a sleek subtitle based on specs or category to match the design
     const subtitle = product.specifications && product.specifications.length > 0 
@@ -28,6 +33,9 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                 <img 
                     src={thumbnail} 
                     alt={product.name} 
+                    onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
+                    }}
                     className={`w-full h-full p-0 transition-transform duration-700 ease-out group-hover:scale-110 ${
                         thumbnail.includes('unsplash.com') ? 'object-cover' : 'object-contain p-6 mix-blend-multiply'
                     }`}
@@ -39,9 +47,10 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                 </div>
 
                 <Link
-                    to="/dashboard/wishlist"
+                    to={isAuthenticated ? "/dashboard/wishlist" : "/login"}
                     onClick={(e) => {
                         e.stopPropagation();
+                        if (!isAuthenticated) return;
                         addToWishlist(product);
                     }}
                     className="absolute right-4 top-4 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-md border border-white/40 text-gray-700 hover:text-red-500 flex items-center justify-center transition-colors"
@@ -68,16 +77,26 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (!isAuthenticated) {
+                      navigate("/login");
+                      return;
+                    }
                     addToCart(product, 1);
                   }}
-                  className="flex items-center justify-center gap-2 bg-[#1b1b1b] hover:bg-[#e60000] text-white rounded-full transition-all duration-300 w-full h-8 sm:h-9 relative overflow-hidden group/btn shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(230,0,0,0.23)] hover:-translate-y-0.5 active:scale-95"
+                  className="flex items-center justify-center gap-2 bg-[#1b1b1b] hover:bg-[#e60000] text-white rounded-full transition-all duration-300 w-full h-8 sm:h-9 relative overflow-hidden group/btn shadow-[0_4px_14px_0_rgba(0,0,0,0.1)] hover:shadow-[0_6px_20px_rgba(230,0,0,0.23)] hover:-translate-y-0.5 active:scale-95 px-3"
                 >
-                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover/btn:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transform group-hover/btn:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
                   </svg>
                   <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
                     Add to cart
                   </span>
+                  {isAuthenticated && quantityInCart > 0 && (
+                    <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9px] font-black tracking-wide text-white ring-1 ring-white/35 backdrop-blur-sm transition-all duration-300 group-hover/btn:bg-white/20 group-hover/btn:scale-105">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                      x{quantityInCart}
+                    </span>
+                  )}
                 </button>
             </div>
         </div>

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import api from "../lib/axios";
+import { resolveApiOrigin } from "../lib/apiBaseUrl";
 import { useAuthStore } from "./useAuthStore";
 import type { Product } from "../types/product";
 
@@ -32,16 +33,30 @@ const getErrorMessage = (error: any, fallback: string) =>
   error?.response?.data?.message ||
   (typeof error?.response?.data === "string" ? error.response.data : fallback);
 
+const defaultImageFallback =
+  "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80";
+
+const resolveImageUrl = (value: any) => {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw;
+  const origin = resolveApiOrigin().replace(/\/api\/?$/, "").replace(/\/+$/, "");
+  const normalizedPath = raw.startsWith("/") ? raw : `/${raw}`;
+  return `${origin}${normalizedPath}`;
+};
+
 const normalizeProduct = (raw: any): Product => {
   const normalizedRating = Math.max(0, Math.min(5, Math.round(Number(raw?.rating || 0))));
   const categoryValue = raw?.category || raw?.categoryName || raw?.categoryId?.name || "GENERAL";
-  const image = raw?.image || raw?.profileImage || raw?.images?.[0] || "";
+  const imageCandidate = raw?.image || raw?.profileImage || raw?.images?.[0] || "";
+  const image = resolveImageUrl(imageCandidate) || defaultImageFallback;
   const rawImages = Array.isArray(raw?.images) ? raw.images : [];
+  const resolvedImages = rawImages.map(resolveImageUrl).filter(Boolean);
   const images: [string, string, string, string] = [
-    rawImages[0] || image,
-    rawImages[1] || image,
-    rawImages[2] || image,
-    rawImages[3] || image,
+    resolvedImages[0] || image,
+    resolvedImages[1] || image,
+    resolvedImages[2] || image,
+    resolvedImages[3] || image,
   ];
 
   const stockValue = raw?.stock ?? raw?.stockQuantity ?? 0;
@@ -122,10 +137,6 @@ export const useProductStore = create<ProductState>()((set) => ({
     try {
       const response = await api.get("products", {
         params: { ...params, _t: Date.now() },
-        headers: {
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-        },
       });
       const incoming = Array.isArray(response.data?.products)
         ? response.data.products
@@ -151,10 +162,6 @@ export const useProductStore = create<ProductState>()((set) => ({
     try {
       const response = await api.get(`products/${id}`, {
         params: { _t: Date.now() },
-        headers: {
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-        },
       });
       const incoming = response.data?.product ?? response.data;
       let reviews: any[] = [];
