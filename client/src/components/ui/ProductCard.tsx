@@ -66,17 +66,23 @@ function ProductCard({ product }: ProductCardProps) {
                 <p className="font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
                     ${product.price?.toFixed(2)}
                 </p>
+<<<<<<< HEAD
                 <Link 
                     to={isAuthenticated ? "/cart" : "/login"}
                     onClick={() => {
                         if (!isAuthenticated) return;
                         addToCart(product, 1);
                     }}
+=======
+                <button
+                    type="button"
+                    onClick={() => addToCart(product, 1)}
+>>>>>>> main
                     className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors"
                     aria-label="Add to cart"
                 >
                     <span className="text-lg leading-none mb-1">+</span>
-                </Link>
+                </button>
             </div>
         </article>
     );

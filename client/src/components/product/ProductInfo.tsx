@@ -35,7 +35,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       return;
     }
     await addToCart(product, quantity);
-    navigate("/cart");
   };
 
   const handleAddToWishlist = () => {

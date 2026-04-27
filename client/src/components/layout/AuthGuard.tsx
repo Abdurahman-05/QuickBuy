@@ -151,7 +151,7 @@ export const GuestRoute: React.FC<Props> = ({ children }) => {
         return <Navigate to={from} replace />;
       }
     }
-    return <Navigate to={user.role === "ADMIN" ? "/admin/dashboard" : "/dashboard"} replace />;
+    return <Navigate to={user.role === "ADMIN" ? "/admin/dashboard" : "/"} replace />;
   }
 
   return <>{children}</>;

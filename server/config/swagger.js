@@ -13,7 +13,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000",
+        url: "https://quickbuy-1-1rn7.onrender.com",
         description: "Development Server",
       },
     ],

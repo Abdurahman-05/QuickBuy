@@ -70,8 +70,13 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
             </div>
 
             <div className="mt-auto pt-2">
+<<<<<<< HEAD
                 <Link
                   to={isAuthenticated ? "/cart" : "/login"}
+=======
+                <button
+                  type="button"
+>>>>>>> main
                   onClick={(e) => {
                     e.stopPropagation();
                     if (!isAuthenticated) return;
@@ -85,7 +90,7 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                   <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
                     Add to cart
                   </span>
-                </Link>
+                </button>
             </div>
         </div>
     );

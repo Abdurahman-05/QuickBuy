@@ -23,6 +23,13 @@ configureCloudinary();
 
 
 app.use(morgan("dev"));
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -138,7 +145,7 @@ const specs = swaggerJsdoc({
     },
     security: [{ bearerAuth: [] }]
   },
-  apis: ["./routes/*.js", "./modules/**/*.js"], 
+  apis: ["./routes/*.js", "./modules/**/*.js"],
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
