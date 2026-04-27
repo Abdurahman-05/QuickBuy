@@ -25,7 +25,7 @@ configureCloudinary();
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+    origin: "*",
     credentials: true,
   })
 );
@@ -118,7 +118,7 @@ const specs = swaggerJsdoc({
     },
     security: [{ bearerAuth: [] }]
   },
-  apis: ["./routes/*.js", "./modules/**/*.js"], 
+  apis: ["./routes/*.js", "./modules/**/*.js"],
 });
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));

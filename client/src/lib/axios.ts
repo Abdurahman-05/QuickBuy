@@ -3,7 +3,7 @@ import axios from "axios";
 const envBaseUrl = (import.meta.env.VITE_API_URL || "").trim();
 const normalizedBaseUrl = envBaseUrl
   ? (envBaseUrl.endsWith("/api") ? envBaseUrl : `${envBaseUrl.replace(/\/+$/, "")}/api`)
-  : "http://localhost:5000/api";
+  : "https://quickbuy-1-1rn7.onrender.com/api";
 
 const api = axios.create({
   baseURL: normalizedBaseUrl,
