@@ -90,8 +90,8 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                   ${product.price.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                 </p>
 
-                <Link
-                  to="/cart"
+                <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     addToCart(product, 1);
@@ -104,7 +104,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
                   <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
                     Add to cart
                   </span>
-                </Link>
+                </button>
               </div>
             </div>
           </div>

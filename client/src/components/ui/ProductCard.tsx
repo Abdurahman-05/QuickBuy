@@ -64,14 +64,14 @@ function ProductCard({ product }: ProductCardProps) {
                 <p className="font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight">
                     ${product.price?.toFixed(2)}
                 </p>
-                <Link 
-                    to="/cart"
+                <button
+                    type="button"
                     onClick={() => addToCart(product, 1)}
                     className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-indigo-600 hover:text-white transition-colors"
                     aria-label="Add to cart"
                 >
                     <span className="text-lg leading-none mb-1">+</span>
-                </Link>
+                </button>
             </div>
         </article>
     );

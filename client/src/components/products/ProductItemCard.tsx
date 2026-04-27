@@ -64,8 +64,8 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
             </div>
 
             <div className="mt-auto pt-2">
-                <Link
-                  to="/cart"
+                <button
+                  type="button"
                   onClick={(e) => {
                     e.stopPropagation();
                     addToCart(product, 1);
@@ -78,7 +78,7 @@ export default function ProductItemCard({ product }: ProductItemCardProps) {
                   <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
                     Add to cart
                   </span>
-                </Link>
+                </button>
             </div>
         </div>
     );
