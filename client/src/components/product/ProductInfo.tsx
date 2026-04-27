@@ -31,7 +31,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
   const handleAddToCart = async () => {
     await addToCart(product, quantity);
-    navigate("/cart");
   };
 
   const handleAddToWishlist = () => {
