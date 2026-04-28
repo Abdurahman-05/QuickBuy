@@ -1,4 +1,4 @@
-const LOCAL_API_ORIGIN = "http://localhost:5000";
+const LOCAL_API_ORIGIN = "https://quickbuy-1-1rn7.onrender.com";
 
 export const resolveApiOrigin = () => {
   const envValue = String(import.meta.env.VITE_API_URL || "").trim().replace(/\/+$/, "");

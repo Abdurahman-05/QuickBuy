@@ -3,8 +3,8 @@ import Order from "../modules/order/order.model.js";
 
 const CHAPA_API_URL = (process.env.CHAPA_API_URL || "https://api.chapa.co/v1").replace(/\/+$/, "");
 const CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY || "";
-const BACKEND_URL = (process.env.BACKEND_URL || "http://localhost:5000").replace(/\/+$/, "");
-const FRONTEND_URL = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/+$/, "");
+const BACKEND_URL = (process.env.BACKEND_URL || "https://quickbuy-1-1rn7.onrender.com").replace(/\/+$/, "");
+const FRONTEND_URL = (process.env.FRONTEND_URL || "https://quick-buy-coral.vercel.app").replace(/\/+$/, "");
 
 // @desc    Initialize Chapa Payment
 // @route   POST /api/payments/pay

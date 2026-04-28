@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "https://quickbuy-1-1rn7.onrender.com",
         changeOrigin: true,
       },
     },
