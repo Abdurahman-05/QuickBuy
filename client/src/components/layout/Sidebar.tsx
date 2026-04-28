@@ -56,7 +56,7 @@ export default function Sidebar() {
                     fixed top-0 left-0 h-full w-72 bg-white z-[90]
                     flex flex-col p-4 border-r
                     transform transition-transform duration-300 ease-in-out
-                    lg:static lg:h-screen lg:w-64
+                    lg:static lg:w-64 lg:h-auto lg:min-h-screen lg:self-stretch
                     ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
                 `}
             >

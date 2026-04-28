@@ -7,7 +7,6 @@ import {
   Users, 
   HelpCircle, 
   Settings,
-  Bell,
   LogOut,
   Plus
 } from 'lucide-react';
@@ -122,11 +121,6 @@ const AdminLayout = () => {
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 flex-shrink-0">
           <div className="flex-1"></div>
           <div className="flex items-center gap-6">
-            <button className="text-gray-400 hover:text-gray-600 transition-colors relative">
-              <Bell size={20} />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-            <div className="h-6 w-px bg-gray-200"></div>
             <div className="flex items-center gap-3">
                <div className="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
                  <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Admin" className="w-full h-full object-cover"/>

@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Search, Bell, Menu, X } from "lucide-react"
+import { Search, Menu, X } from "lucide-react"
 import { useState } from "react";
 
 const pageTitles: Record<string, string> = {
@@ -80,17 +80,8 @@ const DashboardTopbar: React.FC<DashboardTopbarProps> = ({ onMenuToggle }) => {
         </form>
       </div>
 
-      {/* RIGHT: Notifications & Profile */}
-      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-        {/* Notifications */}
-        <button
-          onClick={() => navigate("/notifications")}
-          className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-xl bg-gray-50 hover:bg-gray-100 text-gray-500 hover:text-red-600 transition-all relative group/notif"
-        >
-          <Bell size={18} strokeWidth={2} className="group-hover/notif:animate-bounce" />
-          <span className="absolute top-2 sm:top-2.5 right-2 sm:right-2.5 w-1.5 sm:w-2 h-1.5 sm:h-2 bg-red-600 rounded-full border-2 border-white" />
-        </button>
-      </div>
+      {/* RIGHT */}
+      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0" />
     </header>
   );
 };

@@ -1,4 +1,4 @@
-import { Bell, Settings, Search } from "lucide-react";
+import { Settings, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -82,9 +82,6 @@ export default function UsersHeader() {
 
                 {/* ICONS */}
                 <div className="flex items-center gap-2 sm:gap-3 text-gray-500">
-                    <Link to="/admin/dashboard" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
-                        <Bell className="w-4 h-4 text-gray-400 hover:text-black transition" />
-                    </Link>
                     <Link to="/admin/users" className="p-1.5 hover:bg-gray-100 rounded-full transition border border-transparent hover:border-black/5">
                         <Settings className="w-4 h-4 text-gray-400 hover:text-black transition" />
                     </Link>
