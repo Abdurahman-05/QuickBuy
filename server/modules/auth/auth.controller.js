@@ -204,7 +204,7 @@ export const forgotPassword = async (req, res) => {
     await user.save({ validateBeforeSave: false });
 
     // Create reset URL (Point to Frontend)
-    const frontendUrl = process.env.FRONTEND_URL || "https://quickbuy-1-1rn7.onrender.com";
+    const frontendUrl = process.env.FRONTEND_URL || "https://quick-buy-coral.vercel.app";
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please click the link below to reset your password: \n\n ${resetUrl}`;
