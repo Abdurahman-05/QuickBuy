@@ -52,9 +52,31 @@ export default function Footer() {
             </h3>
             <div className="flex gap-6 text-gray-400">
                {/* Minimalist Social Icons */}
-               <button className="hover:text-white"><ShareIcon /></button>
-               <button className="hover:text-white"><GlobeIcon /></button>
-               <button className="hover:text-white"><AtIcon /></button>
+               <a
+                 href="https://x.com"
+                 target="_blank"
+                 rel="noreferrer"
+                 aria-label="Follow QuickBuy on X"
+                 className="hover:text-white transition-colors"
+               >
+                 <ShareIcon />
+               </a>
+               <a
+                 href="https://www.quickbuy.com"
+                 target="_blank"
+                 rel="noreferrer"
+                 aria-label="Visit QuickBuy website"
+                 className="hover:text-white transition-colors"
+               >
+                 <GlobeIcon />
+               </a>
+               <a
+                 href="mailto:support@quickbuy.com"
+                 aria-label="Email QuickBuy support"
+                 className="hover:text-white transition-colors"
+               >
+                 <AtIcon />
+               </a>
             </div>
           </div>
           <p className="text-[10px] text-gray-500 uppercase tracking-[0.2em] font-medium md:text-right mt-4">

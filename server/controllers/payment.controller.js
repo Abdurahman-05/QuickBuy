@@ -1,10 +1,19 @@
 import axios from "axios";
 import Order from "../modules/order/order.model.js";
 
+const CHAPA_API_URL = (process.env.CHAPA_API_URL || "https://api.chapa.co/v1").replace(/\/+$/, "");
+const CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY || "";
+const BACKEND_URL = (process.env.BACKEND_URL || "http://localhost:5000").replace(/\/+$/, "");
+const FRONTEND_URL = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/+$/, "");
+
 // @desc    Initialize Chapa Payment
 // @route   POST /api/payments/pay
 export const pay = async (req, res) => {
   const { orderId } = req.body;
+
+  if (!CHAPA_SECRET_KEY) {
+    return res.status(500).json({ message: "CHAPA_SECRET_KEY is not configured on the server." });
+  }
 
   try {
     const order = await Order.findById(orderId).populate("user", "firstName lastName email");
@@ -20,18 +29,18 @@ export const pay = async (req, res) => {
       first_name: order.user.firstName,
       last_name: order.user.lastName,
       tx_ref: tx_ref,
-      callback_url: `${process.env.BACKEND_URL}/api/payments/callback/${tx_ref}`,
-      return_url: `${process.env.FRONTEND_URL}/order-confirmation?tx_ref=${tx_ref}`,
+      callback_url: `${BACKEND_URL}/api/payments/callback/${tx_ref}`,
+      return_url: `${FRONTEND_URL}/order-confirmation?tx_ref=${tx_ref}`,
       "customization[title]": "QuickBuy Order Payment",
       "customization[description]": `Payment for Order ${orderId}`,
     };
 
     const response = await axios.post(
-      `${process.env.CHAPA_API_URL}/transaction/initialize`,
+      `${CHAPA_API_URL}/transaction/initialize`,
       chapaData,
       {
         headers: {
-          Authorization: `Bearer ${process.env.CHAPA_SECRET_KEY}`,
+          Authorization: `Bearer ${CHAPA_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
       }
@@ -55,11 +64,15 @@ export const pay = async (req, res) => {
 export const verify = async (req, res) => {
   const { tx_ref } = req.params;
 
+  if (!CHAPA_SECRET_KEY) {
+    return res.status(500).json({ message: "CHAPA_SECRET_KEY is not configured on the server." });
+  }
+
   try {
     const response = await axios.get(
-      `${process.env.CHAPA_API_URL}/transaction/verify/${tx_ref}`,
+      `${CHAPA_API_URL}/transaction/verify/${tx_ref}`,
       {
-        headers: { Authorization: `Bearer ${process.env.CHAPA_SECRET_KEY}` },
+        headers: { Authorization: `Bearer ${CHAPA_SECRET_KEY}` },
       }
     );
 

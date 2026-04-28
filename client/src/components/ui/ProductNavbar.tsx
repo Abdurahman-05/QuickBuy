@@ -1,4 +1,4 @@
-import { Bell, Settings, ArrowLeft } from "lucide-react"
+import { Settings, ArrowLeft } from "lucide-react"
 import { Link } from "react-router-dom"
 
 export default function ProductNavbar() {
@@ -19,9 +19,6 @@ export default function ProductNavbar() {
 
                 {/* ICONS */}
                 <div className="flex items-center gap-1 md:gap-2">
-                    <Link to="/notifications" className="p-1.5 md:p-2 hover:bg-gray-100 rounded-md transition border-transparent border hover:border-gray-200">
-                        <Bell className="w-4 h-4 md:w-5 md:h-5 text-gray-400 hover:text-black transition" />
-                    </Link>
                     <Link to="/settings" className="p-1.5 md:p-2 hover:bg-gray-100 rounded-md transition border-transparent border hover:border-gray-200">
                         <Settings className="w-4 h-4 md:w-5 md:h-5 text-gray-400 hover:text-black transition" />
                     </Link>
