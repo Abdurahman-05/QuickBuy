@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../lib/axios';
 
 export default function OrderConfirmation() {
   const [searchParams] = useSearchParams();
   const [status, setStatus] = useState('loading');
   const tx_ref = searchParams.get('tx_ref');
   
-  // NEW: Dynamic API URL
-  const API_URL = import.meta.env.VITE_API_URL;
-
   useEffect(() => {
     const verifyPayment = async () => {
       try {
-        // UPDATED: Dynamic URL
-        const { data } = await axios.get(`${API_URL}/payments/verify/${tx_ref}`);
+        const { data } = await api.get(`payments/verify/${tx_ref}`);
         if (data.status === 'success') {
           setStatus('success');
         } else {
@@ -26,7 +22,7 @@ export default function OrderConfirmation() {
     };
 
     if (tx_ref) verifyPayment();
-  }, [tx_ref, API_URL]);
+  }, [tx_ref]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">

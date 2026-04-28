@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import chapaLogo from '../assets/chapa.jpg';
 import { useCommerceStore } from '../store/useCommerceStore';
 import { useOrderStore } from '../store/useOrderStore';
 import { useAuthStore } from '../store/useAuthStore';
+import api from '../lib/axios';
 
 export default function Checkout() {
   const [paymentMethod, setPaymentMethod] = useState('chapa');
@@ -19,9 +19,6 @@ export default function Checkout() {
   const isLoading = useOrderStore((state) => state.isLoading);
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore((state) => state.token);
-
-  // NEW: Get the API URL from environment variables
-  const API_URL = import.meta.env.VITE_API_URL;
 
   const subtotal = useMemo(() => cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0), [cartItems]);
   const tax = subtotal * 0.08;
@@ -51,20 +48,17 @@ export default function Checkout() {
         totalPrice: Number(total.toFixed(2)),
       });
 
-      // UPDATED: Dynamic URL
-      const { data } = await axios.post(
-        `${API_URL}/payments/pay`, 
-        { orderId: orderResponse._id },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const { data } = await api.post("payments/pay", { orderId: orderResponse._id });
 
       if (data.checkout_url) {
         await clearCart();
         window.location.href = data.checkout_url;
       }
 
-    } catch (err) {
-      alert(err.response?.data?.message || "Payment initialization failed.");
+    } catch (err: any) {
+      const status = err?.response?.status;
+      const message = err?.response?.data?.message || "Payment initialization failed.";
+      alert(status ? `${message} (HTTP ${status})` : message);
     }
   };
 
