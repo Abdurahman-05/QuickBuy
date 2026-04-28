@@ -85,7 +85,24 @@ export const verify = async (req, res) => {
         order.orderStatus = "PROCESSING";
         await order.save();
       }
-      return res.json({ status: "success", message: "Payment verified" });
+      const receiptUrl =
+        response?.data?.data?.receipt_url ||
+        response?.data?.data?.receipt ||
+        order?.paymentScreenshot ||
+        null;
+
+      return res.json({
+        status: "success",
+        message: "Payment verified",
+        receipt: {
+          tx_ref,
+          orderId: order?._id || null,
+          amount: order?.totalPrice || null,
+          paymentStatus: order?.paymentStatus || "PAID",
+          paidAt: order?.paidAt || new Date().toISOString(),
+          receiptUrl,
+        },
+      });
     }
     res.status(400).json({ status: "failed", message: "Payment not verified" });
   } catch (error) {
